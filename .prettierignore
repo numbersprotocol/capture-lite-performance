@@ -1,6 +1,3 @@
-# Specifies intentionally untracked files to ignore when using Git
-# http://git-scm.com/docs/gitignore
-
 *~
 *.sw[mnpcod]
 .tmp
@@ -39,3 +36,6 @@ resources/ios/icon
 resources/ios/splash
 resources/windows/icon
 resources/windows/splash
+
+/android
+/ios
