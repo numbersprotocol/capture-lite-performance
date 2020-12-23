@@ -5,12 +5,17 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () =>
-      import('./feature/home/home.module').then(m => m.HomePageModule),
+      import('./features/home/home.module').then(m => m.HomePageModule),
   },
   {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',
+  },
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('./features/login/login.module').then(m => m.LoginPageModule),
   },
 ];
 
