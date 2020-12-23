@@ -8,7 +8,7 @@
     "build": "ionic build",
     "test": "ng test",
     "test-ci": "ng test --no-watch --no-progress --browsers=ChromeHeadlessCI",
-    "lint": "prettier --check . && ng lint",
+    "lint": "prettier --check . && stylelint \"**/*.{css,scss,sass}\" && ng lint",
     "e2e": "ng e2e"
   },
   "private": true,
@@ -50,6 +50,7 @@
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsdoc": "30.7.6",
     "eslint-plugin-prefer-arrow": "1.2.2",
+    "eslint-plugin-rxjs": "^2.1.5",
     "husky": "^4.3.6",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
@@ -61,6 +62,9 @@
     "lint-staged": "^10.5.3",
     "prettier": "2.2.1",
     "protractor": "~7.0.0",
+    "stylelint": "^13.8.0",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-scss": "^3.18.0",
     "ts-node": "~9.1.1",
     "typescript": "~4.0.5"
   },
