@@ -1,7 +1,10 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding">
+  <ion-img src="/assets/images/capture.svg" class="logo"></ion-img>
 
-<ion-content> </ion-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <formly-form [form]="form" [fields]="fields" [model]="model"> </formly-form>
+    <ion-button type="submit" [disabled]="!form.valid" expand="full"
+      >Login</ion-button
+    >
+  </form>
+</ion-content>

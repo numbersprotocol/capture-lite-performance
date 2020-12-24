@@ -6,11 +6,19 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
-  },
-  {
-    path: 'profile',
-    loadChildren: () =>
-      import('./profile/profile.module').then(m => m.ProfilePageModule),
+    children: [
+      { path: '', redirectTo: 'capture', pathMatch: 'full' },
+      {
+        path: 'capture',
+        loadChildren: () =>
+          import('./capture/capture.module').then(m => m.CapturePageModule),
+      },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./profile/profile.module').then(m => m.ProfilePageModule),
+      },
+    ],
   },
 ];
 
