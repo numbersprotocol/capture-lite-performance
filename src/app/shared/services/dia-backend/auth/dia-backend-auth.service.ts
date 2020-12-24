@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { reject } from 'lodash';
 import { defer, forkJoin, Observable } from 'rxjs';
 import { concatMap, concatMapTo, filter, map, timeout } from 'rxjs/operators';
 import { PreferenceManager } from '../../preference-manager/preference-manager.service';
@@ -127,7 +126,7 @@ export class DiaBackendAuthService {
   }
 
   private async getToken() {
-    return new Promise<string>(resolve => {
+    return new Promise<string>((resolve, reject) => {
       this.preferences.getString(PrefKeys.TOKEN).then(token => {
         if (token.length !== 0) {
           resolve(token);

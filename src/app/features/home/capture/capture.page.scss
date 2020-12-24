@@ -1,0 +1,21 @@
+.capture-tab {
+  ion-img {
+    height: 30vw;
+    object-fit: cover;
+  }
+
+  ion-img::part(image) {
+    border-radius: 8px;
+  }
+}
+
+.post-capture-tab {
+  ion-img {
+    height: 90vw;
+    object-fit: cover;
+  }
+
+  ion-img::part(image) {
+    border-radius: 8px;
+  }
+}
