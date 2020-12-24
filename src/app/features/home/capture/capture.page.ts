@@ -9,7 +9,6 @@ import { DiaBackendAssetRepository } from '../../../shared/services/dia-backend/
   styleUrls: ['./capture.page.scss'],
 })
 export class CapturePage {
-  readonly segment = 'capture';
   readonly isFetching$ = this.diaBackendAssetRepository.isFetching$();
   readonly itemsPerRow = 3;
   readonly assets$ = this.diaBackendAssetRepository.getAll$();

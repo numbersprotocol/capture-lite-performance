@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyIonicModule } from '@ngx-formly/ionic';
 import { SharedTestingModule } from '../../shared/shared-testing.module';
 import { LoginPage } from './login.page';
 
@@ -10,7 +13,12 @@ describe('LoginPage', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [LoginPage],
-        imports: [SharedTestingModule],
+        imports: [
+          SharedTestingModule,
+          ReactiveFormsModule,
+          FormlyModule.forRoot(),
+          FormlyIonicModule,
+        ],
       }).compileComponents();
 
       fixture = TestBed.createComponent(LoginPage);

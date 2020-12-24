@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyIonicModule } from '@ngx-formly/ionic';
 import { SharedModule } from '../../shared/shared.module';
@@ -9,6 +10,7 @@ import { LoginPage } from './login.page';
   imports: [
     SharedModule,
     LoginPageRoutingModule,
+    ReactiveFormsModule,
     FormlyModule,
     FormlyIonicModule,
   ],

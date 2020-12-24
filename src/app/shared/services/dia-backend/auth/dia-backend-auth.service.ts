@@ -12,7 +12,6 @@ export class DiaBackendAuthService {
   private readonly preferences = this.preferenceManager.getPreferences(
     DiaBackendAuthService.name
   );
-  private readonly loginTimeout = 20000;
 
   constructor(
     private readonly httpClient: HttpClient,
@@ -20,13 +19,14 @@ export class DiaBackendAuthService {
   ) {}
 
   login$(email: string, password: string): Observable<LoginResult> {
+    const timeoutMillis = 2000;
     return this.httpClient
       .post<LoginResponse>(`${BASE_URL}/auth/token/login/`, {
         email,
         password,
       })
       .pipe(
-        timeout(this.loginTimeout),
+        timeout(timeoutMillis),
         concatMap(response => this.setToken(response.auth_token)),
         concatMapTo(this.readUser$()),
         concatMap(response =>
@@ -71,12 +71,6 @@ export class DiaBackendAuthService {
       username,
       email,
       password,
-    });
-  }
-
-  resendActivationEmail(email: string) {
-    return this.httpClient.post(`${BASE_URL}/auth/users/resend_activation/`, {
-      email,
     });
   }
 

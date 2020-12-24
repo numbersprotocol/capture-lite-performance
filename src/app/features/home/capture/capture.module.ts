@@ -1,15 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-import { IonicModule } from '@ionic/angular';
-
+import { SuperTabsModule } from '@ionic-super-tabs/angular';
+import { SharedModule } from '../../../shared/shared.module';
 import { CapturePageRoutingModule } from './capture-routing.module';
-
 import { CapturePage } from './capture.page';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, CapturePageRoutingModule],
+  imports: [SharedModule, CapturePageRoutingModule, SuperTabsModule],
   declarations: [CapturePage],
 })
 export class CapturePageModule {}

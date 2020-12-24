@@ -1,40 +1,54 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar color="primary">
-    <ion-segment [(ngModel)]="segment">
-      <ion-segment-button value="capture"> Capture </ion-segment-button>
-      <ion-segment-button value="postCapture"> PostCapture </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen="true">
-  <ion-grid *ngIf="segment === 'capture'" class="capture-tab"
-    ><ion-virtual-scroll
-      [items]="chunkedAssets$ | async"
-      approxItemHeight="100px"
-    >
-      <ion-row *virtualItem="let chunkedGroup">
-        <ion-col *ngFor="let asset of chunkedGroup" [size]="12 / itemsPerRow">
-          <ion-img [src]="asset.asset_file_thumbnail"></ion-img>
-        </ion-col>
-      </ion-row>
-    </ion-virtual-scroll>
-  </ion-grid>
-  <ion-virtual-scroll
-    *ngIf="segment === 'postCapture'"
-    [items]="assets$ | async"
-    approxItemHeight="300px"
-    class="post-capture-tab"
-  >
-    <ion-img
-      *virtualItem="let asset"
-      [src]="asset.sharable_copy"
-      class="ion-margin"
-    ></ion-img>
-  </ion-virtual-scroll>
-</ion-content>
+<super-tabs>
+  <super-tabs-toolbar slot="top">
+    <super-tab-button>
+      <ion-label color="light">Capture</ion-label>
+    </super-tab-button>
+    <super-tab-button>
+      <ion-label color="light">PostCapture</ion-label>
+    </super-tab-button>
+  </super-tabs-toolbar>
+  <super-tabs-container>
+    <super-tab>
+      <ion-content>
+        <ion-grid class="capture-tab"
+          ><ion-virtual-scroll
+            [items]="chunkedAssets$ | async"
+            approxItemHeight="100px"
+          >
+            <ion-row *virtualItem="let chunkedGroup">
+              <ion-col
+                *ngFor="let asset of chunkedGroup"
+                [size]="12 / itemsPerRow"
+              >
+                <ion-img [src]="asset.asset_file_thumbnail"></ion-img>
+              </ion-col>
+            </ion-row>
+          </ion-virtual-scroll>
+        </ion-grid>
+      </ion-content>
+    </super-tab>
+    <super-tab>
+      <ion-content>
+        <ion-virtual-scroll
+          [items]="assets$ | async"
+          approxItemHeight="300px"
+          class="post-capture-tab"
+        >
+          <ion-img
+            *virtualItem="let asset"
+            [src]="asset.sharable_copy"
+            class="ion-margin"
+          ></ion-img>
+        </ion-virtual-scroll>
+      </ion-content>
+    </super-tab>
+  </super-tabs-container>
+</super-tabs>
