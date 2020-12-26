@@ -61,6 +61,12 @@
             class="ion-margin-bottom"
           ></ion-img>
         </ion-virtual-scroll>
+        <ion-infinite-scroll
+          (ionInfinite)="loadPostCaptures($event)"
+          threshold="300px"
+        >
+          <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
       </ion-content>
     </super-tab>
   </super-tabs-container>
