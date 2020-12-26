@@ -30,10 +30,10 @@
                 *ngFor="let asset of chunkedGroup; trackBy: trackById"
                 [size]="12 / capturesPerRow"
               >
-                <ion-img
+                <app-img
                   [src]="asset.asset_file_thumbnail"
                   [style.height.px]="captureImageHeight"
-                ></ion-img>
+                ></app-img>
               </ion-col>
             </ion-row>
           </ion-virtual-scroll>
@@ -54,12 +54,12 @@
           [itemHeight]="postCaptureColumnHeight"
           class="post-capture-tab"
         >
-          <ion-img
+          <app-img
             *virtualItem="let asset"
             [src]="asset.sharable_copy"
             [style.height.px]="postCaptureImageHeight"
             class="ion-margin-bottom"
-          ></ion-img>
+          ></app-img>
         </ion-virtual-scroll>
         <ion-infinite-scroll
           (ionInfinite)="loadPostCaptures($event)"

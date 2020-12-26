@@ -4,21 +4,21 @@
   height: 100%;
 
   .capture-tab {
-    ion-img {
+    app-img {
       object-fit: cover;
     }
 
-    ion-img::part(image) {
+    app-img::part(image) {
       border-radius: 8px;
     }
   }
 
   .post-capture-tab {
-    ion-img {
+    app-img {
       object-fit: cover;
     }
 
-    ion-img::part(image) {
+    app-img::part(image) {
       border-radius: 8px;
     }
   }
