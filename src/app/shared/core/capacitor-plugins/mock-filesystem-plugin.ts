@@ -35,7 +35,7 @@ export class MockFilesystemPlugin implements FilesystemPlugin {
   private readonly files = new Map<string, string>();
 
   async readFile(options: FileReadOptions): Promise<FileReadResult> {
-    const path = `${options.directory || ''}/${options.path}`;
+    const path = `${options.directory ?? ''}/${options.path}`;
     if (!this.files.has(path)) {
       throw new Error(`File ${path} does not exist.`);
     }
@@ -48,7 +48,7 @@ export class MockFilesystemPlugin implements FilesystemPlugin {
   }
 
   async writeFile(options: FileWriteOptions): Promise<FileWriteResult> {
-    const path = `${options.directory || ''}/${options.path}`;
+    const path = `${options.directory ?? ''}/${options.path}`;
     if (!options.encoding) {
       this.files.set(path, options.data);
     } else {
@@ -65,16 +65,16 @@ export class MockFilesystemPlugin implements FilesystemPlugin {
   }
 
   async deleteFile(options: FileDeleteOptions): Promise<FileDeleteResult> {
-    const path = `${options.directory || ''}/${options.path}`;
+    const path = `${options.directory ?? ''}/${options.path}`;
     this.files.delete(path);
     return {};
   }
 
-  async mkdir(options: MkdirOptions): Promise<MkdirResult> {
+  async mkdir(_options: MkdirOptions): Promise<MkdirResult> {
     return {};
   }
 
-  async rmdir(options: RmdirOptions): Promise<RmdirResult> {
+  async rmdir(_options: RmdirOptions): Promise<RmdirResult> {
     throw new Error('Method not implemented.');
   }
 
@@ -82,9 +82,9 @@ export class MockFilesystemPlugin implements FilesystemPlugin {
     const directorys = groupBy([...this.files.keys()], path =>
       path.substring(0, path.lastIndexOf('/'))
     );
-    const targetDirectory = `${options.directory || ''}${options.path}`;
+    const targetDirectory = `${options.directory ?? ''}${options.path}`;
     const directory = directorys[targetDirectory];
-    if (!directory) {
+    if (!directory.length) {
       return { files: [] };
     }
     return {
@@ -94,25 +94,25 @@ export class MockFilesystemPlugin implements FilesystemPlugin {
     };
   }
 
-  async getUri(options: GetUriOptions): Promise<GetUriResult> {
+  async getUri(_options: GetUriOptions): Promise<GetUriResult> {
     throw new Error('Method not implemented.');
   }
 
-  async stat(options: StatOptions): Promise<StatResult> {
+  async stat(_options: StatOptions): Promise<StatResult> {
     throw new Error('Method not implemented.');
   }
 
-  async rename(options: RenameOptions): Promise<RenameResult> {
+  async rename(_options: RenameOptions): Promise<RenameResult> {
     throw new Error('Method not implemented.');
   }
 
-  async copy(options: CopyOptions): Promise<CopyResult> {
+  async copy(_options: CopyOptions): Promise<CopyResult> {
     throw new Error('Method not implemented.');
   }
 
   addListener(
-    eventName: string,
-    listenerFunc: () => any
+    _eventName: string,
+    _listenerFunc: () => any
   ): PluginListenerHandle {
     throw new Error('Method not implemented.');
   }

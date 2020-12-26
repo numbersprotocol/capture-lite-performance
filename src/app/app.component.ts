@@ -10,7 +10,7 @@ const { SplashScreen } = Plugins;
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private platform: Platform) {
+  constructor(private readonly platform: Platform) {
     this.initializeApp();
   }
 

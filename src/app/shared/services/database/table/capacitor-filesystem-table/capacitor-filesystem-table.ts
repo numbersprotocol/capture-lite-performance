@@ -102,7 +102,7 @@ export class CapacitorFilesystemTable<T extends Tuple> implements Table<T> {
         this.tuples$.next(
           uniqWith([...this.tuples$.value, ...tuples], comparator)
         );
-      } else if (onConflict === OnConflictStrategy.REPLACE) {
+      } else {
         this.tuples$.next(
           uniqWith([...tuples, ...this.tuples$.value], comparator)
         );

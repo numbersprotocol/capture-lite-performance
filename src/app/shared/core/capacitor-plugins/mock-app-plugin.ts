@@ -10,13 +10,14 @@ export class MockAppPlugin implements AppPlugin {
     return { remove: () => undefined };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   removeAllListeners(): void {}
 
   exitApp(): never {
     throw new Error('exited');
   }
 
-  async canOpenUrl(options: { url: string }): Promise<{ value: boolean }> {
+  async canOpenUrl(_options: { url: string }): Promise<{ value: boolean }> {
     return Promise.resolve({ value: true });
   }
 
@@ -30,7 +31,7 @@ export class MockAppPlugin implements AppPlugin {
     };
   }
 
-  async openUrl(options: { url: string }): Promise<{ completed: boolean }> {
+  async openUrl(_options: { url: string }): Promise<{ completed: boolean }> {
     return Promise.resolve({ completed: true });
   }
 }

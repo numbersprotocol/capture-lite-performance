@@ -18,34 +18,47 @@
   <super-tabs-container>
     <super-tab>
       <ion-content>
-        <ion-grid class="capture-tab"
-          ><ion-virtual-scroll
-            [items]="chunkedAssets$ | async"
-            approxItemHeight="100px"
+        <ion-grid class="capture-tab">
+          <!-- Use fixed itemHeight to avoid the bug: https://github.com/ionic-team/ionic-framework/issues/17540 -->
+          <ion-virtual-scroll
+            [items]="chunkedCaptures$ | async"
+            [trackBy]="trackById"
+            [itemHeight]="captureColumnHeight"
           >
             <ion-row *virtualItem="let chunkedGroup">
               <ion-col
-                *ngFor="let asset of chunkedGroup"
-                [size]="12 / itemsPerRow"
+                *ngFor="let asset of chunkedGroup; trackBy: trackById"
+                [size]="12 / capturesPerRow"
               >
-                <ion-img [src]="asset.asset_file_thumbnail"></ion-img>
+                <ion-img
+                  [src]="asset.asset_file_thumbnail"
+                  [style.height.px]="captureImageHeight"
+                ></ion-img>
               </ion-col>
             </ion-row>
           </ion-virtual-scroll>
+          <ion-infinite-scroll
+            (ionInfinite)="loadCaptures($event)"
+            threshold="100px"
+          >
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
         </ion-grid>
       </ion-content>
     </super-tab>
     <super-tab>
-      <ion-content>
+      <ion-content class="ion-padding">
         <ion-virtual-scroll
-          [items]="assets$ | async"
-          approxItemHeight="300px"
+          [items]="postCaptures$ | async"
+          [trackBy]="trackById"
+          [itemHeight]="postCaptureColumnHeight"
           class="post-capture-tab"
         >
           <ion-img
             *virtualItem="let asset"
             [src]="asset.sharable_copy"
-            class="ion-margin"
+            [style.height.px]="postCaptureImageHeight"
+            class="ion-margin-bottom"
           ></ion-img>
         </ion-virtual-scroll>
       </ion-content>

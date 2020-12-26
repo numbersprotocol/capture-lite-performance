@@ -15,7 +15,7 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     SharedModule,
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({ mode: 'md' }),
     AppRoutingModule,
     FormlyModule.forRoot({ extras: { lazyRender: true } }),
     FormlyIonicModule,

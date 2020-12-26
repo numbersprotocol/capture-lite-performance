@@ -51,7 +51,7 @@ export class LoginPage {
     private readonly router: Router
   ) {}
 
-  onSubmit() {
+  submit() {
     const action$ = this.diaBackendAuthService.login$(
       this.model.email,
       this.model.password

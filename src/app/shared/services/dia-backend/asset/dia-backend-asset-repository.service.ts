@@ -17,12 +17,13 @@ export class DiaBackendAssetRepository {
     private readonly authService: DiaBackendAuthService
   ) {}
 
-  getAll$() {
+  getAll$(options: GetAllOptions = { limit: 100, offset: 0 }) {
     return defer(async () => this._isFetching$.next(true)).pipe(
       concatMapTo(defer(() => this.authService.getAuthHeaders())),
       concatMap(headers =>
         this.httpClient.get<ListAssetResponse>(`${BASE_URL}/api/v2/assets/`, {
           headers,
+          params: { limit: `${options.limit}`, offset: `${options.offset}` },
         })
       ),
       pluck('results'),
@@ -42,6 +43,11 @@ export interface DiaBackendAsset extends Tuple {
   readonly asset_file: string;
   readonly asset_file_thumbnail: string;
   readonly sharable_copy: string;
+}
+
+interface GetAllOptions {
+  readonly limit?: number;
+  readonly offset?: number;
 }
 
 interface ListAssetResponse {

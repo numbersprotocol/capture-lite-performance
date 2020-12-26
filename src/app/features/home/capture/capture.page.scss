@@ -1,21 +1,25 @@
-.capture-tab {
-  ion-img {
-    height: 30vw;
-    object-fit: cover;
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .capture-tab {
+    ion-img {
+      object-fit: cover;
+    }
+
+    ion-img::part(image) {
+      border-radius: 8px;
+    }
   }
 
-  ion-img::part(image) {
-    border-radius: 8px;
-  }
-}
+  .post-capture-tab {
+    ion-img {
+      object-fit: cover;
+    }
 
-.post-capture-tab {
-  ion-img {
-    height: 90vw;
-    object-fit: cover;
-  }
-
-  ion-img::part(image) {
-    border-radius: 8px;
+    ion-img::part(image) {
+      border-radius: 8px;
+    }
   }
 }

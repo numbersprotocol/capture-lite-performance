@@ -27,13 +27,13 @@ export class MockLocalNotificationsPlugin implements LocalNotificationsPlugin {
     throw new Error('Method not implemented.');
   }
 
-  async registerActionTypes(options: {
+  async registerActionTypes(_options: {
     types: LocalNotificationActionType[];
   }): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  async cancel(pending: LocalNotificationPendingList): Promise<void> {
+  async cancel(_pending: LocalNotificationPendingList): Promise<void> {
     return;
   }
 
@@ -41,11 +41,11 @@ export class MockLocalNotificationsPlugin implements LocalNotificationsPlugin {
     throw new Error('Method not implemented.');
   }
 
-  async createChannel(channel: NotificationChannel): Promise<void> {
+  async createChannel(_channel: NotificationChannel): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  async deleteChannel(channel: NotificationChannel): Promise<void> {
+  async deleteChannel(_channel: NotificationChannel): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
@@ -66,8 +66,10 @@ export class MockLocalNotificationsPlugin implements LocalNotificationsPlugin {
     listenerFunc: (notificationAction: LocalNotificationActionPerformed) => void
   ): PluginListenerHandle;
   addListener(
-    eventName: 'localNotificationReceived' | 'localNotificationActionPerformed',
-    listenerFunc:
+    _eventName:
+      | 'localNotificationReceived'
+      | 'localNotificationActionPerformed',
+    _listenerFunc:
       | ((notification: LocalNotification) => void)
       | ((notificationAction: LocalNotificationActionPerformed) => void)
   ): PluginListenerHandle {

@@ -25,8 +25,8 @@ export class MockStoragePlugin implements StoragePlugin {
   }
 
   addListener(
-    eventName: string,
-    listenerFunc: () => any
+    _eventName: string,
+    _listenerFunc: () => any
   ): PluginListenerHandle {
     throw new Error('Method not implemented.');
   }

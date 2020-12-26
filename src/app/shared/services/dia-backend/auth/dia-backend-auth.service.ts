@@ -162,4 +162,5 @@ export interface ReadUserResponse {
   readonly email: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface CreateUserResponse {}

@@ -1,7 +1,7 @@
 <ion-content class="ion-padding">
   <ion-img src="/assets/images/capture.svg" class="logo"></ion-img>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="submit()">
     <formly-form [form]="form" [fields]="fields" [model]="model"> </formly-form>
     <ion-button type="submit" [disabled]="!form.valid" expand="full"
       >Login</ion-button
