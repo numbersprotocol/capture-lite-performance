@@ -83,8 +83,8 @@ export class MockFilesystemPlugin implements FilesystemPlugin {
       path.substring(0, path.lastIndexOf('/'))
     );
     const targetDirectory = `${options.directory ?? ''}${options.path}`;
-    const directory = directorys[targetDirectory];
-    if (!directory.length) {
+    const directory = directorys[targetDirectory] as string[] | undefined;
+    if (!directory || !directory.length) {
       return { files: [] };
     }
     return {

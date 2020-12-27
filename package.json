@@ -31,6 +31,8 @@
     "@ngx-formly/ionic": "^5.0.0",
     "@ngx-formly/schematics": "^5.10.10",
     "async-mutex": "^0.2.6",
+    "image-blob-reduce": "^2.2.0",
+    "immutable": "^4.0.0-rc.12",
     "lodash-es": "^4.17.20",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",

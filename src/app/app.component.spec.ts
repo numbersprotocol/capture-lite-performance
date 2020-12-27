@@ -33,6 +33,4 @@ describe('AppComponent', () => {
     expect(platformSpy.ready).toHaveBeenCalled();
     await platformReadySpy;
   });
-
-  // TODO: add more tests!
 });
