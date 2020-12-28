@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { SharedTestingModule } from '../../../../shared/shared-testing.module';
 import { verifyWithSha256AndEcdsa } from '../../../../utils/crypto/crypto';
 import { MimeType } from '../../../../utils/mime-type';
-import { ImageStore } from '../../image-store/image-store.service';
+import { ImageStore } from '../../file-store/image/image-store';
 import {
   AssetMeta,
   Assets,

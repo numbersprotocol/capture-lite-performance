@@ -2,7 +2,7 @@ import { sha256WithString } from '../../../../utils/crypto/crypto';
 import { sortObjectDeeplyByKey } from '../../../../utils/immutable/immutable';
 import { MimeType } from '../../../../utils/mime-type';
 import { Tuple } from '../../database/table/table';
-import { ImageStore } from '../../image-store/image-store.service';
+import { ImageStore } from '../../file-store/image/image-store';
 
 /**
  * - A box containing self-verifiable data.

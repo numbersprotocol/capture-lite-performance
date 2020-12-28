@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { Database } from '../../database/database.service';
 import { OnConflictStrategy } from '../../database/table/table';
-import { ImageStore } from '../../image-store/image-store.service';
+import { ImageStore } from '../../file-store/image/image-store';
 import { IndexedProofView, Proof } from './proof';
 
 @Injectable({

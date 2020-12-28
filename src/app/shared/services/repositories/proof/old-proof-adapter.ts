@@ -2,7 +2,7 @@ import { flow, groupBy, mapValues } from 'lodash/fp';
 import { blobToBase64 } from '../../../../utils/encoding/encoding';
 import { MimeType } from '../../../../utils/mime-type';
 import { Tuple } from '../../database/table/table';
-import { ImageStore } from '../../image-store/image-store.service';
+import { ImageStore } from '../../file-store/image/image-store';
 import { DefaultFactId, Proof, Signature } from './proof';
 
 /**
