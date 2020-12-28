@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { SharedTestingModule } from '../../shared-testing.module';
 import { ImageComponent } from './image.component';
 
 describe('ImageComponent', () => {
@@ -10,7 +10,7 @@ describe('ImageComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ImageComponent],
-        imports: [IonicModule.forRoot()],
+        imports: [SharedTestingModule],
       }).compileComponents();
 
       fixture = TestBed.createComponent(ImageComponent);

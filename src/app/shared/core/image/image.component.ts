@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { BehaviorSubject, of } from 'rxjs';
+import { switchAll, switchMap } from 'rxjs/operators';
 import { blobToBase64 } from '../../../utils/encoding/encoding';
 import { MimeType } from '../../../utils/mime-type';
+import { isNonNullable } from '../../../utils/rx-operators/rx-operators';
 import { Database } from '../../services/database/database.service';
 import { OnConflictStrategy, Tuple } from '../../services/database/table/table';
 import { CacheStore } from '../../services/file-store/cache/cache';
@@ -18,16 +19,21 @@ import { CacheStore } from '../../services/file-store/cache/cache';
 })
 export class ImageComponent {
   @Input() cacheBy?: string;
-  @Input() set src(value: string) {
-    this.updateUrl(value);
+  @Input()
+  set src(value: string) {
+    this._src$.next(value);
   }
+  private readonly _src$ = new BehaviorSubject<string | undefined>(undefined);
+  private readonly src$ = this._src$.asObservable().pipe(isNonNullable());
+  readonly url$ = this.src$.pipe(
+    switchMap(src => this.updateUrl(src)),
+    switchAll()
+  );
 
   private readonly cacheTable = this.database.getTable<Cache>(
     `${ImageComponent.name}_cache`
   );
-  private readonly _url$ = new BehaviorSubject<string | undefined>(undefined);
-  readonly url$ = this._url$.asObservable();
-  private readonly _isLoading$ = new BehaviorSubject(false);
+  private readonly _isLoading$ = new BehaviorSubject(true);
   readonly isLoading$ = this._isLoading$.asObservable();
 
   constructor(
@@ -41,34 +47,27 @@ export class ImageComponent {
     const cache = caches.find(
       cache => cache.key === this.cacheBy || cache.key === src
     );
-    if (!cache) return this.setUrlFromSrcAndCacheSrc(src);
+    if (!cache) return this.cacheSrc$(src);
     const cacheBase64 = await this.cacheStore.readCache(cache.fileIndex);
-    if (!cacheBase64) return this.setUrlFromSrcAndCacheSrc(src);
-    console.log('hit');
-
-    this._url$.next(`data:image/*;base64,${cacheBase64}`);
+    if (!cacheBase64) return this.cacheSrc$(src);
+    return of(`data:image/*;base64,${cacheBase64}`);
   }
 
-  private setUrlFromSrcAndCacheSrc(src: string) {
-    console.log('miss');
+  private cacheSrc$(src: string) {
+    return this.httpClient.get(src, { responseType: 'blob' }).pipe(
+      switchMap(async blob => {
+        const base64 = await blobToBase64(blob);
+        const fileIndex = await this.cacheStore.write(
+          base64,
+          blob.type as MimeType
+        );
+        const caches = [{ key: src, fileIndex }];
+        if (this.cacheBy) caches.push({ key: this.cacheBy, fileIndex });
+        await this.cacheTable.insert(caches, OnConflictStrategy.IGNORE);
 
-    this._url$.next(src);
-
-    this.httpClient
-      .get(src, { responseType: 'blob' })
-      .pipe(
-        concatMap(async blob => {
-          const base64 = await blobToBase64(blob);
-          return this.cacheStore.write(base64, blob.type as MimeType);
-        }),
-        concatMap(async fileIndex => {
-          const caches = [{ key: src, fileIndex }];
-          if (this.cacheBy) caches.push({ key: this.cacheBy, fileIndex });
-          this.cacheTable.insert(caches, OnConflictStrategy.IGNORE);
-        }),
-        untilDestroyed(this)
-      )
-      .subscribe();
+        return `data:${blob.type};base64,${base64}`;
+      })
+    );
   }
 
   imageWillLoad() {

@@ -4,7 +4,7 @@
 <ion-img
   part="ion-img"
   exportparts="image"
-  [src]="url$ | async"
+  [attr.src]="url$ | async"
   (ionImgWillLoad)="imageWillLoad()"
   (ionImgDidLoad)="imageDidLoad()"
   [class.isLoading]="isLoading$ | async"
