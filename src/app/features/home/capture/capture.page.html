@@ -22,7 +22,6 @@
           <!-- Use fixed itemHeight to avoid the bug: https://github.com/ionic-team/ionic-framework/issues/17540 -->
           <ion-virtual-scroll
             [items]="chunkedCaptures$ | async"
-            [trackBy]="trackById"
             [itemHeight]="captureColumnHeight"
           >
             <ion-row *virtualItem="let chunkedGroup">
@@ -32,6 +31,7 @@
               >
                 <app-img
                   [src]="asset.asset_file_thumbnail"
+                  [cacheBy]="asset.id + '_assetFileThumbnail'"
                   [style.height.px]="captureImageHeight"
                 ></app-img>
               </ion-col>
@@ -56,13 +56,13 @@
       <ion-content class="ion-padding">
         <ion-virtual-scroll
           [items]="postCaptures$ | async"
-          [trackBy]="trackById"
           [itemHeight]="postCaptureColumnHeight"
           class="post-capture-tab"
         >
           <app-img
             *virtualItem="let asset"
             [src]="asset.sharable_copy"
+            [cacheBy]="asset.id + '_sharableCopy'"
             [style.height.px]="postCaptureImageHeight"
             class="ion-margin-bottom"
           ></app-img>

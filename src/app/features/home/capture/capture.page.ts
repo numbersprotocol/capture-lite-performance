@@ -59,6 +59,10 @@ export class CapturePage implements OnInit {
     return item.id;
   }
 
+  trackChunkedGroupByIds(_: number, item: DiaBackendAsset[]) {
+    return item.map(i => i.id);
+  }
+
   captureColumnHeight(_item: DiaBackendAsset, _index: number) {
     const columnPaddingPx = 10;
     return CAPTURE_IMAGE_HEIGHT_PX + columnPaddingPx;
