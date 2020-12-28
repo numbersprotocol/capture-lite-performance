@@ -1,9 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, defer } from 'rxjs';
+import { BehaviorSubject, defer, forkJoin } from 'rxjs';
 import { concatMap, concatMapTo, pluck, tap } from 'rxjs/operators';
+import { base64ToBlob } from '../../../../utils/encoding/encoding';
+import { toExtension } from '../../../../utils/mime-type';
 import { GetAllOptions } from '../../../../utils/paging-source/paging-source';
 import { Tuple } from '../../database/table/table';
+import {
+  getOldSignatures,
+  getSortedProofInformation,
+} from '../../repositories/proof/old-proof-adapter';
+import { Proof } from '../../repositories/proof/proof';
 import { DiaBackendAuthService } from '../auth/dia-backend-auth.service';
 import { BASE_URL } from '../secret';
 
@@ -38,6 +45,21 @@ export class DiaBackendAssetRepository {
   isFetching$() {
     return this._isFetching$.asObservable();
   }
+
+  add$(proof: Proof) {
+    return forkJoin([
+      defer(() => this.authService.getAuthHeaders()),
+      defer(() => buildFormDataToCreateAsset(proof)),
+    ]).pipe(
+      concatMap(([headers, formData]) =>
+        this.httpClient.post<CreateAssetResponse>(
+          `${BASE_URL}/api/v2/assets/`,
+          formData,
+          { headers }
+        )
+      )
+    );
+  }
 }
 
 export interface DiaBackendAsset extends Tuple {
@@ -51,4 +73,27 @@ export interface DiaBackendAsset extends Tuple {
 
 interface ListAssetResponse {
   results: DiaBackendAsset[];
+}
+
+type CreateAssetResponse = DiaBackendAsset;
+
+async function buildFormDataToCreateAsset(proof: Proof) {
+  const formData = new FormData();
+
+  const info = await getSortedProofInformation(proof);
+  formData.set('meta', JSON.stringify(info));
+
+  formData.set('signature', JSON.stringify(getOldSignatures(proof)));
+
+  const fileBase64 = Object.keys(await proof.getAssets())[0];
+  const mimeType = Object.values(proof.indexedAssets)[0].mimeType;
+  formData.set(
+    'asset_file',
+    await base64ToBlob(fileBase64, mimeType),
+    `proof.${toExtension(mimeType)}`
+  );
+
+  formData.set('asset_file_mime_type', mimeType);
+
+  return formData;
 }

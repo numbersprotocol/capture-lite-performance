@@ -26,9 +26,7 @@ export class MockAppPlugin implements AppPlugin {
   }
 
   async getState(_options?: any): Promise<AppState> {
-    return {
-      isActive: true,
-    };
+    return { isActive: true };
   }
 
   async openUrl(_options: { url: string }): Promise<{ completed: boolean }> {

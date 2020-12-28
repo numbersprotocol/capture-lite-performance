@@ -1,7 +1,9 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Platform } from '@ionic/angular';
 import { AppComponent } from './app.component';
+import { CapacitorPluginsTestingModule } from './shared/core/capacitor-plugins/capacitor-plugins-testing.module';
 
 describe('AppComponent', () => {
   let platformReadySpy: Promise<void>;
@@ -17,6 +19,7 @@ describe('AppComponent', () => {
       TestBed.configureTestingModule({
         declarations: [AppComponent],
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        imports: [CapacitorPluginsTestingModule, HttpClientTestingModule],
         providers: [{ provide: Platform, useValue: platformSpy }],
       }).compileComponents();
     })

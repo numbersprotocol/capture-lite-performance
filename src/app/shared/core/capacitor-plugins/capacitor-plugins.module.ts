@@ -1,6 +1,7 @@
 import { InjectionToken, NgModule } from '@angular/core';
 import {
   AppPlugin,
+  CameraPlugin,
   FilesystemPlugin,
   GeolocationPlugin,
   LocalNotificationsPlugin,
@@ -11,6 +12,7 @@ import {
 
 const {
   App,
+  Camera,
   Filesystem,
   Geolocation,
   LocalNotifications,
@@ -19,6 +21,7 @@ const {
 } = Plugins;
 
 export const APP_PLUGIN = new InjectionToken<AppPlugin>('APP_PLUGIN');
+export const CAMERA_PLUGIN = new InjectionToken<CameraPlugin>('CAMERA_PLUGIN');
 export const GEOLOCATION_PLUGIN = new InjectionToken<GeolocationPlugin>(
   'GEOLOCATION_PLUGIN'
 );
@@ -38,6 +41,7 @@ export const PUSH_NOTIFICATIONS_PLUGIN = new InjectionToken<PushNotificationsPlu
 @NgModule({
   providers: [
     { provide: APP_PLUGIN, useValue: App },
+    { provide: CAMERA_PLUGIN, useValue: Camera },
     { provide: GEOLOCATION_PLUGIN, useValue: Geolocation },
     { provide: FILESYSTEM_PLUGIN, useValue: Filesystem },
     { provide: LOCAL_NOTIFICATIONS_PLUGIN, useValue: LocalNotifications },

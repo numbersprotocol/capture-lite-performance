@@ -24,19 +24,24 @@ export class FileStoreBase implements FileStore {
   private async initialize() {
     return this.mutex.runExclusive(async () => {
       if (this.hasInitialized) return;
-      const dirs = await this.filesystemPlugin.readdir({
-        directory: this.directory,
-        path: '',
-      });
-      if (!dirs.files.includes(this.rootDir)) {
-        await this.filesystemPlugin.mkdir({
-          directory: this.directory,
-          path: this.rootDir,
-          recursive: true,
-        });
-      }
+      await this.mkDirIfNotExist('', FileStoreBase.name);
+      await this.mkDirIfNotExist(FileStoreBase.name, this.id);
       this.hasInitialized = true;
     });
+  }
+
+  private async mkDirIfNotExist(path: string, name: string) {
+    const dirs = await this.filesystemPlugin.readdir({
+      directory: this.directory,
+      path,
+    });
+    if (!dirs.files.includes(name)) {
+      await this.filesystemPlugin.mkdir({
+        directory: this.directory,
+        path: `${path}/${name}`,
+        recursive: true,
+      });
+    }
   }
 
   async read(index: string): Promise<string> {

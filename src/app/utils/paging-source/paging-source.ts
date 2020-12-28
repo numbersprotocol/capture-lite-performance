@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { single, tap } from 'rxjs/operators';
 
 export class PagingSource<T> {
   private readonly _data$ = new BehaviorSubject<T[]>([]);
@@ -11,22 +11,34 @@ export class PagingSource<T> {
     private readonly pagingSize = 20
   ) {}
 
-  loadData$(event?: InfiniteScrollEvent) {
+  refresh$() {
+    this.currentOffset = 0;
     return this.pagingGetAllFunction$({
       pagingSize: this.pagingSize,
       offset: this.currentOffset,
     }).pipe(
+      single(),
+      tap(data => {
+        this._data$.next(data);
+        this.currentOffset += data.length;
+      })
+    );
+  }
+
+  loadData$(event: InfiniteScrollEvent) {
+    return this.pagingGetAllFunction$({
+      pagingSize: this.pagingSize,
+      offset: this.currentOffset,
+    }).pipe(
+      single(),
       tap(data => {
         if (data.length) {
           // eslint-disable-next-line rxjs/no-subject-value
           this._data$.next(this._data$.value.concat(data));
           this.currentOffset += data.length;
         }
-
-        if (event) {
-          if (data.length === 0) event.target.disabled = true;
-          event.target.complete();
-        }
+        if (data.length === 0) event.target.disabled = true;
+        event.target.complete();
       })
     );
   }

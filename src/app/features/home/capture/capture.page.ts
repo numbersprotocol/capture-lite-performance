@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { chunk } from 'lodash-es';
-import { map } from 'rxjs/operators';
+import { defer } from 'rxjs';
+import { concatMap, map, single, tap } from 'rxjs/operators';
+import { CameraService } from '../../../shared/services/camera/camera.service';
+import { CollectorService } from '../../../shared/services/collector/collector.service';
 import {
   DiaBackendAsset,
   DiaBackendAssetRepository,
@@ -38,12 +41,18 @@ export class CapturePage implements OnInit {
   readonly postCaptureImageHeight = POST_CAPTURE_IMAGE_HEIGHT_PX;
 
   constructor(
-    private readonly diaBackendAssetRepository: DiaBackendAssetRepository
+    private readonly diaBackendAssetRepository: DiaBackendAssetRepository,
+    private readonly cameraService: CameraService,
+    private readonly collectorService: CollectorService
   ) {}
 
   ngOnInit() {
-    this.captureSource.loadData$().pipe(untilDestroyed(this)).subscribe();
-    this.postCaptureSource.loadData$().pipe(untilDestroyed(this)).subscribe();
+    this.refresh();
+  }
+
+  refresh() {
+    this.captureSource.refresh$().pipe(untilDestroyed(this)).subscribe();
+    this.postCaptureSource.refresh$().pipe(untilDestroyed(this)).subscribe();
   }
 
   trackById(_: number, item: DiaBackendAsset) {
@@ -71,6 +80,22 @@ export class CapturePage implements OnInit {
     return this.postCaptureSource
       .loadData$(event)
       .pipe(untilDestroyed(this))
+      .subscribe();
+  }
+
+  capture() {
+    return defer(() => this.cameraService.capture())
+      .pipe(
+        concatMap(photo =>
+          this.collectorService.runAndStore({
+            [photo.base64]: { mimeType: photo.mimeType },
+          })
+        ),
+        concatMap(proof => this.diaBackendAssetRepository.add$(proof)),
+        single(),
+        tap(() => this.refresh()),
+        untilDestroyed(this)
+      )
       .subscribe();
   }
 }
