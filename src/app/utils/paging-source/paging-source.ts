@@ -1,3 +1,4 @@
+import { IonInfiniteScroll } from '@ionic/angular';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { single, tap } from 'rxjs/operators';
 
@@ -54,8 +55,5 @@ export interface PagingFetchFunctionOptions {
 }
 
 export interface InfiniteScrollEvent extends CustomEvent {
-  readonly target: EventTarget & {
-    disabled: boolean;
-    complete(): void;
-  };
+  readonly target: EventTarget & IonInfiniteScroll;
 }

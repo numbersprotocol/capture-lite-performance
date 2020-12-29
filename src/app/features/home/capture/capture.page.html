@@ -18,11 +18,18 @@
   <super-tabs-container>
     <super-tab>
       <ion-content>
+        <ion-refresher
+          (ionRefresh)="refreshCapture($event, captureInfiniteScroll)"
+          slot="fixed"
+        >
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
         <ion-grid class="capture-tab">
           <!-- Use fixed itemHeight to avoid the bug: https://github.com/ionic-team/ionic-framework/issues/17540 -->
           <ion-virtual-scroll
             [items]="chunkedCaptures$ | async"
             [itemHeight]="captureColumnHeight"
+            class="ion-margin-bottom"
           >
             <ion-row *virtualItem="let chunkedGroup">
               <ion-col
@@ -40,14 +47,14 @@
               </ion-col>
             </ion-row>
           </ion-virtual-scroll>
-          <ion-infinite-scroll
-            (ionInfinite)="loadCaptures($event)"
-            threshold="100px"
-          >
-            <ion-infinite-scroll-content></ion-infinite-scroll-content>
-          </ion-infinite-scroll>
         </ion-grid>
-
+        <ion-infinite-scroll
+          #captureInfiniteScroll
+          (ionInfinite)="loadCaptures($event)"
+          threshold="10px"
+        >
+          <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <ion-fab-button (click)="capture()">
             <ion-icon name="camera"></ion-icon>
@@ -57,6 +64,12 @@
     </super-tab>
     <super-tab>
       <ion-content>
+        <ion-refresher
+          (ionRefresh)="refreshPostCapture($event, postCaptureInfiniteScroll)"
+          slot="fixed"
+        >
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
         <ion-virtual-scroll
           [items]="postCaptures$ | async"
           [itemHeight]="postCaptureColumnHeight"
@@ -70,8 +83,9 @@
           ></app-post-capture>
         </ion-virtual-scroll>
         <ion-infinite-scroll
+          #postCaptureInfiniteScroll
           (ionInfinite)="loadPostCaptures($event)"
-          threshold="300px"
+          threshold="10px"
         >
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>

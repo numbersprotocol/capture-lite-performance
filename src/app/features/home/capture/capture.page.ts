@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IonInfiniteScroll, IonRefresher } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { chunk, sortBy } from 'lodash-es';
 import { combineLatest, defer } from 'rxjs';
@@ -74,14 +75,35 @@ export class CapturePage implements OnInit {
     this.refreshPostCapture();
   }
 
-  refreshCapture() {
-    this.captureRemoteSource.refresh$().pipe(untilDestroyed(this)).subscribe();
+  refreshCapture(
+    event?: RefresherEvent,
+    ionInfiniteScroll?: IonInfiniteScroll
+  ) {
+    this.captureRemoteSource
+      .refresh$()
+      .pipe(
+        tap(() => {
+          if (ionInfiniteScroll) ionInfiniteScroll.disabled = false;
+          event?.target.complete();
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
-  refreshPostCapture() {
+  refreshPostCapture(
+    event?: RefresherEvent,
+    ionInfiniteScroll?: IonInfiniteScroll
+  ) {
     this.postCaptureRemoteSource
       .refresh$()
-      .pipe(untilDestroyed(this))
+      .pipe(
+        tap(() => {
+          if (ionInfiniteScroll) ionInfiniteScroll.disabled = false;
+          event?.target.complete();
+        }),
+        untilDestroyed(this)
+      )
       .subscribe();
   }
 
@@ -150,4 +172,8 @@ function mergeDiaBackendAssetsAndProofs(
   }
 
   return items;
+}
+
+interface RefresherEvent extends CustomEvent {
+  readonly target: EventTarget & IonRefresher;
 }
