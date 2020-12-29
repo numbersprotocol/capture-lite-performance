@@ -4,11 +4,11 @@
   height: 100%;
 
   .capture-tab {
-    app-img {
+    app-capture-item::part(app-img) {
       object-fit: cover;
     }
 
-    app-img::part(image) {
+    app-capture-item::part(image) {
       border-radius: 8px;
     }
   }

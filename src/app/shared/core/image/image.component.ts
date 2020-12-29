@@ -6,6 +6,7 @@ import { switchAll, switchMap } from 'rxjs/operators';
 import { blobToBase64 } from '../../../utils/encoding/encoding';
 import { MimeType } from '../../../utils/mime-type';
 import { isNonNullable } from '../../../utils/rx-operators/rx-operators';
+import { toDataUrl } from '../../../utils/url';
 import { Database } from '../../services/database/database.service';
 import { OnConflictStrategy, Tuple } from '../../services/database/table/table';
 import { CacheStore } from '../../services/file-store/cache/cache';
@@ -18,7 +19,7 @@ import { CacheStore } from '../../services/file-store/cache/cache';
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class ImageComponent {
-  @Input() cacheBy?: string;
+  @Input() cacheKey?: string;
   @Input()
   set src(value: string) {
     this._src$.next(value);
@@ -45,12 +46,12 @@ export class ImageComponent {
   private async updateUrl(src: string) {
     const caches = await this.cacheTable.queryAll();
     const cache = caches.find(
-      cache => cache.key === this.cacheBy || cache.key === src
+      cache => cache.key === this.cacheKey || cache.key === src
     );
     if (!cache) return this.cacheSrc$(src);
     const cacheBase64 = await this.cacheStore.readCache(cache.fileIndex);
     if (!cacheBase64) return this.cacheSrc$(src);
-    return of(`data:image/*;base64,${cacheBase64}`);
+    return of(toDataUrl(cacheBase64, 'image/*'));
   }
 
   private cacheSrc$(src: string) {
@@ -62,10 +63,10 @@ export class ImageComponent {
           blob.type as MimeType
         );
         const caches = [{ key: src, fileIndex }];
-        if (this.cacheBy) caches.push({ key: this.cacheBy, fileIndex });
+        if (this.cacheKey) caches.push({ key: this.cacheKey, fileIndex });
         await this.cacheTable.insert(caches, OnConflictStrategy.IGNORE);
 
-        return `data:${blob.type};base64,${base64}`;
+        return toDataUrl(base64, blob.type);
       })
     );
   }

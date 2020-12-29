@@ -1,4 +1,5 @@
 import { MimeType } from '../mime-type';
+import { toDataUrl } from '../url';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -37,7 +38,7 @@ export function arrayBufferToString(arrayBuffer: ArrayBuffer) {
 }
 
 export async function base64ToBlob(base64: string, mimeType: MimeType) {
-  const dataUrl = `data:${mimeType};base64,${base64}`;
+  const dataUrl = toDataUrl(base64, mimeType);
   const response = await fetch(dataUrl);
   return response.blob();
 }

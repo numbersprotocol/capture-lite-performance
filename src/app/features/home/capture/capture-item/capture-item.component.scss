@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  object-fit: contain;
+
+  app-img {
+    height: 100%;
+    width: 100%;
+    object-fit: inherit;
+    object-position: inherit;
+  }
+}

@@ -26,14 +26,13 @@
           >
             <ion-row *virtualItem="let chunkedGroup">
               <ion-col
-                *ngFor="let asset of chunkedGroup; trackBy: trackById"
+                *ngFor="let item of chunkedGroup; trackBy: trackById"
                 [size]="12 / capturesPerRow"
               >
-                <app-img
-                  [src]="asset.asset_file_thumbnail"
-                  [cacheBy]="asset.id + '_assetFileThumbnail'"
-                  [style.height.px]="captureImageHeight"
-                ></app-img>
+                <app-capture-item
+                  [item]="item"
+                  [style.height.px]="captureItemHeight"
+                ></app-capture-item>
               </ion-col>
             </ion-row>
           </ion-virtual-scroll>
@@ -62,7 +61,7 @@
           <app-img
             *virtualItem="let asset"
             [src]="asset.sharable_copy"
-            [cacheBy]="asset.id + '_sharableCopy'"
+            [cacheKey]="asset.id + '_sharableCopy'"
             [style.height.px]="postCaptureImageHeight"
             class="ion-margin-bottom"
           ></app-img>

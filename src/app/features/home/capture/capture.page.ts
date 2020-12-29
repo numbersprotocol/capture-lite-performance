@@ -13,8 +13,9 @@ import {
   InfiniteScrollEvent,
   PagingSource,
 } from '../../../utils/paging-source/paging-source';
+import { CaptureItem } from './capture-item/capture-item.component';
 
-const CAPTURE_IMAGE_HEIGHT_PX = 110;
+const CAPTURE_ITEM_HEIGHT_PX = 110;
 const POST_CAPTURE_IMAGE_HEIGHT_PX = 350;
 
 @UntilDestroy({ checkProperties: true })
@@ -24,20 +25,25 @@ const POST_CAPTURE_IMAGE_HEIGHT_PX = 350;
   styleUrls: ['./capture.page.scss'],
 })
 export class CapturePage implements OnInit {
-  private readonly captureSource = new PagingSource(options =>
+  private readonly captureRemoteSource = new PagingSource(options =>
     this.diaBackendAssetRepository.getAll$(options)
   );
-  readonly chunkedCaptures$ = this.captureSource.data$.pipe(
+  readonly chunkedCaptures$ = this.captureRemoteSource.data$.pipe(
+    map(diaBackendAssets =>
+      diaBackendAssets.map(
+        diaBackendAsset => new CaptureItem({ diaBackendAsset })
+      )
+    ),
     map(captures => chunk(captures, this.capturesPerRow))
   );
   readonly capturesPerRow = 3;
-  readonly captureImageHeight = CAPTURE_IMAGE_HEIGHT_PX;
+  readonly captureItemHeight = CAPTURE_ITEM_HEIGHT_PX;
 
-  private readonly postCaptureSource = new PagingSource(
+  private readonly postCaptureRemoteSource = new PagingSource(
     options => this.diaBackendAssetRepository.getAll$(options),
     10
   );
-  readonly postCaptures$ = this.postCaptureSource.data$;
+  readonly postCaptures$ = this.postCaptureRemoteSource.data$;
   readonly postCaptureImageHeight = POST_CAPTURE_IMAGE_HEIGHT_PX;
 
   constructor(
@@ -51,8 +57,11 @@ export class CapturePage implements OnInit {
   }
 
   refresh() {
-    this.captureSource.refresh$().pipe(untilDestroyed(this)).subscribe();
-    this.postCaptureSource.refresh$().pipe(untilDestroyed(this)).subscribe();
+    this.captureRemoteSource.refresh$().pipe(untilDestroyed(this)).subscribe();
+    this.postCaptureRemoteSource
+      .refresh$()
+      .pipe(untilDestroyed(this))
+      .subscribe();
   }
 
   trackById(_: number, item: DiaBackendAsset) {
@@ -65,7 +74,7 @@ export class CapturePage implements OnInit {
 
   captureColumnHeight(_item: DiaBackendAsset, _index: number) {
     const columnPaddingPx = 10;
-    return CAPTURE_IMAGE_HEIGHT_PX + columnPaddingPx;
+    return CAPTURE_ITEM_HEIGHT_PX + columnPaddingPx;
   }
 
   postCaptureColumnHeight(_item: DiaBackendAsset, _index: number) {
@@ -74,14 +83,14 @@ export class CapturePage implements OnInit {
   }
 
   loadCaptures(event: InfiniteScrollEvent) {
-    return this.captureSource
+    return this.captureRemoteSource
       .loadData$(event)
       .pipe(untilDestroyed(this))
       .subscribe();
   }
 
   loadPostCaptures(event: InfiniteScrollEvent) {
-    return this.postCaptureSource
+    return this.postCaptureRemoteSource
       .loadData$(event)
       .pipe(untilDestroyed(this))
       .subscribe();

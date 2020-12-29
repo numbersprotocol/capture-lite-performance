@@ -9,6 +9,7 @@ import { Tuple } from '../../database/table/table';
 import {
   getOldSignatures,
   getSortedProofInformation,
+  SortedProofInformation,
 } from '../../repositories/proof/old-proof-adapter';
 import { Proof } from '../../repositories/proof/proof';
 import { DiaBackendAuthService } from '../auth/dia-backend-auth.service';
@@ -69,6 +70,7 @@ export interface DiaBackendAsset extends Tuple {
   readonly asset_file: string;
   readonly asset_file_thumbnail: string;
   readonly sharable_copy: string;
+  readonly information: SortedProofInformation;
 }
 
 interface ListAssetResponse {
