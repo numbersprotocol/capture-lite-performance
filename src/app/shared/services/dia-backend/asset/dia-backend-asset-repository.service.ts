@@ -26,7 +26,7 @@ export class DiaBackendAssetRepository {
     private readonly authService: DiaBackendAuthService
   ) {}
 
-  getAll$(options: GetAllOptions = { pagingSize: 100, offset: 0 }) {
+  fetchAll$(options: GetAllOptions = { pagingSize: 100, offset: 0 }) {
     return defer(async () => this._isFetching$.next(true)).pipe(
       concatMapTo(defer(() => this.authService.getAuthHeaders())),
       concatMap(headers =>

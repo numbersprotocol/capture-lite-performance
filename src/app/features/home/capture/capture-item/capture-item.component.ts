@@ -68,8 +68,7 @@ export class CaptureItem {
   async getThumbnailUrl() {
     if (this.diaBackendAsset) return this.diaBackendAsset.asset_file_thumbnail;
     if (this.proof) {
-      const base64 = await this.proof.getThumbnailBase64();
-      if (base64) return toDataUrl(base64, 'image/*');
+      return this.proof.getThumbnailUrl();
     }
     if (this.assets) {
       const [base64, meta] = Object.entries(this.assets)[0];

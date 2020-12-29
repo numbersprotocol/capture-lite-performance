@@ -7,13 +7,13 @@ export class PagingSource<T> {
   private currentOffset = 0;
 
   constructor(
-    private readonly pagingGetAllFunction$: PagingGetAllFunction<T>,
+    private readonly pagingFetchAllFunction$: PagingFetchAllFunction<T>,
     private readonly pagingSize = 20
   ) {}
 
   refresh$() {
     this.currentOffset = 0;
-    return this.pagingGetAllFunction$({
+    return this.pagingFetchAllFunction$({
       pagingSize: this.pagingSize,
       offset: this.currentOffset,
     }).pipe(
@@ -26,7 +26,7 @@ export class PagingSource<T> {
   }
 
   loadData$(event: InfiniteScrollEvent) {
-    return this.pagingGetAllFunction$({
+    return this.pagingFetchAllFunction$({
       pagingSize: this.pagingSize,
       offset: this.currentOffset,
     }).pipe(
@@ -44,7 +44,7 @@ export class PagingSource<T> {
   }
 }
 
-type PagingGetAllFunction<T> = (options: GetAllOptions) => Observable<T[]>;
+type PagingFetchAllFunction<T> = (options: GetAllOptions) => Observable<T[]>;
 
 export interface GetAllOptions {
   readonly pagingSize: number;

@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { chunk } from 'lodash-es';
-import { defer } from 'rxjs';
-import { concatMap, map, single, tap } from 'rxjs/operators';
+import { combineLatest, defer } from 'rxjs';
+import { concatMap, first, map, single, tap } from 'rxjs/operators';
 import { CameraService } from '../../../shared/services/camera/camera.service';
 import { CollectorService } from '../../../shared/services/collector/collector.service';
 import {
   DiaBackendAsset,
   DiaBackendAssetRepository,
 } from '../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
+import { getOldProof } from '../../../shared/services/repositories/proof/old-proof-adapter';
+import { Proof } from '../../../shared/services/repositories/proof/proof';
+import { ProofRepository } from '../../../shared/services/repositories/proof/proof-repository.service';
 import {
   InfiniteScrollEvent,
   PagingSource,
@@ -26,13 +29,14 @@ const POST_CAPTURE_IMAGE_HEIGHT_PX = 350;
 })
 export class CapturePage implements OnInit {
   private readonly captureRemoteSource = new PagingSource(options =>
-    this.diaBackendAssetRepository.getAll$(options)
+    this.diaBackendAssetRepository.fetchAll$(options).pipe(first())
   );
-  readonly chunkedCaptures$ = this.captureRemoteSource.data$.pipe(
-    map(diaBackendAssets =>
-      diaBackendAssets.map(
-        diaBackendAsset => new CaptureItem({ diaBackendAsset })
-      )
+  readonly chunkedCaptures$ = combineLatest([
+    this.captureRemoteSource.data$,
+    this.proofRepository.getAll$(),
+  ]).pipe(
+    map(([diaBackendAssets, proofs]) =>
+      mergeDiaBackendAssetsAndProofs(diaBackendAssets, proofs)
     ),
     map(captures => chunk(captures, this.capturesPerRow))
   );
@@ -40,7 +44,7 @@ export class CapturePage implements OnInit {
   readonly captureItemHeight = CAPTURE_ITEM_HEIGHT_PX;
 
   private readonly postCaptureRemoteSource = new PagingSource(
-    options => this.diaBackendAssetRepository.getAll$(options),
+    options => this.diaBackendAssetRepository.fetchAll$(options),
     10
   );
   readonly postCaptures$ = this.postCaptureRemoteSource.data$;
@@ -49,7 +53,8 @@ export class CapturePage implements OnInit {
   constructor(
     private readonly diaBackendAssetRepository: DiaBackendAssetRepository,
     private readonly cameraService: CameraService,
-    private readonly collectorService: CollectorService
+    private readonly collectorService: CollectorService,
+    private readonly proofRepository: ProofRepository
   ) {}
 
   ngOnInit() {
@@ -111,4 +116,26 @@ export class CapturePage implements OnInit {
       )
       .subscribe();
   }
+}
+
+function mergeDiaBackendAssetsAndProofs(
+  diaBackendAssets: DiaBackendAsset[],
+  proofs: Proof[]
+) {
+  let unpublishedProofs = proofs;
+  const items: CaptureItem[] = [];
+
+  for (const diaBackendAsset of diaBackendAssets) {
+    const found = proofs.find(
+      proof => getOldProof(proof).hash === diaBackendAsset.proof_hash
+    );
+    unpublishedProofs = unpublishedProofs.filter(proof => proof !== found);
+    items.push(new CaptureItem({ diaBackendAsset, proof: found }));
+  }
+
+  for (const unpublished of unpublishedProofs) {
+    items.push(new CaptureItem({ proof: unpublished }));
+  }
+
+  return items;
 }

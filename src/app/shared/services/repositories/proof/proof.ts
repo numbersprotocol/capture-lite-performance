@@ -1,6 +1,7 @@
 import { sha256WithString } from '../../../../utils/crypto/crypto';
 import { sortObjectDeeplyByKey } from '../../../../utils/immutable/immutable';
 import { MimeType } from '../../../../utils/mime-type';
+import { toDataUrl } from '../../../../utils/url';
 import { Tuple } from '../../database/table/table';
 import { ImageStore } from '../../file-store/image/image-store';
 
@@ -113,7 +114,7 @@ export class Proof {
     return Object.fromEntries(assetEntries);
   }
 
-  async getThumbnailBase64() {
+  async getThumbnailUrl() {
     const imageAsset = Object.entries(this.indexedAssets).find(([_, meta]) =>
       meta.mimeType.startsWith('image')
     );
@@ -121,7 +122,11 @@ export class Proof {
       return undefined;
     }
     const [index, assetMeta] = imageAsset;
-    return this.imageStore.readThumbnail(index, assetMeta.mimeType);
+    const base64 = await this.imageStore.readThumbnail(
+      index,
+      assetMeta.mimeType
+    );
+    return toDataUrl(base64, assetMeta.mimeType);
   }
 
   getFactValue(id: string) {

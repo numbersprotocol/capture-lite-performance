@@ -7,7 +7,7 @@ import { DiaBackendAssetRepository } from './dia-backend-asset-repository.servic
   providedIn: 'root',
 })
 export class DiaBackendAssetTestingRepository extends DiaBackendAssetRepository {
-  getAll$(_options: GetAllOptions) {
+  fetchAll$(_options: GetAllOptions) {
     return of([]);
   }
 }
