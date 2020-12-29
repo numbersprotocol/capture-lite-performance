@@ -20,6 +20,16 @@
         "prefer-const": "error",
         "no-param-reassign": "error",
         "no-else-return": "error",
+        "max-len": [
+          "error",
+          {
+            "code": 100,
+            "ignoreStrings": true,
+            "ignoreUrls": true,
+            "ignoreTemplateLiterals": true,
+            "ignoreRegExpLiterals": true
+          }
+        ],
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-unused-vars": [

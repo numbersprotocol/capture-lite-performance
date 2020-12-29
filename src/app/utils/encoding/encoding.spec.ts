@@ -34,7 +34,6 @@ describe('encoding', () => {
 
   it('should convert between base64 and blob', async () => {
     const base64 =
-      // eslint-disable-next-line max-len
       'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAABHNCSVQICAgIfAhkiAAAABl0RVh0U29mdHdhcmUAZ25vbWUtc2NyZWVuc2hvdO8Dvz4AAAA9aVRYdENyZWF0aW9uIFRpbWUAAAAAADIwMjDlubTlhavmnIgxMeaXpSAo6YCx5LqMKSAxMeaZgjIw5YiGMTbnp5JpXef5AAAAP0lEQVQImWOUk5P7z4AFMGETZGBgYGA+e3xSg7uFFAPD/dsM19/8QUhcvvOz4auWNUNGlATDnTWXGR7/g0gAAFsdErMML91eAAAAAElFTkSuQmCC';
     const mimeType: MimeType = 'image/png';
 

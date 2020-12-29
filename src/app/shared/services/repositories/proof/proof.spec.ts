@@ -245,7 +245,6 @@ describe('Proof utils', () => {
       assets: ASSETS,
       truth: TRUTH,
     };
-    // eslint-disable-next-line max-len
     const expected = `{"assets":{"${ASSET2_BASE64}":{"mimeType":"${ASSET2_MIMETYPE}"},"${ASSET1_BASE64}":{"mimeType":"${ASSET1_MIMETYPE}"}},"truth":{"providers":{"${CAPACITOR}":{"${DefaultFactId.DEVICE_NAME}":"${DEVICE_NAME_VALUE2}","${DefaultFactId.GEOLOCATION_LATITUDE}":${GEOLOCATION_LATITUDE2},"${DefaultFactId.GEOLOCATION_LONGITUDE}":${GEOLOCATION_LONGITUDE2},"${HUMIDITY}":${HUMIDITY_VALUE}},"${INFO_SNAPSHOT}":{"${DefaultFactId.DEVICE_NAME}":"${DEVICE_NAME_VALUE1}","${DefaultFactId.GEOLOCATION_LATITUDE}":${GEOLOCATION_LATITUDE1},"${DefaultFactId.GEOLOCATION_LONGITUDE}":${GEOLOCATION_LONGITUDE1}}},"timestamp":${TIMESTAMP}}}`;
     expect(getSerializedSortedSignedTargets(signedTargets)).toEqual(expected);
   });
@@ -253,7 +252,6 @@ describe('Proof utils', () => {
 
 const ASSET1_MIMETYPE: MimeType = 'image/png';
 const ASSET1_BASE64 =
-  // eslint-disable-next-line max-len
   'iVBORw0KGgoAAAANSUhEUgAAAAYAAAADCAYAAACwAX77AAAABHNCSVQICAgIfAhkiAAAABl0RVh0U29mdHdhcmUAZ25vbWUtc2NyZWVuc2hvdO8Dvz4AAABAaVRYdENyZWF0aW9uIFRpbWUAAAAAADIwMjDlubTljYHkuIDmnIgxMOaXpSAo6YCx5LqMKSAyMOaZgjU55YiGMzfnp5JnJvHNAAAAFUlEQVQImWM0MTH5z4AFMGETxCsBAHRhAaHOZzVQAAAAAElFTkSuQmCC';
 const ASSET1_META: AssetMeta = { mimeType: ASSET1_MIMETYPE };
 const ASSET2_MIMETYPE: MimeType = 'image/png';
@@ -300,7 +298,6 @@ const SIGNATURE_PROVIDER_ID = 'CAPTURE';
 const VALID_SIGNATURE =
   '575cbd72438eec799ffc5d78b45d968b65fd4597744d2127cd21556ceb63dff4a94f409d87de8d1f554025efdf56b8445d8d18e661b79754a25f45d05f4e26ac';
 const PUBLIC_KEY =
-  // eslint-disable-next-line max-len
   '3059301306072a8648ce3d020106082a8648ce3d03010703420004bc23d419027e59bf1eb94c18bfa4ab5fb6ca8ae83c94dbac5bfdfac39ac8ae16484e23b4d522906c4cd8c7cb1a34cd820fb8d065e1b32c8a28320a68fff243f8';
 const SIGNATURES_VALID: Signatures = {
   [SIGNATURE_PROVIDER_ID]: {
