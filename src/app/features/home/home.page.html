@@ -2,12 +2,12 @@
   <ion-content>
     <ion-list>
       <ion-menu-toggle>
-        <ion-item routerLink="/home/capture" button>
+        <ion-item routerLink="/home/capture" routerDirection="root" button>
           <ion-label>Capture</ion-label>
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle>
-        <ion-item routerLink="/home/profile" button>
+        <ion-item routerLink="/home/profile" routerDirection="root" button>
           <ion-label>Profile</ion-label>
         </ion-item>
       </ion-menu-toggle>
@@ -16,5 +16,5 @@
 </ion-menu>
 
 <div id="main-content">
-  <router-outlet id="main-content"></router-outlet>
+  <ion-router-outlet id="main-content"></ion-router-outlet>
 </div>

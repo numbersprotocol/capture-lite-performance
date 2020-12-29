@@ -43,6 +43,18 @@ export class DiaBackendAssetRepository {
     );
   }
 
+  fetchById$(id: string) {
+    return defer(async () => this._isFetching$.next(true)).pipe(
+      concatMapTo(defer(() => this.authService.getAuthHeaders())),
+      concatMap(headers =>
+        this.httpClient.get<ReadAssetResponse>(
+          `${BASE_URL}/api/v2/assets/${id}/`,
+          { headers }
+        )
+      )
+    );
+  }
+
   isFetching$() {
     return this._isFetching$.asObservable();
   }
@@ -66,16 +78,19 @@ export class DiaBackendAssetRepository {
 export interface DiaBackendAsset extends Tuple {
   readonly id: string;
   readonly proof_hash: string;
-  readonly is_original_owner: boolean;
   readonly asset_file: string;
   readonly asset_file_thumbnail: string;
   readonly sharable_copy: string;
   readonly information: SortedProofInformation;
+  readonly owner: string;
+  readonly is_original_owner: boolean;
 }
 
 interface ListAssetResponse {
   results: DiaBackendAsset[];
 }
+
+type ReadAssetResponse = DiaBackendAsset;
 
 type CreateAssetResponse = DiaBackendAsset;
 

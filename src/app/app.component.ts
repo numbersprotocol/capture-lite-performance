@@ -5,6 +5,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { concatMap, single } from 'rxjs/operators';
 import { CameraService } from './shared/services/camera/camera.service';
 import { CollectorService } from './shared/services/collector/collector.service';
+import { CapacitorFactsProvider } from './shared/services/collector/facts/capacitor-facts-provider/capacitor-facts-provider.service';
+import { WebCryptoApiSignatureProvider } from './shared/services/collector/signature/web-crypto-api-signature-provider/web-crypto-api-signature-provider.service';
 import { DiaBackendAssetRepository } from './shared/services/dia-backend/asset/dia-backend-asset-repository.service';
 
 const { SplashScreen } = Plugins;
@@ -20,7 +22,9 @@ export class AppComponent {
     private readonly platform: Platform,
     private readonly cameraService: CameraService,
     private readonly collectorService: CollectorService,
-    private readonly diaBackendAssetRepository: DiaBackendAssetRepository
+    private readonly diaBackendAssetRepository: DiaBackendAssetRepository,
+    private readonly webCryptoApiSignatureProvider: WebCryptoApiSignatureProvider,
+    private readonly capacitorFactsProvider: CapacitorFactsProvider
   ) {
     this.initializeApp();
     this.restoreAppStatus();
@@ -45,5 +49,13 @@ export class AppComponent {
         untilDestroyed(this)
       )
       .subscribe();
+  }
+
+  initializeCollectorService() {
+    this.webCryptoApiSignatureProvider.initialize();
+    this.collectorService.addFactsProvider(this.capacitorFactsProvider);
+    this.collectorService.addSignatureProvider(
+      this.webCryptoApiSignatureProvider
+    );
   }
 }

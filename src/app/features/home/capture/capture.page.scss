@@ -4,6 +4,10 @@
   height: 100%;
 
   .capture-tab {
+    app-capture-item:focus {
+      outline: none;
+    }
+
     app-capture-item::part(app-img) {
       object-fit: cover;
     }

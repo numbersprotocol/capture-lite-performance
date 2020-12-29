@@ -32,7 +32,11 @@
                 <app-capture-item
                   [item]="item"
                   [style.height.px]="captureItemHeight"
-                ></app-capture-item>
+                  [routerLink]="
+                    item.id ? ['asset', { id: item.id }] : undefined
+                  "
+                >
+                </app-capture-item>
               </ion-col>
             </ion-row>
           </ion-virtual-scroll>
