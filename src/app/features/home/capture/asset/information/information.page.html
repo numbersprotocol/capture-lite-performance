@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Information</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>Digital Asset</ion-list-header>
+    <ion-item>
+      <ion-icon name="person" slot="start"></ion-icon>
+      <ion-label>
+        <h3>Owner</h3>
+        <p>{{ (asset$ | async)?.owner }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon src="/assets/icons/media-id.svg" slot="start"></ion-icon>
+      <ion-label>
+        <h3>Media ID</h3>
+        <p>{{ (asset$ | async)?.id }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="code-working" slot="start"></ion-icon>
+      <ion-label>
+        <h3>Hash</h3>
+        <p>{{ (asset$ | async)?.proof_hash }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="time" slot="start"></ion-icon>
+      <ion-label>
+        <h3>Timestamp</h3>
+        <p>
+          {{ (asset$ | async)?.information.proof.timestamp | date: 'long' }}
+        </p>
+      </ion-label>
+    </ion-item>
+    <ng-container *ngIf="asset$ | async as asset">
+      <ion-list-header>Information</ion-list-header>
+      <ion-item *ngFor="let info of asset.information.information">
+        <ion-icon name="information-circle" slot="start"></ion-icon>
+        <ion-label>
+          <h3>{{ info.name }}</h3>
+          <p>{{ info.value }}</p>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+
+    <ion-list-header>Signature</ion-list-header>
+    <ion-item>
+      <ion-icon name="shield-checkmark" slot="start"></ion-icon>
+      <ion-label>
+        <h3>Signature</h3>
+        <p>{{ (asset$ | async)?.signature[0].signature }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="key" slot="start"></ion-icon>
+      <ion-label>
+        <h3>Public Key</h3>
+        <p>{{ (asset$ | async)?.signature[0].publicKey }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

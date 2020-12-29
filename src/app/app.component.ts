@@ -28,6 +28,7 @@ export class AppComponent {
   ) {
     this.initializeApp();
     this.restoreAppStatus();
+    this.initializeCollectorService();
   }
 
   async initializeApp() {
@@ -35,7 +36,7 @@ export class AppComponent {
     await SplashScreen.hide();
   }
 
-  restoreAppStatus() {
+  private restoreAppStatus() {
     this.cameraService
       .restoreKilledCapture$()
       .pipe(
@@ -51,7 +52,7 @@ export class AppComponent {
       .subscribe();
   }
 
-  initializeCollectorService() {
+  private initializeCollectorService() {
     this.webCryptoApiSignatureProvider.initialize();
     this.collectorService.addFactsProvider(this.capacitorFactsProvider);
     this.collectorService.addSignatureProvider(

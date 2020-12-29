@@ -8,7 +8,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-img [attr.src]="(asset$ | async)?.asset_file"></ion-img>
+  <app-img
+    [src]="(asset$ | async)?.asset_file"
+    [cacheKey]="(asset$ | async)?.id + '_assetFile'"
+  ></app-img>
   <ion-list>
     <ion-item>
       <ion-icon name="person" slot="start"></ion-icon>
@@ -29,5 +32,7 @@
       <ion-label>{{ (asset$ | async)?.id }}</ion-label>
     </ion-item>
   </ion-list>
-  <ion-button expand="full" class="ion-margin">More Information</ion-button>
+  <ion-button routerLink="information" expand="full" class="ion-margin"
+    >More Information</ion-button
+  >
 </ion-content>
