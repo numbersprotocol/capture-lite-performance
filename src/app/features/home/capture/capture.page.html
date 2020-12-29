@@ -56,19 +56,18 @@
       </ion-content>
     </super-tab>
     <super-tab>
-      <ion-content class="ion-padding">
+      <ion-content>
         <ion-virtual-scroll
           [items]="postCaptures$ | async"
           [itemHeight]="postCaptureColumnHeight"
           class="post-capture-tab"
         >
-          <app-img
-            *virtualItem="let asset"
-            [src]="asset.sharable_copy"
-            [cacheKey]="asset.id + '_sharableCopy'"
-            [style.height.px]="postCaptureImageHeight"
+          <app-post-capture
+            *virtualItem="let transaction"
+            [transaction]="transaction"
+            [style.height.px]="postCaptureItemHeight"
             class="ion-margin-bottom"
-          ></app-img>
+          ></app-post-capture>
         </ion-virtual-scroll>
         <ion-infinite-scroll
           (ionInfinite)="loadPostCaptures($event)"

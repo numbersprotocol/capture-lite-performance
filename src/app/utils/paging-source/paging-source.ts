@@ -7,7 +7,7 @@ export class PagingSource<T> {
   private currentOffset = 0;
 
   constructor(
-    private readonly pagingFetchAllFunction$: PagingFetchAllFunction<T>,
+    private readonly pagingFetchAllFunction$: PagingFetchFunction<T>,
     private readonly pagingSize = 20
   ) {}
 
@@ -44,9 +44,11 @@ export class PagingSource<T> {
   }
 }
 
-type PagingFetchAllFunction<T> = (options: GetAllOptions) => Observable<T[]>;
+type PagingFetchFunction<T> = (
+  options: PagingFetchFunctionOptions
+) => Observable<T[]>;
 
-export interface GetAllOptions {
+export interface PagingFetchFunctionOptions {
   readonly pagingSize: number;
   readonly offset: number;
 }

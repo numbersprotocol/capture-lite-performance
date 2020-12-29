@@ -4,15 +4,16 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CapacitorPluginsModule } from './core/capacitor-plugins/capacitor-plugins.module';
 import { ImageComponent } from './core/image/image.component';
+import { PostCaptureComponent } from './core/post-capture/post-capture.component';
 
 @NgModule({
-  declarations: [ImageComponent],
+  declarations: [ImageComponent, PostCaptureComponent],
   imports: [
     CommonModule,
     IonicModule,
     HttpClientModule,
     CapacitorPluginsModule,
   ],
-  exports: [CommonModule, IonicModule, ImageComponent],
+  exports: [CommonModule, IonicModule, ImageComponent, PostCaptureComponent],
 })
 export class SharedModule {}

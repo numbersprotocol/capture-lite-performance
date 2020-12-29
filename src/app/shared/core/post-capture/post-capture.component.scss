@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  ion-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  ion-item {
+    --min-height: 30px;
+  }
+
+  app-img {
+    flex-grow: 1;
+    object-fit: cover;
+  }
+}

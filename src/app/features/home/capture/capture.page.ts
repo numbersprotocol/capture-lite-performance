@@ -9,6 +9,7 @@ import {
   DiaBackendAsset,
   DiaBackendAssetRepository,
 } from '../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
+import { DiaBackendTransactionRepository } from '../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository.service';
 import { getOldProof } from '../../../shared/services/repositories/proof/old-proof-adapter';
 import { Proof } from '../../../shared/services/repositories/proof/proof';
 import { ProofRepository } from '../../../shared/services/repositories/proof/proof-repository.service';
@@ -19,7 +20,7 @@ import {
 import { CaptureItem } from './capture-item/capture-item.component';
 
 const CAPTURE_ITEM_HEIGHT_PX = 110;
-const POST_CAPTURE_IMAGE_HEIGHT_PX = 350;
+const POST_CAPTURE_ITEM_HEIGHT_PX = 600;
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -32,7 +33,9 @@ export class CapturePage implements OnInit {
     this.diaBackendAssetRepository.fetchAll$(options).pipe(first())
   );
   readonly chunkedCaptures$ = combineLatest([
-    this.captureRemoteSource.data$,
+    this.captureRemoteSource.data$.pipe(
+      map(diaBackendAssets => diaBackendAssets.filter(a => a.is_original_owner))
+    ),
     this.proofRepository.getAll$(),
   ]).pipe(
     skipWhile(([diaBackendAssets]) => diaBackendAssets.length === 0),
@@ -46,25 +49,36 @@ export class CapturePage implements OnInit {
   readonly captureItemHeight = CAPTURE_ITEM_HEIGHT_PX;
 
   private readonly postCaptureRemoteSource = new PagingSource(
-    options => this.diaBackendAssetRepository.fetchAll$(options),
+    options => this.diaBackendTransactionRepository.fetchAllReceived$(options),
     10
   );
-  readonly postCaptures$ = this.postCaptureRemoteSource.data$;
-  readonly postCaptureImageHeight = POST_CAPTURE_IMAGE_HEIGHT_PX;
+  readonly postCaptures$ = this.postCaptureRemoteSource.data$.pipe(
+    map(transactions =>
+      transactions.filter(
+        transaction => !transaction.expired && transaction.fulfilled_at
+      )
+    )
+  );
+  readonly postCaptureItemHeight = POST_CAPTURE_ITEM_HEIGHT_PX;
 
   constructor(
     private readonly diaBackendAssetRepository: DiaBackendAssetRepository,
     private readonly cameraService: CameraService,
     private readonly collectorService: CollectorService,
-    private readonly proofRepository: ProofRepository
+    private readonly proofRepository: ProofRepository,
+    private readonly diaBackendTransactionRepository: DiaBackendTransactionRepository
   ) {}
 
   ngOnInit() {
-    this.refresh();
+    this.refreshCapture();
+    this.refreshPostCapture();
   }
 
-  refresh() {
+  refreshCapture() {
     this.captureRemoteSource.refresh$().pipe(untilDestroyed(this)).subscribe();
+  }
+
+  refreshPostCapture() {
     this.postCaptureRemoteSource
       .refresh$()
       .pipe(untilDestroyed(this))
@@ -75,10 +89,6 @@ export class CapturePage implements OnInit {
     return item.id;
   }
 
-  trackChunkedGroupByIds(_: number, item: DiaBackendAsset[]) {
-    return item.map(i => i.id);
-  }
-
   captureColumnHeight(_item: DiaBackendAsset, _index: number) {
     const columnPaddingPx = 10;
     return CAPTURE_ITEM_HEIGHT_PX + columnPaddingPx;
@@ -86,7 +96,7 @@ export class CapturePage implements OnInit {
 
   postCaptureColumnHeight(_item: DiaBackendAsset, _index: number) {
     const imageMarginPx = 16;
-    return POST_CAPTURE_IMAGE_HEIGHT_PX + imageMarginPx;
+    return POST_CAPTURE_ITEM_HEIGHT_PX + imageMarginPx;
   }
 
   loadCaptures(event: InfiniteScrollEvent) {
@@ -113,7 +123,7 @@ export class CapturePage implements OnInit {
         ),
         concatMap(proof => this.diaBackendAssetRepository.add$(proof)),
         single(),
-        tap(() => this.refresh()),
+        tap(() => this.refreshCapture()),
         untilDestroyed(this)
       )
       .subscribe();

@@ -19,7 +19,7 @@ import { CacheStore } from '../../services/file-store/cache/cache';
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class ImageComponent {
-  @Input() cacheKey?: string;
+  @Input() readonly cacheKey?: string;
   @Input()
   set src(value: string) {
     this._src$.next(value);

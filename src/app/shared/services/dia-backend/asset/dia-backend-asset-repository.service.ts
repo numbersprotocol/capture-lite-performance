@@ -4,7 +4,7 @@ import { BehaviorSubject, defer, forkJoin } from 'rxjs';
 import { concatMap, concatMapTo, pluck, tap } from 'rxjs/operators';
 import { base64ToBlob } from '../../../../utils/encoding/encoding';
 import { toExtension } from '../../../../utils/mime-type';
-import { GetAllOptions } from '../../../../utils/paging-source/paging-source';
+import { PagingFetchFunctionOptions } from '../../../../utils/paging-source/paging-source';
 import { Tuple } from '../../database/table/table';
 import {
   getOldSignatures,
@@ -27,7 +27,9 @@ export class DiaBackendAssetRepository {
     private readonly authService: DiaBackendAuthService
   ) {}
 
-  fetchAll$(options: GetAllOptions = { pagingSize: 100, offset: 0 }) {
+  fetchAll$(
+    options: PagingFetchFunctionOptions = { pagingSize: 100, offset: 0 }
+  ) {
     return defer(async () => this._isFetching$.next(true)).pipe(
       concatMapTo(defer(() => this.authService.getAuthHeaders())),
       concatMap(headers =>

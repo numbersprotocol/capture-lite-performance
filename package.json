@@ -5,7 +5,8 @@
   "homepage": "https://numbersprotocol.io/",
   "scripts": {
     "preconfig": "ts-node set-secret.ts",
-    "serve": "npm run preconfig && ionic serve -- --hmr",
+    "serve": "npm run preconfig && ionic serve",
+    "serve-hmr": "npm run preconfig && ionic serve -- --hmr",
     "build": "npm run preconfig && ionic build",
     "build-android": "npm run build && cap sync android",
     "test": "npm run preconfig && ng test",
