@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { chunk } from 'lodash-es';
+import { chunk, sortBy } from 'lodash-es';
 import { combineLatest, defer } from 'rxjs';
-import { concatMap, first, map, single, tap } from 'rxjs/operators';
+import { concatMap, first, map, single, skipWhile, tap } from 'rxjs/operators';
 import { CameraService } from '../../../shared/services/camera/camera.service';
 import { CollectorService } from '../../../shared/services/collector/collector.service';
 import {
@@ -35,9 +35,11 @@ export class CapturePage implements OnInit {
     this.captureRemoteSource.data$,
     this.proofRepository.getAll$(),
   ]).pipe(
+    skipWhile(([diaBackendAssets]) => diaBackendAssets.length === 0),
     map(([diaBackendAssets, proofs]) =>
       mergeDiaBackendAssetsAndProofs(diaBackendAssets, proofs)
     ),
+    map(captures => sortBy(captures, [c => -c.timestamp])),
     map(captures => chunk(captures, this.capturesPerRow))
   );
   readonly capturesPerRow = 3;

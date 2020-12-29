@@ -1,6 +1,17 @@
 :host {
   display: block;
   object-fit: contain;
+  position: relative;
+
+  ion-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    color: white;
+  }
 
   app-img {
     height: 100%;
