@@ -21,7 +21,7 @@ import {
   SortedProofInformation,
 } from './old-proof-adapter';
 
-describe('old-proof-adapter', () => {
+fdescribe('old-proof-adapter', () => {
   let proof: Proof;
   let imageStore: ImageStore;
 

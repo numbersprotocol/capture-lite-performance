@@ -1,9 +1,9 @@
-import { flow, groupBy, mapValues } from 'lodash/fp';
+import { flow, groupBy, mapValues } from 'lodash-es';
 import { blobToBase64 } from '../../../../utils/encoding/encoding';
 import { MimeType } from '../../../../utils/mime-type';
 import { Tuple } from '../../database/table/table';
 import { ImageStore } from '../../file-store/image/image-store';
-import { DefaultFactId, Proof, Signature } from './proof';
+import { DefaultFactId, Proof } from './proof';
 
 /**
  * Only for migration and connection to backend. Subject to change.
@@ -106,21 +106,26 @@ export async function getProof(
     'provider'
   );
   const providers = flow(
-    mapValues((value: Record<string, string>[]) =>
-      groupObjectsBy(value, 'name')
-    ),
-    mapValues((value: Record<string, { value: string }[]>) =>
-      mapValues((arr: { value: string }[]) => toNumberOrBoolean(arr[0].value))(
-        value
+    (
+      groupedByProvider: Record<
+        string,
+        Omit<OldEssentialInformation, 'provider'>[]
+      >
+    ) => mapValues(groupedByProvider, value => groupObjectsBy(value, 'name')),
+    groupedValueByName =>
+      mapValues(groupedValueByName, value =>
+        mapValues(value, arr => toNumberOrBoolean(arr[0].value))
       )
-    )
   )(groupedByProvider);
   const signatures = flow(
-    mapValues((values: Signature[]) => ({
-      signature: values[0].signature,
-      publicKey: values[0].publicKey,
-    }))
-  )(groupObjectsBy(oldSignatures, 'provider'));
+    (oldSignatures: OldSignature[]) =>
+      groupObjectsBy(oldSignatures, 'provider'),
+    grouped =>
+      mapValues(grouped, values => ({
+        signature: values[0].signature as string,
+        publicKey: values[0].publicKey as string,
+      }))
+  )(oldSignatures);
 
   return Proof.from(
     imageStore,
@@ -146,20 +151,21 @@ export function replaceOldDefaultInformationNameWithDefaultFactId(
 }
 
 /**
- * Group by the key. The returned collection does not have the original key property.
+ * Group by the key. The returned collection without the original key property.
  */
-function groupObjectsBy<T extends Record<string, any>>(
+function groupObjectsBy<T extends Record<string, any>, K extends keyof T>(
   objects: T[],
-  key: string
-): Record<string, Partial<T>[]> {
+  key: K
+): Record<string, Omit<T, K>[]> {
   return flow(
-    groupBy(key),
-    mapValues((values: T[]) =>
-      values.map(value => {
-        delete value[key];
-        return value;
-      })
-    )
+    (objects: T[]) => groupBy(objects, key),
+    grouped =>
+      mapValues(grouped, values =>
+        values.map(value => {
+          delete value[key];
+          return value;
+        })
+      )
   )(objects);
 }
 
