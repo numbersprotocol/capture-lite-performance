@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, defer, forkJoin } from 'rxjs';
+import { BehaviorSubject, defer, forkJoin, Subject } from 'rxjs';
 import { concatMap, concatMapTo, pluck, tap } from 'rxjs/operators';
 import { base64ToBlob } from '../../../../utils/encoding/encoding';
 import { toExtension } from '../../../../utils/mime-type';
@@ -20,18 +20,21 @@ import { BASE_URL } from '../secret';
   providedIn: 'root',
 })
 export class DiaBackendAssetRepository {
+  private readonly _isDirtyEvent$ = new Subject<string | undefined>();
+  readonly isDirtyEvent$ = this._isDirtyEvent$.asObservable();
   private readonly _isFetching$ = new BehaviorSubject(false);
+  readonly isFetching$ = this._isFetching$.asObservable();
 
   constructor(
     private readonly httpClient: HttpClient,
     private readonly authService: DiaBackendAuthService
   ) {}
 
-  isFetching$() {
-    return this._isFetching$.asObservable();
+  setIsDirty(cause?: string) {
+    this._isDirtyEvent$.next(cause);
   }
 
-  fetchAll$(
+  fetchAllOriginallyOwned$(
     options: PagingFetchFunctionOptions = { pagingSize: 100, offset: 0 }
   ) {
     return defer(async () => this._isFetching$.next(true)).pipe(
@@ -42,6 +45,7 @@ export class DiaBackendAssetRepository {
           params: {
             limit: `${options.pagingSize}`,
             offset: `${options.offset}`,
+            is_original_owner: `${true}`,
           },
         })
       ),
@@ -73,7 +77,20 @@ export class DiaBackendAssetRepository {
           formData,
           { headers }
         )
-      )
+      ),
+      tap(() => this.setIsDirty('add'))
+    );
+  }
+
+  removeById$(id: string) {
+    return defer(() => this.authService.getAuthHeaders()).pipe(
+      concatMap(headers =>
+        this.httpClient.delete<DeleteAssetResponse>(
+          `${BASE_URL}/api/v2/assets/${id}/`,
+          { headers }
+        )
+      ),
+      tap(() => this.setIsDirty('remove'))
     );
   }
 }
@@ -97,6 +114,9 @@ interface ListAssetResponse {
 type ReadAssetResponse = DiaBackendAsset;
 
 type CreateAssetResponse = DiaBackendAsset;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface DeleteAssetResponse {}
 
 async function buildFormDataToCreateAsset(proof: Proof) {
   const formData = new FormData();

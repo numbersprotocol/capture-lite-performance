@@ -7,7 +7,7 @@ import { DiaBackendAssetRepository } from './dia-backend-asset-repository.servic
   providedIn: 'root',
 })
 export class DiaBackendAssetTestingRepository extends DiaBackendAssetRepository {
-  fetchAll$(_options: PagingFetchFunctionOptions) {
+  fetchAllOriginallyOwned$(_options: PagingFetchFunctionOptions) {
     return of([]);
   }
 }

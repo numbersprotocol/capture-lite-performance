@@ -28,12 +28,12 @@ import { CaptureItem } from './capture-item/capture-item.component';
 })
 export class CapturePage implements OnInit {
   private readonly captureRemoteSource = new PagingSource(options =>
-    this.diaBackendAssetRepository.fetchAll$(options).pipe(first())
+    this.diaBackendAssetRepository
+      .fetchAllOriginallyOwned$(options)
+      .pipe(first())
   );
   readonly captures$ = combineLatest([
-    this.captureRemoteSource.data$.pipe(
-      map(diaBackendAssets => diaBackendAssets.filter(a => a.is_original_owner))
-    ),
+    this.captureRemoteSource.data$,
     this.proofRepository.getAll$(),
   ]).pipe(
     skipWhile(([diaBackendAssets]) => diaBackendAssets.length === 0),
@@ -66,6 +66,13 @@ export class CapturePage implements OnInit {
   ngOnInit() {
     this.refreshCapture();
     this.refreshPostCapture();
+
+    this.diaBackendAssetRepository.isDirtyEvent$
+      .pipe(
+        tap(() => this.refreshCapture()),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   refreshCapture(
@@ -128,7 +135,6 @@ export class CapturePage implements OnInit {
         ),
         concatMap(proof => this.diaBackendAssetRepository.add$(proof)),
         single(),
-        tap(() => this.refreshCapture()),
         untilDestroyed(this)
       )
       .subscribe();

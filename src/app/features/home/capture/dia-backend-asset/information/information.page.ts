@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { map, share, switchMap } from 'rxjs/operators';
-import { DiaBackendAssetRepository } from '../../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
-import { OldDefaultInformationName } from '../../../../shared/services/repositories/proof/old-proof-adapter';
-import { isNonNullable } from '../../../../utils/rx-operators/rx-operators';
+import { first, map, share, switchMap } from 'rxjs/operators';
+import { DiaBackendAssetRepository } from '../../../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
+import { OldDefaultInformationName } from '../../../../../shared/services/repositories/proof/old-proof-adapter';
+import { isNonNullable } from '../../../../../utils/rx-operators/rx-operators';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-  selector: 'app-asset',
-  templateUrl: './asset.page.html',
-  styleUrls: ['./asset.page.scss'],
+  selector: 'app-information',
+  templateUrl: './information.page.html',
+  styleUrls: ['./information.page.scss'],
 })
-export class AssetPage {
+export class InformationPage {
   readonly asset$ = this.route.paramMap.pipe(
     map(params => params.get('id')),
     isNonNullable(),
     switchMap(id => this.diaBackendAssetRepository.fetchById$(id)),
+    first(),
     share()
   );
 
