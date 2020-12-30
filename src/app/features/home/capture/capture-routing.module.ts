@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: 'asset',
     loadChildren: () =>
-      import('./dia-backend-asset/asset.module').then(m => m.AssetPageModule),
+      import('./asset/asset.module').then(m => m.AssetPageModule),
   },
 ];
 
