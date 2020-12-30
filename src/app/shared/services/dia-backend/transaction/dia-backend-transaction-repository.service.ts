@@ -20,6 +20,10 @@ export class DiaBackendTransactionRepository {
     private readonly ignoredTransactionRepository: IgnoredTransactionRepository
   ) {}
 
+  isFetching$() {
+    return this._isFetching$.asObservable();
+  }
+
   fetchAll$(
     options: PagingFetchFunctionOptions = { pagingSize: 100, offset: 0 }
   ) {
@@ -70,10 +74,6 @@ export class DiaBackendTransactionRepository {
       pluck('results'),
       tap(() => this._isFetching$.next(false))
     );
-  }
-
-  isFetching$() {
-    return this._isFetching$.asObservable();
   }
 
   add$(assetId: string, targetEmail: string, caption: string) {

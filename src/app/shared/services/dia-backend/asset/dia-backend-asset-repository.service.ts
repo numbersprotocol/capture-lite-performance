@@ -27,6 +27,10 @@ export class DiaBackendAssetRepository {
     private readonly authService: DiaBackendAuthService
   ) {}
 
+  isFetching$() {
+    return this._isFetching$.asObservable();
+  }
+
   fetchAll$(
     options: PagingFetchFunctionOptions = { pagingSize: 100, offset: 0 }
   ) {
@@ -56,10 +60,6 @@ export class DiaBackendAssetRepository {
         )
       )
     );
-  }
-
-  isFetching$() {
-    return this._isFetching$.asObservable();
   }
 
   add$(proof: Proof) {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonInfiniteScroll, IonRefresher } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { chunk, sortBy } from 'lodash-es';
+import { chunk, isEqual, sortBy } from 'lodash-es';
 import { combineLatest, defer } from 'rxjs';
 import { concatMap, first, map, single, skipWhile, tap } from 'rxjs/operators';
 import { CameraService } from '../../../shared/services/camera/camera.service';
@@ -163,7 +163,9 @@ function mergeDiaBackendAssetsAndProofs(
     const found = proofs.find(
       proof => getOldProof(proof).hash === diaBackendAsset.proof_hash
     );
-    unpublishedProofs = unpublishedProofs.filter(proof => proof !== found);
+    unpublishedProofs = unpublishedProofs.filter(
+      proof => !isEqual(proof, found)
+    );
     items.push(new CaptureItem({ diaBackendAsset, proof: found }));
   }
 
