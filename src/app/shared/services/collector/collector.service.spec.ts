@@ -3,9 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { MimeType } from '../../../utils/mime-type';
 import { SharedTestingModule } from '../../shared-testing.module';
 import {
-  AssetMeta,
-  Assets,
   DefaultFactId,
+  DocumentMeta,
+  Documents,
   Facts,
   Signature,
 } from '../repositories/proof/proof';
@@ -30,15 +30,15 @@ describe('CollectorService', () => {
   it('should be created', () => expect(service).toBeTruthy());
 
   it('should get the stored proof after run', async () => {
-    const proof = await service.runAndStore(ASSETS);
-    expect(await proof.getAssets()).toEqual(ASSETS);
+    const proof = await service.runAndStore(DOCUMENTS);
+    expect(await proof.getDocuments()).toEqual(DOCUMENTS);
   });
 
   it('should remove added truth providers', async () => {
     service.addFactsProvider(mockFactsProvider);
     service.removeFactsProvider(mockFactsProvider);
 
-    const proof = await service.runAndStore(ASSETS);
+    const proof = await service.runAndStore(DOCUMENTS);
 
     expect(proof.truth.providers).toEqual({});
   });
@@ -47,43 +47,43 @@ describe('CollectorService', () => {
     service.addSignatureProvider(mockSignatureProvider);
     service.removeSignatureProvider(mockSignatureProvider);
 
-    const proof = await service.runAndStore(ASSETS);
+    const proof = await service.runAndStore(DOCUMENTS);
 
     expect(proof.signatures).toEqual({});
   });
 
   it('should get the stored proof with provided facts', async () => {
     service.addFactsProvider(mockFactsProvider);
-    const proof = await service.runAndStore(ASSETS);
+    const proof = await service.runAndStore(DOCUMENTS);
     expect(proof.truth.providers).toEqual({ [mockFactsProvider.id]: FACTS });
   });
 
   it('should get the stored proof with provided signature', async () => {
     service.addSignatureProvider(mockSignatureProvider);
-    const proof = await service.runAndStore(ASSETS);
+    const proof = await service.runAndStore(DOCUMENTS);
     expect(proof.signatures).toEqual({ [mockSignatureProvider.id]: SIGNATURE });
   });
 
   it('should store proof with ProofRepository', async () => {
     spyOn(proofRepository, 'add').and.callThrough();
 
-    const proof = await service.runAndStore(ASSETS);
+    const proof = await service.runAndStore(DOCUMENTS);
 
     expect(proofRepository.add).toHaveBeenCalledWith(proof);
   });
 });
 
-const ASSET1_MIMETYPE: MimeType = 'image/png';
-const ASSET1_BASE64 =
+const DOCUMENT1_MIMETYPE: MimeType = 'image/png';
+const DOCUMENT1_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAYAAAADCAYAAACwAX77AAAABHNCSVQICAgIfAhkiAAAABl0RVh0U29mdHdhcmUAZ25vbWUtc2NyZWVuc2hvdO8Dvz4AAABAaVRYdENyZWF0aW9uIFRpbWUAAAAAADIwMjDlubTljYHkuIDmnIgxMOaXpSAo6YCx5LqMKSAyMOaZgjU55YiGMzfnp5JnJvHNAAAAFUlEQVQImWM0MTH5z4AFMGETxCsBAHRhAaHOZzVQAAAAAElFTkSuQmCC';
-const ASSET1: AssetMeta = { mimeType: ASSET1_MIMETYPE };
-const ASSET2_MIMETYPE: MimeType = 'image/png';
-const ASSET2_BASE64 =
+const DOCUMENT1_META: DocumentMeta = { mimeType: DOCUMENT1_MIMETYPE };
+const DOCUMENT2_MIMETYPE: MimeType = 'image/png';
+const DOCUMENT2_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABHNCSVQICAgIfAhkiAAAABZJREFUCJlj/Pnz538GJMDEgAYICwAAAbkD8p660MIAAAAASUVORK5CYII=';
-const ASSET2: AssetMeta = { mimeType: ASSET2_MIMETYPE };
-const ASSETS: Assets = {
-  [ASSET1_BASE64]: ASSET1,
-  [ASSET2_BASE64]: ASSET2,
+const DOCUMENT2_META: DocumentMeta = { mimeType: DOCUMENT2_MIMETYPE };
+const DOCUMENTS: Documents = {
+  [DOCUMENT1_BASE64]: DOCUMENT1_META,
+  [DOCUMENT2_BASE64]: DOCUMENT2_META,
 };
 
 const GEOLOCATION_LATITUDE = 22.917923;
@@ -97,7 +97,7 @@ const FACTS: Facts = {
 
 class MockFactsProvider implements FactsProvider {
   readonly id = MockFactsProvider.name;
-  async provide(_: Assets) {
+  async provide(_: Documents) {
     return FACTS;
   }
 }

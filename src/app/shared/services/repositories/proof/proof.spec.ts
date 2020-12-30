@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { SharedTestingModule } from '../../../../shared/shared-testing.module';
-import { verifyWithSha256AndEcdsa } from '../../../../utils/crypto/crypto';
 import { MimeType } from '../../../../utils/mime-type';
 import { ImageStore } from '../../file-store/image/image-store';
 import {
-  AssetMeta,
-  Assets,
   DefaultFactId,
+  DocumentMeta,
+  Documents,
   Facts,
   getSerializedSortedSignedTargets,
   isFacts,
@@ -23,7 +22,10 @@ describe('Proof', () => {
 
   beforeAll(() => {
     Proof.registerSignatureProvider(SIGNATURE_PROVIDER_ID, {
-      verify: verifyWithSha256AndEcdsa,
+      verify: (_message, signature, _publicKey) => {
+        if (signature === VALID_SIGNATURE) return true;
+        return false;
+      },
     });
   });
 
@@ -36,43 +38,43 @@ describe('Proof', () => {
     imageStore = TestBed.inject(ImageStore);
   });
 
-  it('should get the same assets with the parameter of factory method', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
-    expect(await proof.getAssets()).toEqual(ASSETS);
+  it('should get the same documents with the parameter of factory method', async () => {
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
+    expect(await proof.getDocuments()).toEqual(DOCUMENTS);
   });
 
   it('should get the same truth with the parameter of factory method', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(proof.truth).toEqual(TRUTH);
   });
 
   it('should get the same signatures with the parameter of factory method', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(proof.signatures).toEqual(SIGNATURES_VALID);
   });
 
   it('should get the same timestamp with the truth in the parameter of factory method', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(proof.timestamp).toEqual(TRUTH.timestamp);
   });
 
   it('should get same ID with same properties', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     const another = await Proof.from(
       imageStore,
-      ASSETS,
+      DOCUMENTS,
       TRUTH,
       SIGNATURES_VALID
     );
     expect(await proof.getId()).toEqual(await another.getId());
   });
 
-  it('should have thumbnail when its assets have images', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+  it('should have thumbnail when its documents have images', async () => {
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(await proof.getThumbnailUrl()).toBeTruthy();
   });
 
-  it('should not have thumbnail when its assets do not have image', async () => {
+  it('should not have thumbnail when its documents do not have image', async () => {
     proof = await Proof.from(
       imageStore,
       { aGVsbG8K: { mimeType: 'application/octet-stream' } },
@@ -83,7 +85,7 @@ describe('Proof', () => {
   });
 
   it('should get any device name when exists', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(
       proof.deviceName === DEVICE_NAME_VALUE1 ||
         proof.deviceName === DEVICE_NAME_VALUE2
@@ -91,12 +93,17 @@ describe('Proof', () => {
   });
 
   it('should get undefined when device name not exists', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH_EMPTY, SIGNATURES_VALID);
+    proof = await Proof.from(
+      imageStore,
+      DOCUMENTS,
+      TRUTH_EMPTY,
+      SIGNATURES_VALID
+    );
     expect(proof.deviceName).toBeUndefined();
   });
 
   it('should get any geolocation latitude when exists', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(
       proof.geolocationLatitude === GEOLOCATION_LATITUDE1 ||
         proof.geolocationLatitude === GEOLOCATION_LATITUDE2
@@ -104,12 +111,17 @@ describe('Proof', () => {
   });
 
   it('should get undefined when geolocation latitude not exists', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH_EMPTY, SIGNATURES_VALID);
+    proof = await Proof.from(
+      imageStore,
+      DOCUMENTS,
+      TRUTH_EMPTY,
+      SIGNATURES_VALID
+    );
     expect(proof.geolocationLatitude).toBeUndefined();
   });
 
   it('should get any geolocation longitude name when exists', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(
       proof.geolocationLongitude === GEOLOCATION_LONGITUDE1 ||
         proof.geolocationLongitude === GEOLOCATION_LONGITUDE2
@@ -117,26 +129,31 @@ describe('Proof', () => {
   });
 
   it('should get undefined when geolocation longitude not exists', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH_EMPTY, SIGNATURES_VALID);
+    proof = await Proof.from(
+      imageStore,
+      DOCUMENTS,
+      TRUTH_EMPTY,
+      SIGNATURES_VALID
+    );
     expect(proof.geolocationLongitude).toBeUndefined();
   });
 
   it('should get existed fact with ID', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(proof.getFactValue(HUMIDITY)).toEqual(HUMIDITY_VALUE);
   });
 
   it('should get undefined with nonexistent fact ID', async () => {
     const NONEXISTENT = 'NONEXISTENT';
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(proof.getFactValue(NONEXISTENT)).toBeUndefined();
   });
 
   it('should stringify to ordered JSON string', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
-    const ASSETS_DIFFERENT_ORDER: Assets = {
-      [ASSET2_BASE64]: ASSET2_META,
-      [ASSET1_BASE64]: { mimeType: ASSET1_MIMETYPE },
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
+    const DOCUMENTS_DIFFERENT_ORDER: Documents = {
+      [DOCUMENT2_BASE64]: DOCUMENT2_META,
+      [DOCUMENT1_BASE64]: { mimeType: DOCUMENT1_MIMETYPE },
     };
     const TRUTH_DIFFERENT_ORDER: Truth = {
       providers: {
@@ -156,7 +173,7 @@ describe('Proof', () => {
     };
     const proofWithDifferentContentsOrder = await Proof.from(
       imageStore,
-      ASSETS_DIFFERENT_ORDER,
+      DOCUMENTS_DIFFERENT_ORDER,
       TRUTH_DIFFERENT_ORDER,
       SIGNATURES_VALID
     );
@@ -166,36 +183,36 @@ describe('Proof', () => {
   });
 
   it('should parse from stringified JSON string', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
 
     const parsed = await Proof.parse(imageStore, await proof.stringify());
 
-    expect(await parsed.getAssets()).toEqual(ASSETS);
+    expect(await parsed.getDocuments()).toEqual(DOCUMENTS);
     expect(parsed.truth).toEqual(TRUTH);
     expect(parsed.signatures).toEqual(SIGNATURES_VALID);
   });
 
   it('should be verified with valid signatures', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     expect(await proof.isVerified()).toBeTrue();
   });
 
   it('should not be verified with invalid signatures', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_INVALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_INVALID);
     expect(await proof.isVerified()).toBeFalse();
   });
 
   it('should get indexed Proof view', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     const indexedProofView = proof.getIndexedProofView();
 
-    expect(indexedProofView.indexedAssets).toBeTruthy();
+    expect(indexedProofView.indexedDocuments).toBeTruthy();
     expect(indexedProofView.truth).toEqual(TRUTH);
     expect(indexedProofView.signatures).toEqual(SIGNATURES_VALID);
   });
 
   it('should create Proof from indexed Proof view', async () => {
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     const indexedProofView = proof.getIndexedProofView();
 
     const anotherProof = Proof.fromIndexedProofView(
@@ -208,7 +225,7 @@ describe('Proof', () => {
 
   it('should release resource after destroy', async () => {
     const spy = spyOn(imageStore, 'delete');
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES_VALID);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES_VALID);
     await proof.destroy();
     expect(spy).toHaveBeenCalled();
   });
@@ -242,25 +259,25 @@ describe('Proof utils', () => {
 
   it('should get serialized sorted SignedTargets', () => {
     const signedTargets: SignedTargets = {
-      assets: ASSETS,
+      documents: DOCUMENTS,
       truth: TRUTH,
     };
-    const expected = `{"assets":{"${ASSET2_BASE64}":{"mimeType":"${ASSET2_MIMETYPE}"},"${ASSET1_BASE64}":{"mimeType":"${ASSET1_MIMETYPE}"}},"truth":{"providers":{"${CAPACITOR}":{"${DefaultFactId.DEVICE_NAME}":"${DEVICE_NAME_VALUE2}","${DefaultFactId.GEOLOCATION_LATITUDE}":${GEOLOCATION_LATITUDE2},"${DefaultFactId.GEOLOCATION_LONGITUDE}":${GEOLOCATION_LONGITUDE2},"${HUMIDITY}":${HUMIDITY_VALUE}},"${INFO_SNAPSHOT}":{"${DefaultFactId.DEVICE_NAME}":"${DEVICE_NAME_VALUE1}","${DefaultFactId.GEOLOCATION_LATITUDE}":${GEOLOCATION_LATITUDE1},"${DefaultFactId.GEOLOCATION_LONGITUDE}":${GEOLOCATION_LONGITUDE1}}},"timestamp":${TIMESTAMP}}}`;
+    const expected = `{"documents":{"${DOCUMENT2_BASE64}":{"mimeType":"${DOCUMENT2_MIMETYPE}"},"${DOCUMENT1_BASE64}":{"mimeType":"${DOCUMENT1_MIMETYPE}"}},"truth":{"providers":{"${CAPACITOR}":{"${DefaultFactId.DEVICE_NAME}":"${DEVICE_NAME_VALUE2}","${DefaultFactId.GEOLOCATION_LATITUDE}":${GEOLOCATION_LATITUDE2},"${DefaultFactId.GEOLOCATION_LONGITUDE}":${GEOLOCATION_LONGITUDE2},"${HUMIDITY}":${HUMIDITY_VALUE}},"${INFO_SNAPSHOT}":{"${DefaultFactId.DEVICE_NAME}":"${DEVICE_NAME_VALUE1}","${DefaultFactId.GEOLOCATION_LATITUDE}":${GEOLOCATION_LATITUDE1},"${DefaultFactId.GEOLOCATION_LONGITUDE}":${GEOLOCATION_LONGITUDE1}}},"timestamp":${TIMESTAMP}}}`;
     expect(getSerializedSortedSignedTargets(signedTargets)).toEqual(expected);
   });
 });
 
-const ASSET1_MIMETYPE: MimeType = 'image/png';
-const ASSET1_BASE64 =
+const DOCUMENT1_MIMETYPE: MimeType = 'image/png';
+const DOCUMENT1_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAYAAAADCAYAAACwAX77AAAABHNCSVQICAgIfAhkiAAAABl0RVh0U29mdHdhcmUAZ25vbWUtc2NyZWVuc2hvdO8Dvz4AAABAaVRYdENyZWF0aW9uIFRpbWUAAAAAADIwMjDlubTljYHkuIDmnIgxMOaXpSAo6YCx5LqMKSAyMOaZgjU55YiGMzfnp5JnJvHNAAAAFUlEQVQImWM0MTH5z4AFMGETxCsBAHRhAaHOZzVQAAAAAElFTkSuQmCC';
-const ASSET1_META: AssetMeta = { mimeType: ASSET1_MIMETYPE };
-const ASSET2_MIMETYPE: MimeType = 'image/png';
-const ASSET2_BASE64 =
+const DOCUMENT1_META: DocumentMeta = { mimeType: DOCUMENT1_MIMETYPE };
+const DOCUMENT2_MIMETYPE: MimeType = 'image/png';
+const DOCUMENT2_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABHNCSVQICAgIfAhkiAAAABZJREFUCJlj/Pnz538GJMDEgAYICwAAAbkD8p660MIAAAAASUVORK5CYII=';
-const ASSET2_META: AssetMeta = { mimeType: ASSET2_MIMETYPE };
-const ASSETS: Assets = {
-  [ASSET1_BASE64]: ASSET1_META,
-  [ASSET2_BASE64]: ASSET2_META,
+const DOCUMENT2_META: DocumentMeta = { mimeType: DOCUMENT2_MIMETYPE };
+const DOCUMENTS: Documents = {
+  [DOCUMENT1_BASE64]: DOCUMENT1_META,
+  [DOCUMENT2_BASE64]: DOCUMENT2_META,
 };
 const INFO_SNAPSHOT = 'INFO_SNAPSHOT';
 const CAPACITOR = 'CAPACITOR';

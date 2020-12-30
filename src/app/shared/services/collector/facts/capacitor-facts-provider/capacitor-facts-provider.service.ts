@@ -3,8 +3,8 @@ import { GeolocationPlugin, Plugins } from '@capacitor/core';
 import { GEOLOCATION_PLUGIN } from '../../../../core/capacitor-plugins/capacitor-plugins.module';
 import { PreferenceManager } from '../../../preference-manager/preference-manager.service';
 import {
-  Assets,
   DefaultFactId,
+  Documents,
   Facts,
 } from '../../../repositories/proof/proof';
 import { FactsProvider } from '../facts-provider';
@@ -24,7 +24,7 @@ export class CapacitorFactsProvider implements FactsProvider {
     private readonly preferenceManager: PreferenceManager
   ) {}
 
-  async provide(_: Assets): Promise<Facts> {
+  async provide(_: Documents): Promise<Facts> {
     const deviceInfo = await this.collectDeviceInfo();
     const locationInfo = await this.collectLocationInfo();
     return {

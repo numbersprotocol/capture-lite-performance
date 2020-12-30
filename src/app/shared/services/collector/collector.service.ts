@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ImageStore } from '../file-store/image/image-store';
 import {
-  Assets,
+  Documents,
   getSerializedSortedSignedTargets,
   Proof,
   Signatures,
@@ -24,21 +24,26 @@ export class CollectorService {
     private readonly imageStore: ImageStore
   ) {}
 
-  async runAndStore(assets: Assets) {
-    const truth = await this.collectTruth(assets);
-    const signatures = await this.signTargets({ assets, truth });
-    const proof = await Proof.from(this.imageStore, assets, truth, signatures);
+  async runAndStore(documents: Documents) {
+    const truth = await this.collectTruth(documents);
+    const signatures = await this.signTargets({ documents: documents, truth });
+    const proof = await Proof.from(
+      this.imageStore,
+      documents,
+      truth,
+      signatures
+    );
     return this.proofRepository.add(proof);
   }
 
-  private async collectTruth(assets: Assets): Promise<Truth> {
+  private async collectTruth(documents: Documents): Promise<Truth> {
     return {
       timestamp: Date.now(),
       providers: Object.fromEntries(
         await Promise.all(
           [...this.factsProviders].map(async provider => [
             provider.id,
-            await provider.provide(assets),
+            await provider.provide(documents),
           ])
         )
       ),

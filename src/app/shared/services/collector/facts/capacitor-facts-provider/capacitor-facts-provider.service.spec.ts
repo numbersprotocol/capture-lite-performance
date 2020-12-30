@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SharedTestingModule } from '../../../../shared-testing.module';
-import { Assets, isFacts } from '../../../repositories/proof/proof';
+import { Documents, isFacts } from '../../../repositories/proof/proof';
 import { CapacitorFactsProvider } from './capacitor-facts-provider.service';
 
 describe('CapacitorFactsProvider', () => {
@@ -18,9 +18,9 @@ describe('CapacitorFactsProvider', () => {
   it('should have ID', () => expect(provider.id).toBeTruthy());
 
   it('should provide facts', async () => {
-    const assets: Assets = {};
+    const documents: Documents = {};
 
-    const facts = await provider.provide(assets);
+    const facts = await provider.provide(documents);
 
     expect(isFacts(facts)).toBeTrue();
   });

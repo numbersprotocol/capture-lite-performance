@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { DiaBackendAsset } from '../../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
 import {
-  Assets,
+  Documents,
   Proof,
 } from '../../../../shared/services/repositories/proof/proof';
 import { isNonNullable } from '../../../../utils/rx-operators/rx-operators';
@@ -33,7 +33,7 @@ export class CaptureItemComponent {
 
 // Uniform interface for Proof, Asset and DiaBackendAsset
 export class CaptureItem {
-  assets?: Assets;
+  documents?: Documents;
   proof?: Proof;
   diaBackendAsset?: DiaBackendAsset;
 
@@ -44,15 +44,15 @@ export class CaptureItem {
   private readonly createdTimestamp: number;
 
   constructor({
-    assets,
+    documents,
     proof,
     diaBackendAsset,
   }: {
-    assets?: Assets;
+    documents?: Documents;
     proof?: Proof;
     diaBackendAsset?: DiaBackendAsset;
   }) {
-    this.assets = assets;
+    this.documents = documents;
     this.proof = proof;
     this.diaBackendAsset = diaBackendAsset;
     this.createdTimestamp = Date.now();
@@ -68,8 +68,8 @@ export class CaptureItem {
   async getThumbnailUrl() {
     if (this.diaBackendAsset) return this.diaBackendAsset.asset_file_thumbnail;
     if (this.proof) return this.proof.getThumbnailUrl();
-    if (this.assets) {
-      const [base64, meta] = Object.entries(this.assets)[0];
+    if (this.documents) {
+      const [base64, meta] = Object.entries(this.documents)[0];
       return toDataUrl(base64, meta.mimeType);
     }
   }

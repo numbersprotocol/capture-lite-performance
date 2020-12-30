@@ -4,9 +4,9 @@ import { MimeType } from '../../../../utils/mime-type';
 import { SharedTestingModule } from '../../../shared-testing.module';
 import { ImageStore } from '../../file-store/image/image-store';
 import {
-  AssetMeta,
-  Assets,
   DefaultFactId,
+  DocumentMeta,
+  Documents,
   Proof,
   Signatures,
   Truth,
@@ -30,22 +30,22 @@ describe('old-proof-adapter', () => {
       imports: [SharedTestingModule],
     });
     imageStore = TestBed.inject(ImageStore);
-    proof = await Proof.from(imageStore, ASSETS, TRUTH, SIGNATURES);
+    proof = await Proof.from(imageStore, DOCUMENTS, TRUTH, SIGNATURES);
   });
 
   it('should convert Proof to OldProof', () => {
     const oldProof = getOldProof(proof);
 
-    expect(oldProof.hash).toEqual(ASSET1_SHA256);
-    expect(oldProof.mimeType).toEqual(ASSET1_MIMETYPE);
+    expect(oldProof.hash).toEqual(DOCUMENT1_SHA256);
+    expect(oldProof.mimeType).toEqual(DOCUMENT1_MIMETYPE);
     expect(oldProof.timestamp).toEqual(TRUTH.timestamp);
   });
 
   it('should convert Proof to SortedProofInformation', async () => {
     const sortedProofInformation = await getSortedProofInformation(proof);
 
-    expect(sortedProofInformation.proof.hash).toEqual(ASSET1_SHA256);
-    expect(sortedProofInformation.proof.mimeType).toEqual(ASSET1_MIMETYPE);
+    expect(sortedProofInformation.proof.hash).toEqual(DOCUMENT1_SHA256);
+    expect(sortedProofInformation.proof.mimeType).toEqual(DOCUMENT1_MIMETYPE);
     expect(sortedProofInformation.proof.timestamp).toEqual(TRUTH.timestamp);
     sortedProofInformation.information.forEach(({ provider, name }) => {
       expect(Object.keys(proof.truth.providers).includes(provider)).toBeTrue();
@@ -61,14 +61,14 @@ describe('old-proof-adapter', () => {
     const oldSignatures = getOldSignatures(proof);
 
     expect(oldSignatures.length).toEqual(1);
-    expect(oldSignatures[0].proofHash).toEqual(ASSET1_SHA256);
+    expect(oldSignatures[0].proofHash).toEqual(DOCUMENT1_SHA256);
     expect(oldSignatures[0].provider).toEqual(SIGNATURE_PROVIDER_ID);
     expect(oldSignatures[0].publicKey).toEqual(PUBLIC_KEY);
     expect(oldSignatures[0].signature).toEqual(VALID_SIGNATURE);
   });
 
   it('should convert SortedProofInformation with raw Blob to Proof', async () => {
-    const blob = await base64ToBlob(ASSET1_BASE64, ASSET1_MIMETYPE);
+    const blob = await base64ToBlob(DOCUMENT1_BASE64, DOCUMENT1_MIMETYPE);
     const convertedProof = await getProof(
       imageStore,
       blob,
@@ -76,10 +76,10 @@ describe('old-proof-adapter', () => {
       OLD_SIGNATURES
     );
 
-    const assetEntries = Object.entries(await convertedProof.getAssets());
-    expect(assetEntries.length).toEqual(1);
-    expect(assetEntries[0][0]).toEqual(ASSET1_BASE64);
-    expect(assetEntries[0][1].mimeType).toEqual(ASSET1_MIMETYPE);
+    const documentEntries = Object.entries(await convertedProof.getDocuments());
+    expect(documentEntries.length).toEqual(1);
+    expect(documentEntries[0][0]).toEqual(DOCUMENT1_BASE64);
+    expect(documentEntries[0][1].mimeType).toEqual(DOCUMENT1_MIMETYPE);
     expect(convertedProof.timestamp).toEqual(TRUTH.timestamp);
     expect(convertedProof.deviceName).toEqual(DEVICE_NAME_VALUE1);
     expect(convertedProof.geolocationLatitude).toEqual(GEOLOCATION_LATITUDE1);
@@ -89,19 +89,19 @@ describe('old-proof-adapter', () => {
   });
 });
 
-const ASSET1_MIMETYPE: MimeType = 'image/png';
-const ASSET1_BASE64 =
+const DOCUMENT1_MIMETYPE: MimeType = 'image/png';
+const DOCUMENT1_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAYAAAADCAYAAACwAX77AAAABHNCSVQICAgIfAhkiAAAABl0RVh0U29mdHdhcmUAZ25vbWUtc2NyZWVuc2hvdO8Dvz4AAABAaVRYdENyZWF0aW9uIFRpbWUAAAAAADIwMjDlubTljYHkuIDmnIgxMOaXpSAo6YCx5LqMKSAyMOaZgjU55YiGMzfnp5JnJvHNAAAAFUlEQVQImWM0MTH5z4AFMGETxCsBAHRhAaHOZzVQAAAAAElFTkSuQmCC';
-const ASSET1_SHA256 =
+const DOCUMENT1_SHA256 =
   '0e87c3cdb045ae9c4a10f63cc615ee4bbf0f2ff9dca6201f045a4cb276cf3122';
-const ASSET1_META: AssetMeta = { mimeType: ASSET1_MIMETYPE };
-const ASSET2_MIMETYPE: MimeType = 'image/png';
-const ASSET2_BASE64 =
+const DOCUMENT1_META: DocumentMeta = { mimeType: DOCUMENT1_MIMETYPE };
+const DOCUMENT2_MIMETYPE: MimeType = 'image/png';
+const DOCUMENT2_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABHNCSVQICAgIfAhkiAAAABZJREFUCJlj/Pnz538GJMDEgAYICwAAAbkD8p660MIAAAAASUVORK5CYII=';
-const ASSET2_META: AssetMeta = { mimeType: ASSET2_MIMETYPE };
-const ASSETS: Assets = {
-  [ASSET1_BASE64]: ASSET1_META,
-  [ASSET2_BASE64]: ASSET2_META,
+const DOCUMENT2_META: DocumentMeta = { mimeType: DOCUMENT2_MIMETYPE };
+const DOCUMENTS: Documents = {
+  [DOCUMENT1_BASE64]: DOCUMENT1_META,
+  [DOCUMENT2_BASE64]: DOCUMENT2_META,
 };
 const INFO_SNAPSHOT = 'INFO_SNAPSHOT';
 const CAPACITOR = 'CAPACITOR';
@@ -143,8 +143,8 @@ const SIGNATURES: Signatures = {
 };
 const SORTED_PROOF_INFORMATION: SortedProofInformation = {
   proof: {
-    hash: ASSET1_SHA256,
-    mimeType: ASSET1_MIMETYPE,
+    hash: DOCUMENT1_SHA256,
+    mimeType: DOCUMENT1_MIMETYPE,
     timestamp: TRUTH.timestamp,
   },
   information: [
@@ -190,6 +190,6 @@ const OLD_SIGNATURES: OldSignature[] = [
     provider: SIGNATURE_PROVIDER_ID,
     signature: VALID_SIGNATURE,
     publicKey: PUBLIC_KEY,
-    proofHash: ASSET1_SHA256,
+    proofHash: DOCUMENT1_SHA256,
   },
 ];

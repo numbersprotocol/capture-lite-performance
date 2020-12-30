@@ -9,13 +9,13 @@ import { ImageStore } from '../../file-store/image/image-store';
  * - A box containing self-verifiable data.
  * - Easy to serialize and deserialize for data persistence and interchange.
  * - Bundle all immutable information.
- * - Check if proof.assets has image. If true, generate and cache single thumb.
+ * - Check if proof.documents has image. If true, generate and cache single thumb.
  * - Generate and ID from hash of stringified.
  */
 export class Proof {
   static signatureProviders = new Map<string, SignatureVerifier>();
 
-  readonly indexedAssets: IndexedAssets = {};
+  readonly indexedDocuments: IndexedDocuments = {};
 
   get timestamp() {
     return this.truth.timestamp;
@@ -41,21 +41,21 @@ export class Proof {
 
   static async from(
     imageStore: ImageStore,
-    assets: Assets,
+    documents: Documents,
     truth: Truth,
     signatures: Signatures
   ) {
     const proof = new Proof(imageStore, truth, signatures);
-    await proof.setAssets(assets);
+    await proof.setDocuments(documents);
     return proof;
   }
 
   /**
    * Create a Proof from IndexedProofView. This method should only be used when
-   * you sure the Proof has already store its raw assets to ImageStore by calling
-   * Proof.from() or Proof.parse() before.
+   * you sure the Proof has already store its raw documents to ImageStore by
+   * calling Proof.from() or Proof.parse() before.
    * @param imageStore The singleton ImageStore service.
-   * @param indexedProofView The view without assets with base64.
+   * @param indexedProofView The view without documents with base64.
    */
   static fromIndexedProofView(
     imageStore: ImageStore,
@@ -66,7 +66,7 @@ export class Proof {
       indexedProofView.truth,
       indexedProofView.signatures
     );
-    proof.setIndexedAssets(indexedProofView.indexedAssets);
+    proof.setIndexedDocuments(indexedProofView.indexedDocuments);
     return proof;
   }
 
@@ -81,52 +81,52 @@ export class Proof {
   static async parse(imageStore: ImageStore, json: string) {
     const parsed = JSON.parse(json) as SerializedProof;
     const proof = new Proof(imageStore, parsed.truth, parsed.signatures);
-    await proof.setAssets(parsed.assets);
+    await proof.setDocuments(parsed.documents);
     return proof;
   }
 
-  private async setAssets(assets: Assets) {
-    const indexedAssetEntries: [string, AssetMeta][] = [];
-    for (const [base64, meta] of Object.entries(assets)) {
+  private async setDocuments(documents: Documents) {
+    const indexedDocumentEntries: [string, DocumentMeta][] = [];
+    for (const [base64, meta] of Object.entries(documents)) {
       const index = await this.imageStore.write(base64, meta.mimeType);
-      indexedAssetEntries.push([index, meta]);
+      indexedDocumentEntries.push([index, meta]);
     }
 
-    this.setIndexedAssets(Object.fromEntries(indexedAssetEntries));
+    this.setIndexedDocuments(Object.fromEntries(indexedDocumentEntries));
   }
 
-  private setIndexedAssets(indexedAssets: IndexedAssets) {
+  private setIndexedDocuments(indexedDocuments: IndexedDocuments) {
     // @ts-expect-error: intentionally reassign readonly property
-    this.indexedAssets = indexedAssets;
-    return indexedAssets;
+    this.indexedDocuments = indexedDocuments;
+    return indexedDocuments;
   }
 
   async getId() {
     return sha256WithString(await this.stringify());
   }
 
-  async getAssets() {
-    const assetEntries: [string, AssetMeta][] = [];
-    for (const [index, meta] of Object.entries(this.indexedAssets)) {
+  async getDocuments() {
+    const documentEntries: [string, DocumentMeta][] = [];
+    for (const [index, meta] of Object.entries(this.indexedDocuments)) {
       const base64 = await this.imageStore.read(index);
-      assetEntries.push([base64, meta]);
+      documentEntries.push([base64, meta]);
     }
-    return Object.fromEntries(assetEntries);
+    return Object.fromEntries(documentEntries);
   }
 
   async getThumbnailUrl() {
-    const imageAsset = Object.entries(this.indexedAssets).find(([_, meta]) =>
-      meta.mimeType.startsWith('image')
-    );
-    if (imageAsset === undefined) {
+    const imageDocument = Object.entries(
+      this.indexedDocuments
+    ).find(([_, meta]) => meta.mimeType.startsWith('image'));
+    if (imageDocument === undefined) {
       return undefined;
     }
-    const [index, assetMeta] = imageAsset;
+    const [index, documentMeta] = imageDocument;
     const base64 = await this.imageStore.readThumbnail(
       index,
-      assetMeta.mimeType
+      documentMeta.mimeType
     );
-    return toDataUrl(base64, assetMeta.mimeType);
+    return toDataUrl(base64, documentMeta.mimeType);
   }
 
   getFactValue(id: string) {
@@ -139,7 +139,7 @@ export class Proof {
    */
   async stringify() {
     const proofProperties: SerializedProof = {
-      assets: await this.getAssets(),
+      documents: await this.getDocuments(),
       truth: this.truth,
       signatures: this.signatures,
     };
@@ -150,7 +150,7 @@ export class Proof {
 
   async isVerified() {
     const signedTargets: SignedTargets = {
-      assets: await this.getAssets(),
+      documents: await this.getDocuments(),
       truth: this.truth,
     };
     const serializedSortedSignedTargets = getSerializedSortedSignedTargets(
@@ -172,7 +172,7 @@ export class Proof {
 
   getIndexedProofView(): IndexedProofView {
     return {
-      indexedAssets: this.indexedAssets,
+      indexedDocuments: this.indexedDocuments,
       truth: this.truth,
       signatures: this.signatures,
     };
@@ -180,22 +180,22 @@ export class Proof {
 
   async destroy() {
     await Promise.all(
-      Object.keys(this.indexedAssets).map(index =>
+      Object.keys(this.indexedDocuments).map(index =>
         this.imageStore.delete(index)
       )
     );
   }
 }
 
-export interface Assets {
-  readonly [base64: string]: AssetMeta;
+export interface Documents {
+  readonly [base64: string]: DocumentMeta;
 }
 
-interface IndexedAssets extends Tuple {
-  readonly [index: string]: AssetMeta;
+interface IndexedDocuments extends Tuple {
+  readonly [index: string]: DocumentMeta;
 }
 
-export interface AssetMeta extends Tuple {
+export interface DocumentMeta extends Tuple {
   readonly mimeType: MimeType;
 }
 
@@ -261,12 +261,12 @@ export function isSignature(value: any): value is Signature {
 }
 
 interface SerializedProof {
-  readonly assets: Assets;
+  readonly documents: Documents;
   readonly truth: Truth;
   readonly signatures: Signatures;
 }
 
-export type SignedTargets = Pick<SerializedProof, 'assets' | 'truth'>;
+export type SignedTargets = Pick<SerializedProof, 'documents' | 'truth'>;
 
 export function getSerializedSortedSignedTargets(signedTargets: SignedTargets) {
   return JSON.stringify(sortObjectDeeplyByKey(signedTargets as any).toJSON());
@@ -281,7 +281,7 @@ interface SignatureVerifier {
 }
 
 export interface IndexedProofView extends Tuple {
-  readonly indexedAssets: IndexedAssets;
+  readonly indexedDocuments: IndexedDocuments;
   readonly truth: Truth;
   readonly signatures: Signatures;
 }

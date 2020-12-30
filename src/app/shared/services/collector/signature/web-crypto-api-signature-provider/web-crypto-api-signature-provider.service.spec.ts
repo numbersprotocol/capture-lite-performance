@@ -55,7 +55,7 @@ describe('WebCryptoApiSignatureProvider', () => {
 
   it('should provide signature', async () => {
     const signedTargets: SignedTargets = {
-      assets: {},
+      documents: {},
       truth: { timestamp: 0, providers: {} },
     };
     const serializedSortedSignedTargets = JSON.stringify(

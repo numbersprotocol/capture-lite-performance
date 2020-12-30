@@ -18,9 +18,9 @@ import { DefaultFactId, Proof } from './proof';
 
 export function getOldProof(proof: Proof): OldProof {
   return {
-    mimeType: Object.values(proof.indexedAssets)[0].mimeType,
+    mimeType: Object.values(proof.indexedDocuments)[0].mimeType,
     timestamp: proof.timestamp,
-    hash: Object.keys(proof.indexedAssets)[0],
+    hash: Object.keys(proof.indexedDocuments)[0],
   };
 }
 
@@ -79,11 +79,11 @@ function createSortedEssentialInformation(
 }
 
 export function getOldSignatures(proof: Proof): OldSignature[] {
-  const assetHash = Object.keys(proof.indexedAssets)[0];
+  const documentHash = Object.keys(proof.indexedDocuments)[0];
   return Object.entries(proof.signatures).map(
     ([provider, { signature, publicKey }]) => ({
       provider,
-      proofHash: assetHash,
+      proofHash: documentHash,
       signature,
       publicKey,
     })

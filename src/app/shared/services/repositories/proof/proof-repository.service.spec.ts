@@ -3,9 +3,9 @@ import { SharedTestingModule } from '../../../../shared/shared-testing.module';
 import { MimeType } from '../../../../utils/mime-type';
 import { ImageStore } from '../../file-store/image/image-store';
 import {
-  AssetMeta,
-  Assets,
   DefaultFactId,
+  DocumentMeta,
+  Documents,
   Proof,
   Signatures,
   Truth,
@@ -26,13 +26,13 @@ describe('ProofRepository', () => {
     repo = TestBed.inject(ProofRepository);
     proof1 = await Proof.from(
       imageStore,
-      PROOF1_ASSETS,
+      PROOF1_DOCUMENTS,
       PROOF1_TRUTH,
       PROOF1_SIGNATURES_VALID
     );
     proof2 = await Proof.from(
       imageStore,
-      PROOF2_ASSETS,
+      PROOF2_DOCUMENTS,
       PROOF2_TRUTH,
       PROOF2_SIGNATURES_INVALID
     );
@@ -61,7 +61,7 @@ describe('ProofRepository', () => {
     await repo.add(proof2);
     const sameProof1 = await Proof.from(
       imageStore,
-      PROOF1_ASSETS,
+      PROOF1_DOCUMENTS,
       PROOF1_TRUTH,
       PROOF1_SIGNATURES_VALID
     );
@@ -75,16 +75,16 @@ describe('ProofRepository', () => {
   });
 });
 
-const ASSET1_MIMETYPE: MimeType = 'image/png';
-const ASSET1_BASE64 =
+const DOCUMENT1_MIMETYPE: MimeType = 'image/png';
+const DOCUMENT1_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAYAAAADCAYAAACwAX77AAAABHNCSVQICAgIfAhkiAAAABl0RVh0U29mdHdhcmUAZ25vbWUtc2NyZWVuc2hvdO8Dvz4AAABAaVRYdENyZWF0aW9uIFRpbWUAAAAAADIwMjDlubTljYHkuIDmnIgxMOaXpSAo6YCx5LqMKSAyMOaZgjU55YiGMzfnp5JnJvHNAAAAFUlEQVQImWM0MTH5z4AFMGETxCsBAHRhAaHOZzVQAAAAAElFTkSuQmCC';
-const ASSET1: AssetMeta = { mimeType: ASSET1_MIMETYPE };
-const ASSET2_MIMETYPE: MimeType = 'image/png';
-const ASSET2_BASE64 =
+const DOCUMENT1_META: DocumentMeta = { mimeType: DOCUMENT1_MIMETYPE };
+const DOCUMENT2_MIMETYPE: MimeType = 'image/png';
+const DOCUMENT2_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABHNCSVQICAgIfAhkiAAAABZJREFUCJlj/Pnz538GJMDEgAYICwAAAbkD8p660MIAAAAASUVORK5CYII=';
-const ASSET2: AssetMeta = { mimeType: ASSET2_MIMETYPE };
-const PROOF1_ASSETS: Assets = { [ASSET1_BASE64]: ASSET1 };
-const PROOF2_ASSETS: Assets = { [ASSET2_BASE64]: ASSET2 };
+const DOCUMENT2_META: DocumentMeta = { mimeType: DOCUMENT2_MIMETYPE };
+const PROOF1_DOCUMENTS: Documents = { [DOCUMENT1_BASE64]: DOCUMENT1_META };
+const PROOF2_DOCUMENTS: Documents = { [DOCUMENT2_BASE64]: DOCUMENT2_META };
 const INFO_SNAPSHOT = 'INFO_SNAPSHOT';
 const CAPACITOR = 'CAPACITOR';
 const GEOLOCATION_LATITUDE1 = 22.917923;

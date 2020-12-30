@@ -126,8 +126,8 @@ async function buildFormDataToCreateAsset(proof: Proof) {
 
   formData.set('signature', JSON.stringify(getOldSignatures(proof)));
 
-  const fileBase64 = Object.keys(await proof.getAssets())[0];
-  const mimeType = Object.values(proof.indexedAssets)[0].mimeType;
+  const fileBase64 = Object.keys(await proof.getDocuments())[0];
+  const mimeType = Object.values(proof.indexedDocuments)[0].mimeType;
   formData.set(
     'asset_file',
     await base64ToBlob(fileBase64, mimeType),
