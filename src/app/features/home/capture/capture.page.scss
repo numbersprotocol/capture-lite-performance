@@ -4,6 +4,10 @@
   height: 100%;
 
   .capture-tab {
+    app-capture-item {
+      height: 30vw;
+    }
+
     app-capture-item:focus {
       outline: none;
     }
@@ -13,16 +17,6 @@
     }
 
     app-capture-item::part(image) {
-      border-radius: 8px;
-    }
-  }
-
-  .post-capture-tab {
-    app-img {
-      object-fit: cover;
-    }
-
-    app-img::part(image) {
       border-radius: 8px;
     }
   }

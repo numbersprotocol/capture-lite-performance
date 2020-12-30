@@ -25,28 +25,18 @@
           <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
         <ion-grid class="capture-tab">
-          <!-- Use fixed itemHeight to avoid the bug: https://github.com/ionic-team/ionic-framework/issues/17540 -->
-          <ion-virtual-scroll
-            [items]="chunkedCaptures$ | async"
-            [itemHeight]="captureColumnHeight"
-            class="ion-margin-bottom"
-          >
-            <ion-row *virtualItem="let chunkedGroup">
-              <ion-col
-                *ngFor="let item of chunkedGroup; trackBy: trackById"
-                [size]="12 / capturesPerRow"
+          <ion-row>
+            <ion-col
+              *ngFor="let item of captures$ | async; trackBy: trackById"
+              size="4"
+            >
+              <app-capture-item
+                [item]="item"
+                [routerLink]="item.id ? ['asset', { id: item.id }] : undefined"
               >
-                <app-capture-item
-                  [item]="item"
-                  [style.height.px]="captureItemHeight"
-                  [routerLink]="
-                    item.id ? ['asset', { id: item.id }] : undefined
-                  "
-                >
-                </app-capture-item>
-              </ion-col>
-            </ion-row>
-          </ion-virtual-scroll>
+              </app-capture-item>
+            </ion-col>
+          </ion-row>
         </ion-grid>
         <ion-infinite-scroll
           #captureInfiniteScroll
@@ -70,18 +60,11 @@
         >
           <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
-        <ion-virtual-scroll
-          [items]="postCaptures$ | async"
-          [itemHeight]="postCaptureColumnHeight"
-          class="post-capture-tab"
-        >
-          <app-post-capture
-            *virtualItem="let transaction"
-            [transaction]="transaction"
-            [style.height.px]="postCaptureItemHeight"
-            class="ion-margin-bottom"
-          ></app-post-capture>
-        </ion-virtual-scroll>
+        <app-post-capture
+          *ngFor="let transaction of postCaptures$ | async"
+          [transaction]="transaction"
+          class="ion-margin-bottom"
+        ></app-post-capture>
         <ion-infinite-scroll
           #postCaptureInfiniteScroll
           (ionInfinite)="loadPostCaptures($event)"

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonInfiniteScroll, IonRefresher } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { chunk, isEqual, sortBy } from 'lodash-es';
+import { isEqual, sortBy } from 'lodash-es';
 import { combineLatest, defer } from 'rxjs';
 import { concatMap, first, map, single, skipWhile, tap } from 'rxjs/operators';
 import { CameraService } from '../../../shared/services/camera/camera.service';
@@ -20,9 +20,6 @@ import {
 } from '../../../utils/paging-source/paging-source';
 import { CaptureItem } from './capture-item/capture-item.component';
 
-const CAPTURE_ITEM_HEIGHT_PX = 110;
-const POST_CAPTURE_ITEM_HEIGHT_PX = 600;
-
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-capture',
@@ -33,7 +30,7 @@ export class CapturePage implements OnInit {
   private readonly captureRemoteSource = new PagingSource(options =>
     this.diaBackendAssetRepository.fetchAll$(options).pipe(first())
   );
-  readonly chunkedCaptures$ = combineLatest([
+  readonly captures$ = combineLatest([
     this.captureRemoteSource.data$.pipe(
       map(diaBackendAssets => diaBackendAssets.filter(a => a.is_original_owner))
     ),
@@ -43,11 +40,8 @@ export class CapturePage implements OnInit {
     map(([diaBackendAssets, proofs]) =>
       mergeDiaBackendAssetsAndProofs(diaBackendAssets, proofs)
     ),
-    map(captures => sortBy(captures, [c => -c.timestamp])),
-    map(captures => chunk(captures, this.capturesPerRow))
+    map(captures => sortBy(captures, [c => -c.timestamp]))
   );
-  readonly capturesPerRow = 3;
-  readonly captureItemHeight = CAPTURE_ITEM_HEIGHT_PX;
 
   private readonly postCaptureRemoteSource = new PagingSource(
     options => this.diaBackendTransactionRepository.fetchAllReceived$(options),
@@ -60,7 +54,6 @@ export class CapturePage implements OnInit {
       )
     )
   );
-  readonly postCaptureItemHeight = POST_CAPTURE_ITEM_HEIGHT_PX;
 
   constructor(
     private readonly diaBackendAssetRepository: DiaBackendAssetRepository,
@@ -109,16 +102,6 @@ export class CapturePage implements OnInit {
 
   trackById(_: number, item: DiaBackendAsset) {
     return item.id;
-  }
-
-  captureColumnHeight(_item: DiaBackendAsset, _index: number) {
-    const columnPaddingPx = 10;
-    return CAPTURE_ITEM_HEIGHT_PX + columnPaddingPx;
-  }
-
-  postCaptureColumnHeight(_item: DiaBackendAsset, _index: number) {
-    const imageMarginPx = 16;
-    return POST_CAPTURE_ITEM_HEIGHT_PX + imageMarginPx;
   }
 
   loadCaptures(event: InfiniteScrollEvent) {
