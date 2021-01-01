@@ -1,0 +1,28 @@
+ion-slides {
+  min-height: 100%;
+
+  ion-slide {
+    flex-direction: column;
+
+    ion-list {
+      width: 100%;
+    }
+
+    app-post-capture {
+      width: 100%;
+    }
+
+    ion-button {
+      width: 90%;
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    ion-button.input-button {
+      width: fit-content;
+    }
+  }
+}

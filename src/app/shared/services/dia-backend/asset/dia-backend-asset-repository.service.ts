@@ -105,6 +105,7 @@ export interface DiaBackendAsset extends Tuple {
   readonly signature: OldSignature[];
   readonly owner: string;
   readonly is_original_owner: boolean;
+  readonly caption: string;
 }
 
 interface ListAssetResponse {

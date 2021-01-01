@@ -16,4 +16,33 @@
     flex-grow: 1;
     object-fit: cover;
   }
+
+  .ion-activatable {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .caption {
+    text-align: start;
+  }
+
+  .caption-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .caption-full {
+    overflow: visible;
+    height: auto;
+    text-overflow: initial;
+    white-space: initial;
+  }
+
+  .show-more {
+    width: fit-content;
+    margin-left: auto;
+    border-radius: 8px;
+    padding: 4px;
+  }
 }

@@ -13,16 +13,13 @@ import { IgnoredTransactionRepository } from './ignored-transaction-repository.s
 })
 export class DiaBackendTransactionRepository {
   private readonly _isFetching$ = new BehaviorSubject(false);
+  readonly isFetching$ = this._isFetching$.asObservable();
 
   constructor(
     private readonly httpClient: HttpClient,
     private readonly authService: DiaBackendAuthService,
     private readonly ignoredTransactionRepository: IgnoredTransactionRepository
   ) {}
-
-  isFetching$() {
-    return this._isFetching$.asObservable();
-  }
 
   fetchAll$(
     options: PagingFetchFunctionOptions = { pagingSize: 100, offset: 0 }

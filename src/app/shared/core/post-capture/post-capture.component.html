@@ -13,7 +13,7 @@
 
 <app-img [src]="(asset$ | async)?.sharable_copy"></app-img>
 
-<ion-list lines="none">
+<ion-list [class.ion-hide]="!showMore" lines="none">
   <ion-item>
     <ion-icon
       name="time"
@@ -45,3 +45,16 @@
     </ion-label>
   </ion-item>
 </ion-list>
+<p
+  class="ion-padding-horizontal caption caption-ellipsis"
+  [class.caption-full]="showMore"
+>
+  {{ (transaction$ | async)?.asset.caption }}
+</p>
+<span
+  (click)="showMore = !showMore"
+  class="show-more ion-activatable ion-margin-end"
+>
+  {{ showMore ? 'show less' : 'show more...' }}
+  <ion-ripple-effect></ion-ripple-effect>
+</span>

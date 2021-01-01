@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { first, map, share, switchMap } from 'rxjs/operators';
+import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { isNonNullable } from '../../../utils/rx-operators/rx-operators';
 import { DiaBackendAssetRepository } from '../../services/dia-backend/asset/dia-backend-asset-repository.service';
 import { DiaBackendTransaction } from '../../services/dia-backend/transaction/dia-backend-transaction-repository.service';
@@ -28,7 +28,7 @@ export class PostCaptureComponent {
       this.diaBackendAssetRepository.fetchById$(transaction.asset.id)
     ),
     first(),
-    share()
+    shareReplay({ bufferSize: 1, refCount: true })
   );
   readonly location$ = this.asset$.pipe(
     map(asset => {
@@ -43,6 +43,7 @@ export class PostCaptureComponent {
       return `${latitude}, ${longitude}`;
     })
   );
+  showMore = false;
 
   constructor(
     private readonly diaBackendAssetRepository: DiaBackendAssetRepository

@@ -2,21 +2,18 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, defer, zip } from 'rxjs';
+import { defer, zip } from 'rxjs';
 import {
   concatMap,
   concatMapTo,
   first,
   map,
+  shareReplay,
   switchMap,
-  tap,
 } from 'rxjs/operators';
 import { BlockingAction } from '../../../../shared/services/blocking-action/blocking-action.service';
 import { ConfirmAlert } from '../../../../shared/services/confirm-alert/confirm-alert.service';
-import {
-  DiaBackendAsset,
-  DiaBackendAssetRepository,
-} from '../../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
+import { DiaBackendAssetRepository } from '../../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
 import {
   getOldProof,
   OldDefaultInformationName,
@@ -31,10 +28,13 @@ import { isNonNullable } from '../../../../utils/rx-operators/rx-operators';
   styleUrls: ['./asset.page.scss'],
 })
 export class AssetPage {
-  private readonly _asset$ = new BehaviorSubject<DiaBackendAsset | undefined>(
-    undefined
+  readonly asset$ = this.route.paramMap.pipe(
+    map(params => params.get('id')),
+    isNonNullable(),
+    switchMap(id => this.diaBackendAssetRepository.fetchById$(id)),
+    first(),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
-  readonly asset$ = this._asset$.asObservable().pipe(isNonNullable());
 
   readonly location$ = this.asset$.pipe(
     map(asset => {
@@ -57,18 +57,7 @@ export class AssetPage {
     private readonly router: Router,
     private readonly confirmAlert: ConfirmAlert,
     private readonly blockingAction: BlockingAction
-  ) {
-    this.route.paramMap
-      .pipe(
-        map(params => params.get('id')),
-        isNonNullable(),
-        switchMap(id => this.diaBackendAssetRepository.fetchById$(id)),
-        first(),
-        tap(diaBackendAsset => this._asset$.next(diaBackendAsset)),
-        untilDestroyed(this)
-      )
-      .subscribe();
-  }
+  ) {}
 
   async showOptionsMenu() {
     const actionSheet = await this.actionSheetController.create({

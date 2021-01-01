@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonInfiniteScroll, IonRefresher } from '@ionic/angular';
+import { IonInfiniteScroll } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, sortBy } from 'lodash-es';
 import { combineLatest, defer } from 'rxjs';
@@ -15,9 +15,10 @@ import { getOldProof } from '../../../shared/services/repositories/proof/old-pro
 import { Proof } from '../../../shared/services/repositories/proof/proof';
 import { ProofRepository } from '../../../shared/services/repositories/proof/proof-repository.service';
 import {
-  InfiniteScrollEvent,
-  PagingSource,
-} from '../../../utils/paging-source/paging-source';
+  IonInfiniteScrollEvent,
+  IonRefresherEvent,
+} from '../../../utils/events';
+import { PagingSource } from '../../../utils/paging-source/paging-source';
 import { CaptureItem } from './capture-item/capture-item.component';
 
 @UntilDestroy({ checkProperties: true })
@@ -64,19 +65,19 @@ export class CapturePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.refreshCapture();
-    this.refreshPostCapture();
+    this.refreshCaptures();
+    this.refreshPostCaptures();
 
     this.diaBackendAssetRepository.isDirtyEvent$
       .pipe(
-        tap(() => this.refreshCapture()),
+        tap(() => this.refreshCaptures()),
         untilDestroyed(this)
       )
       .subscribe();
   }
 
-  refreshCapture(
-    event?: RefresherEvent,
+  refreshCaptures(
+    event?: IonRefresherEvent,
     ionInfiniteScroll?: IonInfiniteScroll
   ) {
     this.captureRemoteSource
@@ -91,8 +92,8 @@ export class CapturePage implements OnInit {
       .subscribe();
   }
 
-  refreshPostCapture(
-    event?: RefresherEvent,
+  refreshPostCaptures(
+    event?: IonRefresherEvent,
     ionInfiniteScroll?: IonInfiniteScroll
   ) {
     this.postCaptureRemoteSource
@@ -111,14 +112,14 @@ export class CapturePage implements OnInit {
     return item.id;
   }
 
-  loadCaptures(event: InfiniteScrollEvent) {
+  loadCaptures(event: IonInfiniteScrollEvent) {
     return this.captureRemoteSource
       .loadData$(event)
       .pipe(untilDestroyed(this))
       .subscribe();
   }
 
-  loadPostCaptures(event: InfiniteScrollEvent) {
+  loadPostCaptures(event: IonInfiniteScrollEvent) {
     return this.postCaptureRemoteSource
       .loadData$(event)
       .pipe(untilDestroyed(this))
@@ -163,8 +164,4 @@ function mergeDiaBackendAssetsAndProofs(
   }
 
   return items;
-}
-
-interface RefresherEvent extends CustomEvent {
-  readonly target: EventTarget & IonRefresher;
 }

@@ -19,7 +19,7 @@
     <super-tab>
       <ion-content>
         <ion-refresher
-          (ionRefresh)="refreshCapture($event, captureInfiniteScroll)"
+          (ionRefresh)="refreshCaptures($event, capturesInfiniteScroll)"
           slot="fixed"
         >
           <ion-refresher-content></ion-refresher-content>
@@ -39,7 +39,7 @@
           </ion-row>
         </ion-grid>
         <ion-infinite-scroll
-          #captureInfiniteScroll
+          #capturesInfiniteScroll
           (ionInfinite)="loadCaptures($event)"
           threshold="10px"
         >
@@ -55,7 +55,7 @@
     <super-tab>
       <ion-content>
         <ion-refresher
-          (ionRefresh)="refreshPostCapture($event, postCaptureInfiniteScroll)"
+          (ionRefresh)="refreshPostCaptures($event, postCapturesInfiniteScroll)"
           slot="fixed"
         >
           <ion-refresher-content></ion-refresher-content>
@@ -66,7 +66,7 @@
           class="ion-margin-bottom"
         ></app-post-capture>
         <ion-infinite-scroll
-          #postCaptureInfiniteScroll
+          #postCapturesInfiniteScroll
           (ionInfinite)="loadPostCaptures($event)"
           threshold="10px"
         >

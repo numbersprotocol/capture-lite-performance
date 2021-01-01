@@ -1,0 +1,120 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button
+        (click)="slides.slidePrev()"
+        [routerLink]="currentSlideIndex === 0 ? '..' : undefined"
+        routerDirection="back"
+      >
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ titles[currentSlideIndex] }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-slides
+    #slides
+    [options]="slidesOptions"
+    (ionSlideDidChange)="onSlidesDidChange($event)"
+    class="swiper-no-swiping"
+  >
+    <ion-slide>
+      <ion-refresher
+        (ionRefresh)="refreshContacts($event, contactsInfiniteScroll)"
+        slot="fixed"
+      >
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+      <ion-list lines="none">
+        <ion-item
+          *ngFor="let contact of contacts$ | async; trackBy: trackByEmail"
+          (click)="targetContact = contact; slides.slideNext()"
+          button
+          detail
+        >
+          <ion-icon
+            [name]="contact.contact_name ? 'person' : 'mail'"
+            slot="start"
+          ></ion-icon>
+          <ion-label>{{
+            contact.contact_name || contact.contact_email
+          }}</ion-label>
+        </ion-item>
+        <ion-item-divider></ion-item-divider>
+        <ion-item>
+          <ion-label position="fixed">Invite Friend</ion-label>
+          <ion-input
+            #invitedEmailInput
+            placeholder="Enter email..."
+            type="email"
+          ></ion-input>
+          <ion-button
+            (click)="inviteFriend(invitedEmailInput.value); slides.slideNext()"
+            [disabled]="
+              !invitedEmailInput.value || invitedEmailInput.value.length === 0
+            "
+            class="input-button"
+            fill="clear"
+            slot="end"
+          >
+            <ion-icon name="add" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+      <ion-infinite-scroll
+        #contactsInfiniteScroll
+        (ionInfinite)="loadContacts($event)"
+        threshold="10px"
+      >
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-slide>
+
+    <ion-slide>
+      <ng-container *ngIf="asset$ | async as asset">
+        <ng-container *ngIf="userEmail$ | async as userEmail">
+          <app-post-capture
+            [transaction]="{ asset: { id: asset.id }, sender: userEmail }"
+          ></app-post-capture>
+        </ng-container>
+      </ng-container>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Message</ion-label>
+          <ion-textarea
+            inputmode="text"
+            placeholder="Enter message..."
+            [(ngModel)]="message"
+          ></ion-textarea>
+        </ion-item>
+      </ion-list>
+      <ion-button (click)="slides.slideNext()">Preview</ion-button>
+    </ion-slide>
+
+    <ion-slide>
+      <ng-container *ngIf="asset$ | async as asset">
+        <ng-container *ngIf="userEmail$ | async as userEmail">
+          <app-post-capture
+            class="ion-margin-bottom"
+            [transaction]="{
+              asset: { id: asset.id, caption: message },
+              sender: userEmail
+            }"
+          ></app-post-capture>
+        </ng-container>
+      </ng-container>
+      <ion-button
+        (click)="send(targetContact?.contact_email)"
+        [disabled]="!targetContact"
+      >
+        <span>
+          Send to
+          {{ targetContact?.contact_name || targetContact?.contact_email }}
+        </span>
+        <ion-icon name="send" slot="end"></ion-icon>
+      </ion-button>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
