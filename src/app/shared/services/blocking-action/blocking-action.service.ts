@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 import { LoadingOptions } from '@ionic/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { defer, Observable } from 'rxjs';
 import { concatMap, concatMapTo, finalize } from 'rxjs/operators';
 
@@ -8,12 +9,15 @@ import { concatMap, concatMapTo, finalize } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class BlockingAction {
-  constructor(private readonly loadingController: LoadingController) {}
+  constructor(
+    private readonly loadingController: LoadingController,
+    private readonly translocoService: TranslocoService
+  ) {}
 
   run$<T>(
     action$: Observable<T>,
     opts: Partial<LoadingOptions> = {
-      message: 'Please Wait',
+      message: this.translocoService.translate('pleaseWait'),
     }
   ) {
     return defer(() => this.loadingController.create({ ...opts })).pipe(

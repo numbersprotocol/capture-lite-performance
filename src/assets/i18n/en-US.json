@@ -28,12 +28,22 @@
   "selectContact": "Select Contact",
   "writeMessage": "Write Message",
   "sendPostCapture": "Send PostCapture",
+  "email": "Email",
+  "password": "Password",
+  "pleaseWait": "Please Wait",
+  "areYouSure": "Are You Sure",
+  "cancel": "Cancel",
+  "ok": "Ok",
+  "locationNotProvided": "Location Not Provided",
   ".message": "Message",
   "message": {
+    "areYouSure": "This action cannot be undone.",
     "showLess": "show less",
     "showMore": "show more...",
     "enterEmail": "Enter email...",
-    "enterMessage": "Enter message..."
+    "enterMessage": "Enter message...",
+    "pleaseEnterValidEmail": "Please enter valid email.",
+    "sendPostCaptureAlert": "After a PostCapture is sent, the ownership will be transferred to the selected friend. Are you sure?"
   },
   "transactionState": {
     "accepted": "Accepted",

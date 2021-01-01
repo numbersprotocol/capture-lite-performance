@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
+import { TranslocoService } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { defer, zip } from 'rxjs';
 import {
@@ -44,7 +45,8 @@ export class AssetPage {
       const longitude = asset.information.information.find(
         info => info.name === OldDefaultInformationName.GEOLOCATION_LONGITUDE
       )?.value;
-      if (!latitude || !longitude) return 'Location Not Provided';
+      if (!latitude || !longitude)
+        return this.translocoService.translate('locationNotProvided');
       return `${latitude}, ${longitude}`;
     })
   );
@@ -56,7 +58,8 @@ export class AssetPage {
     private readonly proofRepository: ProofRepository,
     private readonly router: Router,
     private readonly confirmAlert: ConfirmAlert,
-    private readonly blockingAction: BlockingAction
+    private readonly blockingAction: BlockingAction,
+    private readonly translocoService: TranslocoService
   ) {}
 
   async showOptionsMenu() {

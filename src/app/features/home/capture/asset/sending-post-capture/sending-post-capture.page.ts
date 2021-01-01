@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonInfiniteScroll } from '@ionic/angular';
+import { TranslocoService } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { defer } from 'rxjs';
 import {
@@ -75,7 +76,8 @@ export class SendingPostCapturePage implements OnInit {
     private readonly proofRepository: ProofRepository,
     private readonly router: Router,
     private readonly confirmAlert: ConfirmAlert,
-    private readonly blockingAction: BlockingAction
+    private readonly blockingAction: BlockingAction,
+    private readonly translocoService: TranslocoService
   ) {}
 
   ngOnInit() {
@@ -137,7 +139,7 @@ export class SendingPostCapturePage implements OnInit {
     );
 
     const result = await this.confirmAlert.present(
-      'After a PostCapture is sent, the ownership will be transferred to the selected friend. Are you sure?'
+      this.translocoService.translate('message.sendPostCaptureAlert')
     );
     if (result) {
       this.blockingAction.run$(action$).pipe(untilDestroyed(this)).subscribe();

@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { DiaBackendAssetRepository } from '../../../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
-import { OldDefaultInformationName } from '../../../../../shared/services/repositories/proof/old-proof-adapter';
 import { isNonNullable } from '../../../../../utils/rx-operators/rx-operators';
 
 @UntilDestroy({ checkProperties: true })
@@ -19,19 +18,6 @@ export class InformationPage {
     switchMap(id => this.diaBackendAssetRepository.fetchById$(id)),
     first(),
     shareReplay({ bufferSize: 1, refCount: true })
-  );
-
-  readonly location$ = this.asset$.pipe(
-    map(asset => {
-      const latitude = asset.information.information.find(
-        info => info.name === OldDefaultInformationName.GEOLOCATION_LATITUDE
-      )?.value;
-      const longitude = asset.information.information.find(
-        info => info.name === OldDefaultInformationName.GEOLOCATION_LONGITUDE
-      )?.value;
-      if (!latitude || !longitude) return 'Location Not Provided';
-      return `${latitude}, ${longitude}`;
-    })
   );
 
   constructor(

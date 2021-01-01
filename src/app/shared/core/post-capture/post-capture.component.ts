@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { BehaviorSubject } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { isNonNullable } from '../../../utils/rx-operators/rx-operators';
@@ -38,7 +39,8 @@ export class PostCaptureComponent {
       const longitude = asset.information.information.find(
         info => info.name === OldDefaultInformationName.GEOLOCATION_LONGITUDE
       )?.value;
-      if (!latitude || !longitude) return 'Location Not Provided';
+      if (!latitude || !longitude)
+        return this.translocoService.translate('locationNotProvided');
 
       return `${latitude}, ${longitude}`;
     })
@@ -46,6 +48,7 @@ export class PostCaptureComponent {
   showMore = false;
 
   constructor(
-    private readonly diaBackendAssetRepository: DiaBackendAssetRepository
+    private readonly diaBackendAssetRepository: DiaBackendAssetRepository,
+    private readonly translocoService: TranslocoService
   ) {}
 }

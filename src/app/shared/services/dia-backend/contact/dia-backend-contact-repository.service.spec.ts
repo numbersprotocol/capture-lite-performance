@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { SharedModule } from '../../../shared.module';
+import { SharedTestingModule } from '../../../shared-testing.module';
 import { DiaBackendContactRepository } from './dia-backend-contact-repository.service';
 
-xdescribe('DiaBackendContactRepository', () => {
+describe('DiaBackendContactRepository', () => {
   let repository: DiaBackendContactRepository;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [SharedModule] });
+    TestBed.configureTestingModule({ imports: [SharedTestingModule] });
     repository = TestBed.inject(DiaBackendContactRepository);
   });
 
