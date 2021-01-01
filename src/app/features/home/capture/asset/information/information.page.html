@@ -36,7 +36,10 @@
       <ion-label>
         <h3>{{ t('timestamp') }}</h3>
         <p>
-          {{ (asset$ | async)?.information.proof.timestamp | date: 'long' }}
+          {{
+            (asset$ | async)?.information.proof.timestamp
+              | translocoDate: { dateStyle: 'long', timeStyle: 'long' }
+          }}
         </p>
       </ion-label>
     </ion-item>

@@ -9,11 +9,12 @@ import {
   TRANSLOCO_CONFIG,
   TRANSLOCO_LOADER,
 } from '@ngneat/transloco';
+import { TranslocoLocaleModule } from '@ngneat/transloco-locale';
 import { environment } from '../../../../environments/environment';
 
 export const languages: { [key: string]: string } = {
-  'en-us': 'English (United State)',
-  'zh-tw': '繁體中文（台灣）',
+  'en-US': 'English (United State)',
+  'zh-TW': '繁體中文（台灣）',
 };
 
 export const defaultLanguage =
@@ -33,18 +34,19 @@ export class TranslocoHttpLoader implements TranslocoLoader {
 }
 
 @NgModule({
-  exports: [TranslocoModule],
+  imports: [TranslocoLocaleModule.init()],
   providers: [
     {
       provide: TRANSLOCO_CONFIG,
       useValue: translocoConfig({
-        availableLangs: ['en-us', 'zh-tw'],
-        defaultLang: 'en-us',
+        availableLangs: ['en-US', 'zh-TW'],
+        defaultLang: 'en-US',
         reRenderOnLangChange: true,
         prodMode: environment.production,
       }),
     },
     { provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader },
   ],
+  exports: [TranslocoModule],
 })
 export class TranslocoRootModule {}

@@ -7,7 +7,8 @@
       /></ion-avatar>
       <ion-title>{{ (transaction$ | async)?.sender }}</ion-title>
       <ion-title size="small">{{
-        (transaction$ | async)?.fulfilled_at | date: 'short'
+        (transaction$ | async)?.fulfilled_at
+          | translocoDate: { dateStyle: 'medium', timeStyle: 'medium' }
       }}</ion-title>
     </ion-toolbar>
   </ion-header>
@@ -22,7 +23,10 @@
         class="ion-no-margin ion-margin-end"
       ></ion-icon>
       <ion-label class="ion-no-margin ion-margin-start">
-        {{ (asset$ | async)?.information.proof.timestamp | date: 'medium' }}
+        {{
+          (asset$ | async)?.information.proof.timestamp
+            | translocoDate: { dateStyle: 'short', timeStyle: 'long' }
+        }}
       </ion-label>
     </ion-item>
     <ion-item>

@@ -32,7 +32,10 @@
     <ion-item>
       <ion-icon name="time" slot="start"></ion-icon>
       <ion-label>
-        {{ (asset$ | async)?.information.proof.timestamp | date: 'long' }}
+        {{
+          (asset$ | async)?.information.proof.timestamp
+            | translocoDate: { dateStyle: 'medium', timeStyle: 'medium' }
+        }}
       </ion-label>
     </ion-item>
     <ion-item>

@@ -29,7 +29,12 @@
       <div class="inbox-content">
         <ion-label>
           <h3>{{ transaction.asset.id }}</h3>
-          <p>{{ transaction.created_at | date: 'medium' }}</p>
+          <p>
+            {{
+              transaction.created_at
+                | translocoDate: { dateStyle: 'short', timeStyle: 'medium' }
+            }}
+          </p>
         </ion-label>
 
         <div class="inbox-actions">

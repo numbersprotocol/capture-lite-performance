@@ -1,6 +1,6 @@
 import { TranslocoConfig, TranslocoTestingModule } from '@ngneat/transloco';
-import enUs from '../../../../assets/i18n/en-us.json';
-import zhTw from '../../../../assets/i18n/zh-tw.json';
+import enUs from '../../../../assets/i18n/en-US.json';
+import zhTw from '../../../../assets/i18n/zh-TW.json';
 import { defaultLanguage, languages } from './transloco-root.module';
 
 export function getTranslocoTestingModule(

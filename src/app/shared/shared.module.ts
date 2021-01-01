@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { TranslocoModule } from '@ngneat/transloco';
+import { TranslocoLocaleModule } from '@ngneat/transloco-locale';
 import { CapacitorPluginsModule } from './core/capacitor-plugins/capacitor-plugins.module';
 import { ImageComponent } from './core/image/image.component';
 import { PostCaptureComponent } from './core/post-capture/post-capture.component';
@@ -17,6 +18,7 @@ import { TransactionStatusPipe } from './pipes/transaction-status/transaction-st
     IonicModule,
     HttpClientModule,
     TranslocoModule,
+    TranslocoLocaleModule,
     CapacitorPluginsModule,
   ],
   exports: [
@@ -24,6 +26,7 @@ import { TransactionStatusPipe } from './pipes/transaction-status/transaction-st
     FormsModule,
     IonicModule,
     TranslocoModule,
+    TranslocoLocaleModule,
     ImageComponent,
     PostCaptureComponent,
     TransactionStatusPipe,

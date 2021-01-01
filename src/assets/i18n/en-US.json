@@ -1,6 +1,6 @@
 {
   "capture": "Capture",
-  "PostCapture": "PostCapture",
+  "postCapture": "PostCapture",
   "index": "Index",
   "profile": "Profile",
   "settings": "Settings",
