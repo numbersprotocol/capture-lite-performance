@@ -8,6 +8,7 @@ import { CollectorService } from './shared/services/collector/collector.service'
 import { CapacitorFactsProvider } from './shared/services/collector/facts/capacitor-facts-provider/capacitor-facts-provider.service';
 import { WebCryptoApiSignatureProvider } from './shared/services/collector/signature/web-crypto-api-signature-provider/web-crypto-api-signature-provider.service';
 import { DiaBackendAssetRepository } from './shared/services/dia-backend/asset/dia-backend-asset-repository.service';
+import { LanguageService } from './shared/services/language/language.service';
 
 const { SplashScreen } = Plugins;
 
@@ -24,11 +25,13 @@ export class AppComponent {
     private readonly collectorService: CollectorService,
     private readonly diaBackendAssetRepository: DiaBackendAssetRepository,
     private readonly webCryptoApiSignatureProvider: WebCryptoApiSignatureProvider,
-    private readonly capacitorFactsProvider: CapacitorFactsProvider
+    private readonly capacitorFactsProvider: CapacitorFactsProvider,
+    languageService: LanguageService
   ) {
     this.initializeApp();
     this.restoreAppStatus();
     this.initializeCollectorService();
+    languageService.initialize();
   }
 
   async initializeApp() {

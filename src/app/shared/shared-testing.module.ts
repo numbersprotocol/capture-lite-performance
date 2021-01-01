@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CapacitorPluginsTestingModule } from './core/capacitor-plugins/capacitor-plugins-testing.module';
+import { getTranslocoTestingModule } from './core/transloco/transloco-testing.module';
 import { SharedModule } from './shared.module';
 
 @NgModule({
@@ -9,6 +10,7 @@ import { SharedModule } from './shared.module';
     SharedModule,
     HttpClientTestingModule,
     RouterTestingModule,
+    getTranslocoTestingModule(),
     CapacitorPluginsTestingModule,
   ],
   exports: [SharedModule, RouterTestingModule],

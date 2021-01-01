@@ -12,7 +12,9 @@
     "importHelpers": true,
     "target": "es2015",
     "lib": ["es2019", "dom"],
-    "strict": true
+    "strict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

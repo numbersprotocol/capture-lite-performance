@@ -4,6 +4,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Platform } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { CapacitorPluginsTestingModule } from './shared/core/capacitor-plugins/capacitor-plugins-testing.module';
+import { getTranslocoTestingModule } from './shared/core/transloco/transloco-testing.module';
 
 describe('AppComponent', () => {
   let platformReadySpy: Promise<void>;
@@ -19,7 +20,11 @@ describe('AppComponent', () => {
       TestBed.configureTestingModule({
         declarations: [AppComponent],
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
-        imports: [CapacitorPluginsTestingModule, HttpClientTestingModule],
+        imports: [
+          CapacitorPluginsTestingModule,
+          HttpClientTestingModule,
+          getTranslocoTestingModule(),
+        ],
         providers: [{ provide: Platform, useValue: platformSpy }],
       }).compileComponents();
     })
