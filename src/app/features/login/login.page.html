@@ -1,10 +1,10 @@
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" *transloco="let t">
   <ion-img src="/assets/images/capture.svg" class="logo"></ion-img>
 
   <form [formGroup]="form" (ngSubmit)="submit()">
     <formly-form [form]="form" [fields]="fields" [model]="model"> </formly-form>
-    <ion-button type="submit" [disabled]="!form.valid" expand="full"
-      >Login</ion-button
-    >
+    <ion-button type="submit" [disabled]="!form.valid" expand="full">
+      {{ t('login') }}
+    </ion-button>
   </form>
 </ion-content>

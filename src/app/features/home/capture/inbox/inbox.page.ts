@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { first, tap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { first, map, tap } from 'rxjs/operators';
 import { BlockingAction } from '../../../../shared/services/blocking-action/blocking-action.service';
 import { DiaBackendAuthService } from '../../../../shared/services/dia-backend/auth/dia-backend-auth.service';
 import {
@@ -25,7 +26,16 @@ export class InboxPage implements OnInit {
   private readonly inboxRemoteSource = new PagingSource(options =>
     this.diaBackendTransactionRepository.fetchInbox$(options).pipe(first())
   );
-  readonly inbox$ = this.inboxRemoteSource.data$;
+  readonly inbox$ = combineLatest([
+    this.inboxRemoteSource.data$,
+    this.ignoredTransactionRepository.getAll$(),
+  ]).pipe(
+    map(([transactions, ignoredTransactions]) =>
+      transactions.filter(
+        transaction => !ignoredTransactions.includes(transaction.id)
+      )
+    )
+  );
   readonly email$ = this.diaBackendAuthService.getEmail$;
 
   constructor(

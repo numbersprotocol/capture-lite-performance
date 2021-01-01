@@ -1,13 +1,13 @@
-<ion-header>
+<ion-header *transloco="let t">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Transactions</ion-title>
+    <ion-title>{{ t('transactions') }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *transloco="let t">
   <ion-refresher
     (ionRefresh)="refreshTransactions($event, transactionsInfiniteScroll)"
     slot="fixed"
@@ -38,7 +38,12 @@
         [class]="transaction | transactionStatus: email$ | async"
         disabled
       >
-        {{ transaction | transactionStatus: email$ | async }}
+        {{
+          t(
+            'transactionState.' +
+              (transaction | transactionStatus: email$ | async)
+          )
+        }}
       </ion-label>
     </ion-item>
   </ion-list>

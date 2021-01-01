@@ -1,17 +1,17 @@
-<ion-header>
+<ion-header *transloco="let t">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Settings</ion-title>
+    <ion-title>{{ t('settings') }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *transloco="let t">
   <ion-list>
     <ion-item>
       <ion-icon name="language" slot="start"></ion-icon>
-      <ion-label>Language</ion-label>
+      <ion-label>{{ t('language') }}</ion-label>
       <ion-select
         [value]="currentLanguageKey$ | async"
         (ionChange)="setCurrentLanguage($event.target.value)"

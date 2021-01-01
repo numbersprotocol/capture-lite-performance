@@ -1,1 +1,46 @@
-{}
+{
+  "capture": "Capture",
+  "PostCapture": "PostCapture",
+  "index": "Index",
+  "profile": "Profile",
+  "settings": "Settings",
+  "language": "Language",
+  "assetDetails": "Asset Details",
+  "moreInformation": "More Information",
+  "information": "Information",
+  "digitalAsset": "Digital Asset",
+  "owner": "Owner",
+  "mediaId": "Media ID",
+  "hash": "Hash",
+  "timestamp": "Timestamp",
+  "mimeType": "MIME Type",
+  "signature": "Signature",
+  "publicKey": "Public Key",
+  "inviteFriend": "Invite Friend",
+  "preview": "Preview",
+  "sendTo": "Send to",
+  "inbox": "Inbox",
+  "ignore": "Ignore",
+  "accept": "Accept",
+  "transactions": "Transactions",
+  "logout": "Logout",
+  "login": "Login",
+  "selectContact": "Select Contact",
+  "writeMessage": "Write Message",
+  "sendPostCapture": "Send PostCapture",
+  ".message": "Message",
+  "message": {
+    "showLess": "show less",
+    "showMore": "show more...",
+    "enterEmail": "Enter email...",
+    "enterMessage": "Enter message..."
+  },
+  "transactionState": {
+    "accepted": "Accepted",
+    "delivered": "Delivered",
+    "returned": "Returned",
+    "inProgress": "In Progress",
+    "waitingToBeAccepted": "In Progress",
+    "null": "Unknown"
+  }
+}

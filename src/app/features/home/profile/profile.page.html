@@ -1,12 +1,12 @@
-<ion-header>
+<ion-header *transloco="let t">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Profile</ion-title>
+    <ion-title>{{ t('profile') }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-button (click)="logout()" expand="full">Log Out</ion-button>
+<ion-content *transloco="let t">
+  <ion-button (click)="logout()" expand="full">{{ t('logout') }}</ion-button>
 </ion-content>

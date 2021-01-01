@@ -1,13 +1,13 @@
-<ion-header>
+<ion-header *transloco="let t">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Inbox</ion-title>
+    <ion-title>{{ t('inbox') }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *transloco="let t">
   <ion-refresher
     (ionRefresh)="refreshInbox($event, transactionsInfiniteScroll)"
     slot="fixed"
@@ -33,10 +33,12 @@
         </ion-label>
 
         <div class="inbox-actions">
-          <ion-button (click)="ignore(transaction.id)" fill="outline"
-            >Ignore</ion-button
-          >
-          <ion-button (click)="accept(transaction.id)">Accept</ion-button>
+          <ion-button (click)="ignore(transaction.id)" fill="outline">
+            {{ t('ignore') }}
+          </ion-button>
+          <ion-button (click)="accept(transaction.id)">
+            {{ t('accept') }}
+          </ion-button>
         </div>
       </div>
     </ion-item>

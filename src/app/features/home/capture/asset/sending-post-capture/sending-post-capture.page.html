@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header *transloco="let t">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-button
@@ -9,7 +9,7 @@
         <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ titles[currentSlideIndex] }}</ion-title>
+    <ion-title>{{ t(titles[currentSlideIndex]) }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -44,10 +44,12 @@
         </ion-item>
         <ion-item-divider></ion-item-divider>
         <ion-item>
-          <ion-label position="fixed">Invite Friend</ion-label>
+          <ion-label position="fixed">
+            {{ 'inviteFriend' | transloco }}
+          </ion-label>
           <ion-input
             #invitedEmailInput
-            placeholder="Enter email..."
+            [placeholder]="'message.enterEmail' | transloco"
             type="email"
           ></ion-input>
           <ion-button
@@ -82,15 +84,19 @@
       </ng-container>
       <ion-list>
         <ion-item>
-          <ion-label position="floating">Message</ion-label>
+          <ion-label position="floating">{{
+            '.message' | transloco
+          }}</ion-label>
           <ion-textarea
             inputmode="text"
-            placeholder="Enter message..."
+            [placeholder]="'message.enterMessage' | transloco"
             [(ngModel)]="message"
           ></ion-textarea>
         </ion-item>
       </ion-list>
-      <ion-button (click)="slides.slideNext()">Preview</ion-button>
+      <ion-button (click)="slides.slideNext()">
+        {{ 'preview' | transloco }}
+      </ion-button>
     </ion-slide>
 
     <ion-slide>
@@ -110,8 +116,10 @@
         [disabled]="!targetContact"
       >
         <span>
-          Send to
-          {{ targetContact?.contact_name || targetContact?.contact_email }}
+          {{
+            ('sendTo' | transloco) +
+              (targetContact?.contact_name || targetContact?.contact_email)
+          }}
         </span>
         <ion-icon name="send" slot="end"></ion-icon>
       </ion-button>

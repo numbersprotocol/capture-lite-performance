@@ -1,1 +1,46 @@
-{}
+{
+  "capture": "Capture",
+  "postCapture": "PostCapture",
+  "index": "主頁",
+  "profile": "個人資料",
+  "settings": "設定",
+  "language": "語言",
+  "assetDetails": "詳細資訊",
+  "moreInformation": "更多資訊",
+  "information": "資訊",
+  "digitalAsset": "數位資產",
+  "owner": "擁有者",
+  "mediaId": "媒體 ID",
+  "hash": "雜湊",
+  "timestamp": "時間戳記",
+  "mimeType": "MIME 類型",
+  "signature": "簽章",
+  "publicKey": "公開金鑰",
+  "inviteFriend": "邀請好友",
+  "preview": "預覽",
+  "sendTo": "發送給",
+  "inbox": "收件匣",
+  "ignore": "忽略",
+  "accept": "接收",
+  "transactions": "活動紀錄",
+  "logout": "登出",
+  "login": "登入",
+  "selectContact": "選擇聯絡人",
+  "writeMessage": "撰寫訊息",
+  "sendPostCapture": "送出 PostCapture",
+  ".message": "訊息",
+  "message": {
+    "showLess": "顯示較少",
+    "showMore": "顯示更多...",
+    "enterEmail": "輸入電子信箱...",
+    "enterMessage": "輸入訊息..."
+  },
+  "transactionState": {
+    "accepted": "已接收",
+    "delivered": "已送出",
+    "returned": "已退回",
+    "inProgress": "等待中",
+    "waitingToBeAccepted": "等待中",
+    "null": "未知狀態"
+  }
+}

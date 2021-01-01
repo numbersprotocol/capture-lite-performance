@@ -1,19 +1,19 @@
-<ion-menu content-id="main-content">
+<ion-menu content-id="main-content" *transloco="let t">
   <ion-content>
     <ion-list lines="full">
       <ion-menu-toggle>
         <ion-item routerLink="/home/capture" routerDirection="root" button>
-          <ion-label>Capture</ion-label>
+          <ion-label>{{ t('index') }}</ion-label>
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle>
         <ion-item routerLink="/home/profile" routerDirection="root" button>
-          <ion-label>Profile</ion-label>
+          <ion-label>{{ t('profile') }}</ion-label>
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle>
         <ion-item routerLink="/home/settings" routerDirection="root" button>
-          <ion-label>Settings</ion-label>
+          <ion-label>{{ t('settings') }}</ion-label>
         </ion-item>
       </ion-menu-toggle>
     </ion-list>

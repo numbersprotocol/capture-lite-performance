@@ -40,7 +40,7 @@ import {
   styleUrls: ['./sending-post-capture.page.scss'],
 })
 export class SendingPostCapturePage implements OnInit {
-  readonly titles = ['Select Contact', 'Write Message', 'Send PostCapture'];
+  readonly titles = ['selectContact', 'writeMessage', 'sendPostCapture'];
   private readonly initialSlideIndex = 0;
   currentSlideIndex = this.initialSlideIndex;
   readonly slidesOptions = { initialSlide: this.initialSlideIndex };

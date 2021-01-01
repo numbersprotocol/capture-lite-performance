@@ -1,9 +1,9 @@
-<ion-header>
+<ion-header *transloco="let t">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Asset Details</ion-title>
+    <ion-title>{{ t('assetDetails') }}</ion-title>
     <ion-buttons slot="end">
       <ion-button routerLink="sending-post-capture">
         <ion-icon name="send" slot="icon-only"></ion-icon>
@@ -15,7 +15,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *transloco="let t">
   <app-img
     [src]="(asset$ | async)?.asset_file"
     [cacheKey]="(asset$ | async)?.id + '_assetFile'"
@@ -31,16 +31,16 @@
     </ion-item>
     <ion-item>
       <ion-icon name="time" slot="start"></ion-icon>
-      <ion-label>{{
-        (asset$ | async)?.information.proof.timestamp | date: 'long'
-      }}</ion-label>
+      <ion-label>
+        {{ (asset$ | async)?.information.proof.timestamp | date: 'long' }}
+      </ion-label>
     </ion-item>
     <ion-item>
       <ion-icon src="/assets/icons/media-id.svg" slot="start"></ion-icon>
       <ion-label>{{ (asset$ | async)?.id }}</ion-label>
     </ion-item>
   </ion-list>
-  <ion-button routerLink="information" expand="full" class="ion-margin"
-    >More Information</ion-button
-  >
+  <ion-button routerLink="information" expand="full" class="ion-margin">
+    {{ t('moreInformation') }}
+  </ion-button>
 </ion-content>

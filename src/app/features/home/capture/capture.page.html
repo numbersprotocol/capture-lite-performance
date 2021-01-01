@@ -14,13 +14,13 @@
   </ion-toolbar>
 </ion-header>
 
-<super-tabs>
+<super-tabs *transloco="let t">
   <super-tabs-toolbar slot="top">
     <super-tab-button>
-      <ion-label color="light">Capture</ion-label>
+      <ion-label color="light">{{ t('capture') }}</ion-label>
     </super-tab-button>
     <super-tab-button>
-      <ion-label color="light">PostCapture</ion-label>
+      <ion-label color="light">{{ t('postCapture') }}</ion-label>
     </super-tab-button>
   </super-tabs-toolbar>
   <super-tabs-container>
