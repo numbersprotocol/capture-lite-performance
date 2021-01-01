@@ -13,6 +13,19 @@ export class DiaBackendAuthService {
     DiaBackendAuthService.name
   );
 
+  private readonly getToken$ = this.preferences
+    .getString$(PrefKeys.TOKEN)
+    .pipe(filter(token => token.length !== 0));
+  readonly hasLoggedIn$ = this.preferences
+    .getString$(PrefKeys.TOKEN)
+    .pipe(map(token => token !== ''));
+
+  readonly getUsername$ = this.preferences.getString$(PrefKeys.USERNAME);
+  readonly getEmail$ = this.preferences.getString$(PrefKeys.EMAIL);
+  readonly getAuthHeaders$ = this.getToken$.pipe(
+    map(token => ({ authorization: `token ${token}` }))
+  );
+
   constructor(
     private readonly httpClient: HttpClient,
     private readonly preferenceManager: PreferenceManager
@@ -74,19 +87,9 @@ export class DiaBackendAuthService {
     });
   }
 
-  hasLoggedIn$() {
-    return this.preferences
-      .getString$(PrefKeys.TOKEN)
-      .pipe(map(token => token !== ''));
-  }
-
   async hasLoggedIn() {
     const token = await this.preferences.getString(PrefKeys.TOKEN);
     return !!token;
-  }
-
-  getUsername$() {
-    return this.preferences.getString$(PrefKeys.USERNAME);
   }
 
   async getUsername() {
@@ -95,10 +98,6 @@ export class DiaBackendAuthService {
 
   private async setUsername(value: string) {
     return this.preferences.setString(PrefKeys.USERNAME, value);
-  }
-
-  getEmail$() {
-    return this.preferences.getString$(PrefKeys.EMAIL);
   }
 
   async getEmail() {
@@ -113,12 +112,6 @@ export class DiaBackendAuthService {
     return { authorization: `token ${await this.getToken()}` };
   }
 
-  getAuthHeaders$() {
-    return this.getToken$().pipe(
-      map(token => ({ authorization: `token ${token}` }))
-    );
-  }
-
   private async getToken() {
     return new Promise<string>((resolve, reject) => {
       this.preferences.getString(PrefKeys.TOKEN).then(token => {
@@ -129,12 +122,6 @@ export class DiaBackendAuthService {
         }
       });
     });
-  }
-
-  private getToken$() {
-    return this.preferences
-      .getString$(PrefKeys.TOKEN)
-      .pipe(filter(token => token.length !== 0));
   }
 
   private async setToken(value: string) {

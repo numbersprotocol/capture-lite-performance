@@ -1,0 +1,49 @@
+:host {
+  ion-list {
+    ion-item {
+      app-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+      }
+
+      app-img::part(image) {
+        border-radius: 4px;
+      }
+
+      .status {
+        border: 1px solid;
+        border-radius: 4px;
+        padding: 4px;
+      }
+
+      .status.accepted {
+        color: white;
+        border-color: #4cd964;
+        background-color: #4cd964;
+      }
+
+      .status.delivered {
+        color: mediumseagreen;
+        border-color: mediumseagreen;
+      }
+
+      .status.inProgress {
+        color: deepskyblue;
+        border-color: deepskyblue;
+      }
+
+      .status.waitingToBeAccepted {
+        color: white;
+        border-color: deepskyblue;
+        background-color: deepskyblue;
+      }
+
+      .status.returned {
+        color: white;
+        border-color: var(--ion-color-danger);
+        background-color: #e31587;
+      }
+    }
+  }
+}

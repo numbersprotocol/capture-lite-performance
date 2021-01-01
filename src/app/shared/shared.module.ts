@@ -6,9 +6,10 @@ import { IonicModule } from '@ionic/angular';
 import { CapacitorPluginsModule } from './core/capacitor-plugins/capacitor-plugins.module';
 import { ImageComponent } from './core/image/image.component';
 import { PostCaptureComponent } from './core/post-capture/post-capture.component';
+import { TransactionStatusPipe } from './pipes/transaction-status/transaction-status.pipe';
 
 @NgModule({
-  declarations: [ImageComponent, PostCaptureComponent],
+  declarations: [ImageComponent, PostCaptureComponent, TransactionStatusPipe],
   imports: [
     CommonModule,
     FormsModule,
@@ -22,6 +23,7 @@ import { PostCaptureComponent } from './core/post-capture/post-capture.component
     IonicModule,
     ImageComponent,
     PostCaptureComponent,
+    TransactionStatusPipe,
   ],
 })
 export class SharedModule {}

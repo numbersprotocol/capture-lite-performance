@@ -12,6 +12,18 @@ const routes: Routes = [
     loadChildren: () =>
       import('./asset/asset.module').then(m => m.AssetPageModule),
   },
+  {
+    path: 'transactions',
+    loadChildren: () =>
+      import('./transactions/transactions.module').then(
+        m => m.TransactionsPageModule
+      ),
+  },
+  {
+    path: 'inbox',
+    loadChildren: () =>
+      import('./inbox/inbox.module').then(m => m.InboxPageModule),
+  },
 ];
 
 @NgModule({

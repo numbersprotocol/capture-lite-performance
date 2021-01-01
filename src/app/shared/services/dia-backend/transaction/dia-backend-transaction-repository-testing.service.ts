@@ -14,4 +14,8 @@ export class DiaBackendTransactionTestingRepository extends DiaBackendTransactio
   fetchAllReceived$(_options: PagingFetchFunctionOptions) {
     return of([]);
   }
+
+  fetchInbox$(_options: PagingFetchFunctionOptions) {
+    return of([]);
+  }
 }

@@ -1,0 +1,30 @@
+:host {
+  ion-list {
+    ion-item {
+      app-img {
+        width: 100px;
+        height: 80px;
+        object-fit: cover;
+      }
+
+      app-img::part(image) {
+        border-radius: 4px;
+      }
+
+      .inbox-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        .inbox-actions {
+          display: flex;
+
+          ion-button {
+            flex-grow: 1;
+
+            --box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+}

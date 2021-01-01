@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, defer } from 'rxjs';
-import { concatMap, concatMapTo, map, pluck, tap } from 'rxjs/operators';
+import { BehaviorSubject, defer, Subject } from 'rxjs';
+import { concatMap, concatMapTo, pluck, tap } from 'rxjs/operators';
 import { PagingFetchFunctionOptions } from '../../../../utils/paging-source/paging-source';
 import { Tuple } from '../../database/table/table';
 import { DiaBackendAuthService } from '../auth/dia-backend-auth.service';
@@ -12,6 +12,8 @@ import { IgnoredTransactionRepository } from './ignored-transaction-repository.s
   providedIn: 'root',
 })
 export class DiaBackendTransactionRepository {
+  private readonly _isDirtyEvent$ = new Subject<string | undefined>();
+  readonly isDirtyEvent$ = this._isDirtyEvent$.asObservable();
   private readonly _isFetching$ = new BehaviorSubject(false);
   readonly isFetching$ = this._isFetching$.asObservable();
 
@@ -20,6 +22,10 @@ export class DiaBackendTransactionRepository {
     private readonly authService: DiaBackendAuthService,
     private readonly ignoredTransactionRepository: IgnoredTransactionRepository
   ) {}
+
+  setIsDirty(cause?: string) {
+    this._isDirtyEvent$.next(cause);
+  }
 
   fetchAll$(
     options: PagingFetchFunctionOptions = { pagingSize: 100, offset: 0 }
@@ -47,21 +53,36 @@ export class DiaBackendTransactionRepository {
     options: PagingFetchFunctionOptions = { pagingSize: 100, offset: 0 }
   ) {
     return defer(async () => this._isFetching$.next(true)).pipe(
-      concatMapTo(
-        defer(() =>
-          Promise.all([
-            this.authService.getAuthHeaders(),
-            this.authService.getEmail(),
-          ])
-        )
-      ),
-      concatMap(([headers, email]) =>
+      concatMapTo(defer(() => this.authService.getAuthHeaders())),
+      concatMap(headers =>
         this.httpClient.get<ListTransactionResponse>(
           `${BASE_URL}/api/v2/transactions/`,
           {
             headers,
             params: {
-              receiver_email: email,
+              user_is_receiver: `${true}`,
+              limit: `${options.pagingSize}`,
+              offset: `${options.offset}`,
+            },
+          }
+        )
+      ),
+      pluck('results'),
+      tap(() => this._isFetching$.next(false))
+    );
+  }
+
+  fetchInbox$(
+    options: PagingFetchFunctionOptions = { pagingSize: 100, offset: 0 }
+  ) {
+    return defer(async () => this._isFetching$.next(true)).pipe(
+      concatMapTo(defer(() => this.authService.getAuthHeaders())),
+      concatMap(headers =>
+        this.httpClient.get<ListTransactionResponse>(
+          `${BASE_URL}/api/v2/transactions/inbox/`,
+          {
+            headers,
+            params: {
               limit: `${options.pagingSize}`,
               offset: `${options.offset}`,
             },
@@ -81,7 +102,8 @@ export class DiaBackendTransactionRepository {
           { asset_id: assetId, email: targetEmail, caption },
           { headers }
         )
-      )
+      ),
+      tap(() => this.setIsDirty('add'))
     );
   }
 
@@ -93,25 +115,8 @@ export class DiaBackendTransactionRepository {
           {},
           { headers }
         )
-      )
-    );
-  }
-
-  getInbox$() {
-    return combineLatest([
-      this.fetchAll$(),
-      this.ignoredTransactionRepository.getAll$(),
-      this.authService.getEmail$(),
-    ]).pipe(
-      map(([transactions, ignoredTransactions, email]) =>
-        transactions.filter(
-          transaction =>
-            transaction.receiver_email === email &&
-            !transaction.fulfilled_at &&
-            !transaction.expired &&
-            !ignoredTransactions.includes(transaction.id)
-        )
-      )
+      ),
+      tap(() => this.setIsDirty('accept'))
     );
   }
 }

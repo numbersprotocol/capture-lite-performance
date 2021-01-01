@@ -74,21 +74,22 @@ export class CapturePage implements OnInit {
         untilDestroyed(this)
       )
       .subscribe();
+
+    this.diaBackendTransactionRepository.isDirtyEvent$
+      .pipe(
+        tap(() => this.refreshPostCaptures()),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   refreshCaptures(
     event?: IonRefresherEvent,
     ionInfiniteScroll?: IonInfiniteScroll
   ) {
-    this.captureRemoteSource
-      .refresh$()
-      .pipe(
-        tap(() => {
-          if (ionInfiniteScroll) ionInfiniteScroll.disabled = false;
-          event?.target.complete();
-        }),
-        untilDestroyed(this)
-      )
+    return this.captureRemoteSource
+      .refresh$(event, ionInfiniteScroll)
+      .pipe(untilDestroyed(this))
       .subscribe();
   }
 
@@ -96,15 +97,9 @@ export class CapturePage implements OnInit {
     event?: IonRefresherEvent,
     ionInfiniteScroll?: IonInfiniteScroll
   ) {
-    this.postCaptureRemoteSource
-      .refresh$()
-      .pipe(
-        tap(() => {
-          if (ionInfiniteScroll) ionInfiniteScroll.disabled = false;
-          event?.target.complete();
-        }),
-        untilDestroyed(this)
-      )
+    return this.postCaptureRemoteSource
+      .refresh$(event, ionInfiniteScroll)
+      .pipe(untilDestroyed(this))
       .subscribe();
   }
 

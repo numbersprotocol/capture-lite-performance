@@ -10,7 +10,6 @@ import {
   map,
   shareReplay,
   switchMap,
-  tap,
 } from 'rxjs/operators';
 import { BlockingAction } from '../../../../../shared/services/blocking-action/blocking-action.service';
 import { ConfirmAlert } from '../../../../../shared/services/confirm-alert/confirm-alert.service';
@@ -62,7 +61,7 @@ export class SendingPostCapturePage implements OnInit {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  readonly userEmail$ = this.diaBackendAuthService.getEmail$();
+  readonly userEmail$ = this.diaBackendAuthService.getEmail$;
 
   message = '';
   targetContact?: DiaBackendContact;
@@ -91,15 +90,9 @@ export class SendingPostCapturePage implements OnInit {
     event?: IonRefresherEvent,
     ionInfiniteScroll?: IonInfiniteScroll
   ) {
-    this.contactRemoteSource
-      .refresh$()
-      .pipe(
-        tap(() => {
-          if (ionInfiniteScroll) ionInfiniteScroll.disabled = false;
-          event?.target.complete();
-        }),
-        untilDestroyed(this)
-      )
+    return this.contactRemoteSource
+      .refresh$(event, ionInfiniteScroll)
+      .pipe(untilDestroyed(this))
       .subscribe();
   }
 

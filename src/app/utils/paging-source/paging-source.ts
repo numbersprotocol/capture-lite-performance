@@ -1,6 +1,7 @@
+import { IonInfiniteScroll } from '@ionic/angular';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { single, tap } from 'rxjs/operators';
-import { IonInfiniteScrollEvent } from '../events';
+import { IonInfiniteScrollEvent, IonRefresherEvent } from '../events';
 
 export class PagingSource<T> {
   private readonly _data$ = new BehaviorSubject<T[]>([]);
@@ -12,7 +13,7 @@ export class PagingSource<T> {
     private readonly pagingSize = 20
   ) {}
 
-  refresh$() {
+  refresh$(event?: IonRefresherEvent, ionInfiniteScroll?: IonInfiniteScroll) {
     this.currentOffset = 0;
     return this.pagingFetchAllFunction$({
       pagingSize: this.pagingSize,
@@ -22,6 +23,8 @@ export class PagingSource<T> {
       tap(data => {
         this._data$.next(data);
         this.currentOffset += data.length;
+        if (ionInfiniteScroll) ionInfiniteScroll.disabled = false;
+        event?.target.complete();
       })
     );
   }
