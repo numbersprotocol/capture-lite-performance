@@ -6,7 +6,6 @@ import { PagingFetchFunctionOptions } from '../../../../utils/paging-source/pagi
 import { Tuple } from '../../database/table/table';
 import { DiaBackendAuthService } from '../auth/dia-backend-auth.service';
 import { BASE_URL } from '../secret';
-import { IgnoredTransactionRepository } from './ignored-transaction-repository.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +18,7 @@ export class DiaBackendTransactionRepository {
 
   constructor(
     private readonly httpClient: HttpClient,
-    private readonly authService: DiaBackendAuthService,
-    private readonly ignoredTransactionRepository: IgnoredTransactionRepository
+    private readonly authService: DiaBackendAuthService
   ) {}
 
   setIsDirty(cause?: string) {
@@ -94,6 +92,19 @@ export class DiaBackendTransactionRepository {
     );
   }
 
+  fetchById$(id: string) {
+    return defer(async () => this._isFetching$.next(true)).pipe(
+      concatMapTo(defer(() => this.authService.getAuthHeaders())),
+      concatMap(headers =>
+        this.httpClient.get<ReadTransactionResponse>(
+          `${BASE_URL}/api/v2/transactions/${id}/`,
+          { headers }
+        )
+      ),
+      tap(() => this._isFetching$.next(false))
+    );
+  }
+
   add$(assetId: string, targetEmail: string, caption: string) {
     return defer(() => this.authService.getAuthHeaders()).pipe(
       concatMap(headers =>
@@ -138,6 +149,8 @@ export interface DiaBackendTransaction extends Tuple {
 interface ListTransactionResponse {
   readonly results: DiaBackendTransaction[];
 }
+
+type ReadTransactionResponse = DiaBackendTransaction;
 
 type CreateTransactionResponse = DiaBackendTransaction;
 

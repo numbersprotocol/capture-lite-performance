@@ -6,9 +6,10 @@ import { DiaBackendTransaction } from '../dia-backend-transaction-repository.ser
 })
 export class TransactionStatusPipe implements PipeTransform {
   async transform(
-    transaction: DiaBackendTransaction,
+    transaction: DiaBackendTransaction | undefined | null,
     email?: string | Promise<string>
   ) {
+    if (!transaction) return Status.Unknown;
     const resolvedEmail = await email;
     if (transaction.expired) {
       return Status.Returned;
@@ -32,4 +33,5 @@ enum Status {
   Returned = 'returned',
   Delivered = 'delivered',
   Accepted = 'accepted',
+  Unknown = 'null',
 }

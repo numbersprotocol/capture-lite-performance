@@ -62,7 +62,7 @@ export class SendingPostCapturePage implements OnInit {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  readonly userEmail$ = this.diaBackendAuthService.getEmail$;
+  readonly userEmail$ = this.diaBackendAuthService.email$;
 
   message = '';
   targetContact?: DiaBackendContact;

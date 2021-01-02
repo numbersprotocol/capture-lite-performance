@@ -36,6 +36,12 @@
   "ok": "Ok",
   "locationNotProvided": "Location Not Provided",
   "noData": "No Data",
+  "transactionDetails": "Transaction Details",
+  "from": "From",
+  "to": "To",
+  "id": "ID",
+  "createdAt": "Created at",
+  "status": "Status",
   ".message": "Message",
   "message": {
     "areYouSure": "This action cannot be undone.",
@@ -46,7 +52,7 @@
     "pleaseEnterValidEmail": "Please enter valid email.",
     "sendPostCaptureAlert": "After a PostCapture is sent, the ownership will be transferred to the selected friend. Are you sure?"
   },
-  "transactionState": {
+  "transactionStatus": {
     "accepted": "Accepted",
     "delivered": "Delivered",
     "returned": "Returned",

@@ -37,7 +37,7 @@ export class InboxPage implements OnInit {
       )
     )
   );
-  readonly email$ = this.diaBackendAuthService.getEmail$;
+  readonly email$ = this.diaBackendAuthService.email$;
 
   constructor(
     private readonly diaBackendTransactionRepository: DiaBackendTransactionRepository,
@@ -87,6 +87,6 @@ export class InboxPage implements OnInit {
   }
 
   async ignore(id: string) {
-    await this.ignoredTransactionRepository.add(id);
+    return this.ignoredTransactionRepository.add(id);
   }
 }

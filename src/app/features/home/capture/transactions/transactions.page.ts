@@ -25,7 +25,7 @@ export class TransactionsPage implements OnInit {
     this.diaBackendTransactionRepository.fetchAll$(options).pipe(first())
   );
   readonly transactions$ = this.transactionRemoteSource.data$;
-  readonly email$ = this.diaBackendAuthService.getEmail$;
+  readonly email$ = this.diaBackendAuthService.email$;
 
   constructor(
     private readonly diaBackendTransactionRepository: DiaBackendTransactionRepository,

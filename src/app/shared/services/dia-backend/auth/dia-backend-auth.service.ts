@@ -13,16 +13,16 @@ export class DiaBackendAuthService {
     DiaBackendAuthService.name
   );
 
-  private readonly getToken$ = this.preferences
+  private readonly token$ = this.preferences
     .getString$(PrefKeys.TOKEN)
     .pipe(filter(token => token.length !== 0));
   readonly hasLoggedIn$ = this.preferences
     .getString$(PrefKeys.TOKEN)
     .pipe(map(token => token !== ''));
 
-  readonly getUsername$ = this.preferences.getString$(PrefKeys.USERNAME);
-  readonly getEmail$ = this.preferences.getString$(PrefKeys.EMAIL);
-  readonly getAuthHeaders$ = this.getToken$.pipe(
+  readonly username$ = this.preferences.getString$(PrefKeys.USERNAME);
+  readonly email$ = this.preferences.getString$(PrefKeys.EMAIL);
+  readonly authHeaders$ = this.token$.pipe(
     map(token => ({ authorization: `token ${token}` }))
   );
 

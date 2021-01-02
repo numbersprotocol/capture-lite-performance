@@ -1,0 +1,64 @@
+<ion-header *transloco="let t">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ t('transactionDetails') }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *transloco="let t">
+  <app-img
+    [src]="(transaction$ | async)?.asset.asset_file_thumbnail"
+    [cacheKey]="(transaction$ | async)?.id + 'asset_file_thumbnail'"
+  ></app-img>
+  <ion-list>
+    <ion-item>
+      <ion-icon name="code" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('id') }}</h3>
+        <p>{{ (transaction$ | async)?.id }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="time" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('createdAt') }}</h3>
+        <p>
+          {{
+            (transaction$ | async)?.created_at
+              | translocoDate: { dateStyle: 'long', timeStyle: 'long' }
+          }}
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="information" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('status') }}</h3>
+        <p>
+          {{
+            t(
+              'transactionStatus.' +
+                (transaction$ | async | transactionStatus: email$ | async)
+            )
+          }}
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="arrow-down" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('from') }}</h3>
+        <p>{{ (transaction$ | async)?.sender }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="arrow-up" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('to') }}</h3>
+        <p>{{ (transaction$ | async)?.receiver_email }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

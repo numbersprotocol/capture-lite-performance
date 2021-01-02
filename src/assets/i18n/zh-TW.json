@@ -36,6 +36,12 @@
   "ok": "確認",
   "locationNotProvided": "沒有位置資訊",
   "noData": "沒有資料",
+  "transactionDetails": "活動資訊",
+  "from": "來自",
+  "to": "至",
+  "id": "ID",
+  "createdAt": "建立於",
+  "status": "狀態",
   ".message": "訊息",
   "message": {
     "areYouSure": "此操作不可撤銷。",
@@ -46,7 +52,7 @@
     "pleaseEnterValidEmail": "請輸入有效的電子郵件地址。",
     "sendPostCaptureAlert": "PostCapture 送出後，它的所有權將轉移至選定的朋友。您確定嗎？"
   },
-  "transactionState": {
+  "transactionStatus": {
     "accepted": "已接收",
     "delivered": "已送出",
     "returned": "已退回",

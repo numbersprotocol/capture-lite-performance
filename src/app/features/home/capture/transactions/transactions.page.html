@@ -26,6 +26,7 @@
           let transaction of transactions$ | async;
           trackBy: trackByIdAndStatus
         "
+        [routerLink]="['transaction', { id: transaction.id }]"
       >
         <app-img
           slot="start"
@@ -51,7 +52,7 @@
         >
           {{
             t(
-              'transactionState.' +
+              'transactionStatus.' +
                 (transaction | transactionStatus: email$ | async)
             )
           }}
