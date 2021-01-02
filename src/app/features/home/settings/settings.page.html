@@ -8,9 +8,9 @@
 </ion-header>
 
 <ion-content *transloco="let t">
-  <ion-list>
+  <ion-list lines="full">
     <ion-item>
-      <ion-icon name="language" slot="start"></ion-icon>
+      <ion-icon name="language-outline" slot="start"></ion-icon>
       <ion-label>{{ t('language') }}</ion-label>
       <ion-select
         [value]="currentLanguageKey$ | async"
@@ -23,6 +23,11 @@
           {{ language.value }}
         </ion-select-option>
       </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+      <ion-label> {{ t('version') }} </ion-label>
+      <ion-label slot="end">{{ version$ | async }}</ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

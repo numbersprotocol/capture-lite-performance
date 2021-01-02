@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
+import { Plugins } from '@capacitor/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { defer } from 'rxjs';
+import { pluck } from 'rxjs/operators';
 import { LanguageService } from '../../../shared/services/language/language.service';
+
+const { Device } = Plugins;
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -11,6 +16,7 @@ import { LanguageService } from '../../../shared/services/language/language.serv
 export class SettingsPage {
   readonly languages = this.languageService.languages;
   readonly currentLanguageKey$ = this.languageService.currentLanguageKey$;
+  readonly version$ = defer(() => Device.getInfo()).pipe(pluck('appVersion'));
 
   constructor(private readonly languageService: LanguageService) {}
 

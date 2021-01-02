@@ -8,5 +8,47 @@
 </ion-header>
 
 <ion-content *transloco="let t">
-  <ion-button (click)="logout()" expand="full">{{ t('logout') }}</ion-button>
+  <ion-list>
+    <ion-item>
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('username') }}</h3>
+        <p>{{ username$ | async }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="mail-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('email') }}</h3>
+        <p>{{ email$ | async }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('publicKey') }}</h3>
+        <p>{{ publicKey$ | async }}</p>
+      </ion-label>
+      <app-copy-button
+        *ngIf="publicKey$ | async as publicKey"
+        [value]="publicKey"
+        slot="end"
+      ></app-copy-button>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="key-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h3>{{ t('privateKey') }}</h3>
+        <p>{{ privateKey$ | async }}</p>
+      </ion-label>
+      <app-copy-button
+        *ngIf="privateKey$ | async as privateKey"
+        [value]="privateKey"
+        slot="end"
+      ></app-copy-button>
+    </ion-item>
+  </ion-list>
+  <ion-button (click)="logout()" expand="full" class="ion-margin">{{
+    t('logout')
+  }}</ion-button>
 </ion-content>

@@ -42,6 +42,12 @@
   "id": "ID",
   "createdAt": "Created at",
   "status": "Status",
+  "privacy": "Privacy",
+  "version": "Version",
+  "privateKey": "Private Key",
+  "username": "Username",
+  "collectDeviceInfo": "Collect Device Info",
+  "collectGeolocationInfo": "Collect Geolocation Info",
   ".message": "Message",
   "message": {
     "areYouSure": "This action cannot be undone.",
@@ -50,7 +56,8 @@
     "enterEmail": "Enter email...",
     "enterMessage": "Enter message...",
     "pleaseEnterValidEmail": "Please enter valid email.",
-    "sendPostCaptureAlert": "After a PostCapture is sent, the ownership will be transferred to the selected friend. Are you sure?"
+    "sendPostCaptureAlert": "After a PostCapture is sent, the ownership will be transferred to the selected friend. Are you sure?",
+    "copiedToClipboard": "Has copied to clipboard."
   },
   "transactionStatus": {
     "accepted": "Accepted",

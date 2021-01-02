@@ -42,6 +42,12 @@
   "id": "ID",
   "createdAt": "建立於",
   "status": "狀態",
+  "privacy": "隱私",
+  "version": "版本",
+  "privateKey": "私密金鑰",
+  "username": "使用者名稱",
+  "collectDeviceInfo": "蒐集裝置資訊",
+  "collectGeolocationInfo": "蒐集地理位置資訊",
   ".message": "訊息",
   "message": {
     "areYouSure": "此操作不可撤銷。",
@@ -50,7 +56,8 @@
     "enterEmail": "輸入電子信箱...",
     "enterMessage": "輸入訊息...",
     "pleaseEnterValidEmail": "請輸入有效的電子郵件地址。",
-    "sendPostCaptureAlert": "PostCapture 送出後，它的所有權將轉移至選定的朋友。您確定嗎？"
+    "sendPostCaptureAlert": "PostCapture 送出後，它的所有權將轉移至選定的朋友。您確定嗎？",
+    "copiedToClipboard": "已複製至剪貼簿。"
   },
   "transactionStatus": {
     "accepted": "已接收",

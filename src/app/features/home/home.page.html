@@ -1,19 +1,26 @@
 <ion-menu content-id="main-content" *transloco="let t">
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-avatar slot="start" class="ion-margin">
+        <img
+          src="https://gravatar.com/avatar/8db683da3c728970bb776f6cc4048fd2?s=400&d=mp&r=x"
+        />
+      </ion-avatar>
+      <ion-title>{{ username$ | async }}</ion-title>
+      <ion-title size="small">{{ email$ | async }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
   <ion-content>
-    <ion-list lines="full">
-      <ion-menu-toggle>
-        <ion-item routerLink="/home/capture" routerDirection="root" button>
-          <ion-label>{{ t('index') }}</ion-label>
-        </ion-item>
-      </ion-menu-toggle>
-      <ion-menu-toggle>
-        <ion-item routerLink="/home/profile" routerDirection="root" button>
-          <ion-label>{{ t('profile') }}</ion-label>
-        </ion-item>
-      </ion-menu-toggle>
-      <ion-menu-toggle>
-        <ion-item routerLink="/home/settings" routerDirection="root" button>
-          <ion-label>{{ t('settings') }}</ion-label>
+    <ion-list lines="none" class="ion-padding">
+      <ion-menu-toggle *ngFor="let page of pages">
+        <ion-item
+          [routerLink]="page.routerLink"
+          routerDirection="root"
+          routerLinkActive="selected"
+          button
+        >
+          <ion-icon [name]="page.iconName" slot="start"></ion-icon>
+          <ion-label>{{ t(page.labelText) }}</ion-label>
         </ion-item>
       </ion-menu-toggle>
     </ion-list>

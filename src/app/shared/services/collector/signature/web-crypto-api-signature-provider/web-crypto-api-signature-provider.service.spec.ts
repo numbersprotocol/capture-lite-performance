@@ -28,7 +28,7 @@ describe('WebCryptoApiSignatureProvider', () => {
   it('should get public key by Observable after initialization', async done => {
     await provider.initialize();
 
-    provider.getPublicKey$().subscribe(result => {
+    provider.publicKey$.subscribe(result => {
       expect(result).toBeTruthy();
       done();
     });
@@ -37,7 +37,7 @@ describe('WebCryptoApiSignatureProvider', () => {
   it('should get private key by Observable after initialization', async done => {
     await provider.initialize();
 
-    provider.getPrivateKey$().subscribe(result => {
+    provider.privateKey$.subscribe(result => {
       expect(result).toBeTruthy();
       done();
     });

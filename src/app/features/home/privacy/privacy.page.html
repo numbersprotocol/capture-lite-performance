@@ -1,0 +1,29 @@
+<ion-header *transloco="let t">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>{{ t('privacy') }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *transloco="let t">
+  <ion-list>
+    <ion-item>
+      <ion-icon name="hardware-chip-outline" slot="start"></ion-icon>
+      <ion-label>{{ t('collectDeviceInfo') }}</ion-label>
+      <ion-toggle
+        [checked]="isDeviceInfoCollectionEnabled$ | async"
+        (ionChange)="setDeviceInfoCollection($event)"
+        slot="end"
+      ></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="locate-outline" slot="start"></ion-icon>
+      <ion-label>{{ t('collectGeolocationInfo') }}</ion-label>
+      <ion-toggle
+        [checked]="isLocationInfoCollectionEnabled$ | async"
+        (ionChange)="setGeolocationInfoCollection($event)"
+        slot="end"
+      ></ion-toggle>
+    </ion-item>
+  </ion-list>
+</ion-content>

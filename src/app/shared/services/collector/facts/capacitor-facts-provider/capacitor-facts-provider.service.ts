@@ -18,6 +18,15 @@ export class CapacitorFactsProvider implements FactsProvider {
   readonly id = CapacitorFactsProvider.name;
   private readonly preferences = this.preferenceManager.getPreferences(this.id);
 
+  readonly isDeviceInfoCollectionEnabled$ = this.preferences.getBoolean$(
+    PrefKeys.COLLECT_DEVICE_INFO,
+    true
+  );
+  readonly isGeolocationInfoCollectionEnabled$ = this.preferences.getBoolean$(
+    PrefKeys.COLLECT_LOCATION_INFO,
+    true
+  );
+
   constructor(
     @Inject(GEOLOCATION_PLUGIN)
     private readonly geolocationPlugin: GeolocationPlugin,
@@ -92,20 +101,12 @@ export class CapacitorFactsProvider implements FactsProvider {
     });
   }
 
-  isDeviceInfoCollectionEnabled$() {
-    return this.preferences.getBoolean$(PrefKeys.COLLECT_DEVICE_INFO, true);
-  }
-
   async isDeviceInfoCollectionEnabled() {
     return this.preferences.getBoolean(PrefKeys.COLLECT_DEVICE_INFO, true);
   }
 
   async setDeviceInfoCollection(enable: boolean) {
     return this.preferences.setBoolean(PrefKeys.COLLECT_DEVICE_INFO, enable);
-  }
-
-  isGeolocationInfoCollectionEnabled$() {
-    return this.preferences.getBoolean$(PrefKeys.COLLECT_LOCATION_INFO, true);
   }
 
   async isGeolocationInfoCollectionEnabled() {

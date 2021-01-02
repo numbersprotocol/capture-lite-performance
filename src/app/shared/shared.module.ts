@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { TranslocoModule } from '@ngneat/transloco';
 import { TranslocoLocaleModule } from '@ngneat/transloco-locale';
 import { CapacitorPluginsModule } from './core/capacitor-plugins/capacitor-plugins.module';
+import { CopyButtonComponent } from './core/copy-button/copy-button.component';
 import { ImageComponent } from './core/image/image.component';
 import { NoDataComponent } from './core/no-data/no-data.component';
 import { PostCaptureComponent } from './core/post-capture/post-capture.component';
@@ -16,6 +17,7 @@ import { TransactionStatusPipe } from './services/dia-backend/transaction/transa
     ImageComponent,
     PostCaptureComponent,
     NoDataComponent,
+    CopyButtonComponent,
     TransactionStatusPipe,
   ],
   imports: [
@@ -36,6 +38,7 @@ import { TransactionStatusPipe } from './services/dia-backend/transaction/transa
     ImageComponent,
     PostCaptureComponent,
     NoDataComponent,
+    CopyButtonComponent,
     TransactionStatusPipe,
   ],
 })
