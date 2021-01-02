@@ -35,6 +35,7 @@
   "cancel": "取消",
   "ok": "確認",
   "locationNotProvided": "沒有位置資訊",
+  "noData": "沒有資料",
   ".message": "訊息",
   "message": {
     "areYouSure": "此操作不可撤銷。",

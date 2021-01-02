@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DiaBackendTransaction } from '../../services/dia-backend/transaction/dia-backend-transaction-repository.service';
+import { DiaBackendTransaction } from '../dia-backend-transaction-repository.service';
 
 @Pipe({
   name: 'transactionStatus',

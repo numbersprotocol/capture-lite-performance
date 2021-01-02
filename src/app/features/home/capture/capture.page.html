@@ -32,27 +32,36 @@
         >
           <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
-        <ion-grid class="capture-tab">
-          <ion-row>
-            <ion-col
-              *ngFor="let item of captures$ | async; trackBy: trackById"
-              size="4"
-            >
-              <app-capture-item
-                [item]="item"
-                [routerLink]="item.id ? ['asset', { id: item.id }] : undefined"
+        <app-no-data
+          *ngIf="
+            (isFetching$ | async) === false && (captures$ | async)?.length === 0
+          "
+        ></app-no-data>
+        <ng-container *ngIf="(captures$ | async)?.length !== 0">
+          <ion-grid class="capture-tab">
+            <ion-row>
+              <ion-col
+                *ngFor="let item of captures$ | async; trackBy: trackById"
+                size="4"
               >
-              </app-capture-item>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-        <ion-infinite-scroll
-          #capturesInfiniteScroll
-          (ionInfinite)="loadCaptures($event)"
-          threshold="10px"
-        >
-          <ion-infinite-scroll-content></ion-infinite-scroll-content>
-        </ion-infinite-scroll>
+                <app-capture-item
+                  [item]="item"
+                  [routerLink]="
+                    item.id ? ['asset', { id: item.id }] : undefined
+                  "
+                >
+                </app-capture-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-infinite-scroll
+            #capturesInfiniteScroll
+            (ionInfinite)="loadCaptures($event)"
+            threshold="10px"
+          >
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+        </ng-container>
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <ion-fab-button (click)="capture()">
             <ion-icon name="camera"></ion-icon>
@@ -68,18 +77,29 @@
         >
           <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
-        <app-post-capture
-          *ngFor="let transaction of postCaptures$ | async"
-          [transaction]="transaction"
-          class="ion-margin-bottom"
-        ></app-post-capture>
-        <ion-infinite-scroll
-          #postCapturesInfiniteScroll
-          (ionInfinite)="loadPostCaptures($event)"
-          threshold="10px"
-        >
-          <ion-infinite-scroll-content></ion-infinite-scroll-content>
-        </ion-infinite-scroll>
+        <app-no-data
+          *ngIf="
+            (isFetching$ | async) === false &&
+            (postCaptures$ | async)?.length === 0
+          "
+        ></app-no-data>
+        <ng-container *ngIf="(postCaptures$ | async)?.length !== 0">
+          <app-post-capture
+            *ngFor="
+              let transaction of postCaptures$ | async;
+              trackBy: trackById
+            "
+            [transaction]="transaction"
+            class="ion-margin-bottom"
+          ></app-post-capture>
+          <ion-infinite-scroll
+            #postCapturesInfiniteScroll
+            (ionInfinite)="loadPostCaptures($event)"
+            threshold="10px"
+          >
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+        </ng-container>
       </ion-content>
     </super-tab>
   </super-tabs-container>

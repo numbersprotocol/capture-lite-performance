@@ -39,8 +39,10 @@ export class TranslocoHttpLoader implements TranslocoLoader {
     {
       provide: TRANSLOCO_CONFIG,
       useValue: translocoConfig({
-        availableLangs: ['en-US', 'zh-TW'],
-        defaultLang: 'en-US',
+        availableLangs: Object.keys(languages),
+        defaultLang: defaultLanguage[0],
+        fallbackLang: defaultLanguage[0],
+        missingHandler: { useFallbackTranslation: true },
         reRenderOnLangChange: true,
         prodMode: environment.production,
       }),

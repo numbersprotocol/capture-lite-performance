@@ -20,6 +20,7 @@ import { PagingSource } from '../../../../utils/paging-source/paging-source';
   styleUrls: ['./transactions.page.scss'],
 })
 export class TransactionsPage implements OnInit {
+  readonly isFetching$ = this.diaBackendTransactionRepository.isFetching$;
   private readonly transactionRemoteSource = new PagingSource(options =>
     this.diaBackendTransactionRepository.fetchAll$(options).pipe(first())
   );

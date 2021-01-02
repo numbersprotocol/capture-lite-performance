@@ -10,7 +10,10 @@ import {
   DiaBackendAsset,
   DiaBackendAssetRepository,
 } from '../../../shared/services/dia-backend/asset/dia-backend-asset-repository.service';
-import { DiaBackendTransactionRepository } from '../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository.service';
+import {
+  DiaBackendTransaction,
+  DiaBackendTransactionRepository,
+} from '../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository.service';
 import { getOldProof } from '../../../shared/services/repositories/proof/old-proof-adapter';
 import { Proof } from '../../../shared/services/repositories/proof/proof';
 import { ProofRepository } from '../../../shared/services/repositories/proof/proof-repository.service';
@@ -28,6 +31,7 @@ import { CaptureItem } from './capture-item/capture-item.component';
   styleUrls: ['./capture.page.scss'],
 })
 export class CapturePage implements OnInit {
+  readonly isFetching$ = this.diaBackendAssetRepository.isFetching$;
   private readonly captureRemoteSource = new PagingSource(options =>
     this.diaBackendAssetRepository
       .fetchAllOriginallyOwned$(options)
@@ -103,7 +107,7 @@ export class CapturePage implements OnInit {
       .subscribe();
   }
 
-  trackById(_: number, item: DiaBackendAsset) {
+  trackById(_: number, item: DiaBackendAsset | DiaBackendTransaction) {
     return item.id;
   }
 

@@ -23,6 +23,7 @@ import { PagingSource } from '../../../../utils/paging-source/paging-source';
   styleUrls: ['./inbox.page.scss'],
 })
 export class InboxPage implements OnInit {
+  readonly isFetching$ = this.diaBackendTransactionRepository.isFetching$;
   private readonly inboxRemoteSource = new PagingSource(options =>
     this.diaBackendTransactionRepository.fetchInbox$(options).pipe(first())
   );

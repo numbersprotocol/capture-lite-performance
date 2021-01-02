@@ -14,45 +14,50 @@
   >
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-list lines="none">
-    <ion-item
-      *ngFor="let transaction of inbox$ | async; trackBy: trackByIdAndStatus"
-      class="ion-margin-bottom"
-    >
-      <app-img
-        slot="start"
-        [src]="transaction.asset.asset_file_thumbnail"
-        [cacheKey]="transaction.id + 'asset_file_thumbnail'"
-        class="ion-margin-end"
+  <app-no-data
+    *ngIf="(isFetching$ | async) === false && (inbox$ | async)?.length === 0"
+  ></app-no-data>
+  <ng-container *ngIf="(inbox$ | async)?.length !== 0">
+    <ion-list lines="none">
+      <ion-item
+        *ngFor="let transaction of inbox$ | async; trackBy: trackByIdAndStatus"
+        class="ion-margin-bottom"
       >
-      </app-img>
-      <div class="inbox-content">
-        <ion-label>
-          <h3>{{ transaction.asset.id }}</h3>
-          <p>
-            {{
-              transaction.created_at
-                | translocoDate: { dateStyle: 'short', timeStyle: 'medium' }
-            }}
-          </p>
-        </ion-label>
+        <app-img
+          slot="start"
+          [src]="transaction.asset.asset_file_thumbnail"
+          [cacheKey]="transaction.id + 'asset_file_thumbnail'"
+          class="ion-margin-end"
+        >
+        </app-img>
+        <div class="inbox-content">
+          <ion-label>
+            <h3>{{ transaction.asset.id }}</h3>
+            <p>
+              {{
+                transaction.created_at
+                  | translocoDate: { dateStyle: 'short', timeStyle: 'medium' }
+              }}
+            </p>
+          </ion-label>
 
-        <div class="inbox-actions">
-          <ion-button (click)="ignore(transaction.id)" fill="outline">
-            {{ t('ignore') }}
-          </ion-button>
-          <ion-button (click)="accept(transaction.id)">
-            {{ t('accept') }}
-          </ion-button>
+          <div class="inbox-actions">
+            <ion-button (click)="ignore(transaction.id)" fill="outline">
+              {{ t('ignore') }}
+            </ion-button>
+            <ion-button (click)="accept(transaction.id)">
+              {{ t('accept') }}
+            </ion-button>
+          </div>
         </div>
-      </div>
-    </ion-item>
-  </ion-list>
-  <ion-infinite-scroll
-    #transactionsInfiniteScroll
-    (ionInfinite)="loadInbox($event)"
-    threshold="10px"
-  >
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll
+      #transactionsInfiniteScroll
+      (ionInfinite)="loadInbox($event)"
+      threshold="10px"
+    >
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ng-container>
 </ion-content>

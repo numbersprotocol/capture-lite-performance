@@ -35,6 +35,7 @@
   "cancel": "Cancel",
   "ok": "Ok",
   "locationNotProvided": "Location Not Provided",
+  "noData": "No Data",
   ".message": "Message",
   "message": {
     "areYouSure": "This action cannot be undone.",
