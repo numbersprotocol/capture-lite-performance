@@ -5,13 +5,16 @@ import {
   IonInfiniteScrollEvent,
   IonRefresherEvent,
 } from '../../../../utils/events';
-import { switchTap } from '../../../../utils/rx-operators/rx-operators';
+import {
+  isNonNullable,
+  switchTap,
+} from '../../../../utils/rx-operators/rx-operators';
 import { Database } from '../../database/database.service';
 import { OnConflictStrategy, Tuple } from '../../database/table/table';
 
 export class PagingSource<T extends Tuple> {
-  private readonly _data$ = new BehaviorSubject<T[]>([]);
-  readonly data$ = this._data$.asObservable();
+  private readonly _data$ = new BehaviorSubject<T[] | undefined>(undefined);
+  readonly data$ = this._data$.asObservable().pipe(isNonNullable());
   private currentOffset = 0;
 
   private readonly cacheTable = this.database.getTable<CachedData<T>>(
@@ -61,7 +64,7 @@ export class PagingSource<T extends Tuple> {
       tap(data => {
         if (data.length) {
           // eslint-disable-next-line rxjs/no-subject-value
-          const next = this._data$.value;
+          const next = this._data$.value ?? [];
           next.splice(this.currentOffset, data.length, ...data);
           this._data$.next(next);
           this.currentOffset += data.length;
