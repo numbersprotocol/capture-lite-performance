@@ -1,6 +1,6 @@
 import { IonInfiniteScroll } from '@ionic/angular';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { single, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { IonInfiniteScrollEvent, IonRefresherEvent } from '../events';
 
 export class PagingSource<T> {
@@ -9,17 +9,16 @@ export class PagingSource<T> {
   private currentOffset = 0;
 
   constructor(
-    private readonly pagingFetchAllFunction$: PagingFetchFunction<T>,
+    private readonly pagingFetchFunction$: PagingFetchFunction<T>,
     private readonly pagingSize = 20
   ) {}
 
   refresh$(event?: IonRefresherEvent, ionInfiniteScroll?: IonInfiniteScroll) {
     this.currentOffset = 0;
-    return this.pagingFetchAllFunction$({
+    return this.pagingFetchFunction$({
       pagingSize: this.pagingSize,
       offset: this.currentOffset,
     }).pipe(
-      single(),
       tap(data => {
         this._data$.next(data);
         this.currentOffset += data.length;
@@ -30,15 +29,16 @@ export class PagingSource<T> {
   }
 
   loadData$(event: IonInfiniteScrollEvent) {
-    return this.pagingFetchAllFunction$({
+    return this.pagingFetchFunction$({
       pagingSize: this.pagingSize,
       offset: this.currentOffset,
     }).pipe(
-      single(),
       tap(data => {
         if (data.length) {
           // eslint-disable-next-line rxjs/no-subject-value
-          this._data$.next(this._data$.value.concat(data));
+          const next = this._data$.value;
+          next.splice(this.currentOffset, data.length, ...data);
+          this._data$.next(next);
           this.currentOffset += data.length;
         }
         if (data.length === 0) event.target.disabled = true;

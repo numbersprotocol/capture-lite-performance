@@ -1,8 +1,9 @@
 /* eslint-disable rxjs/no-subject-value */
 import { StoragePlugin } from '@capacitor/core';
 import { Mutex } from 'async-mutex';
+import { isEqual } from 'lodash-es';
 import { BehaviorSubject, defer, Observable } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { concatMap, distinctUntilChanged } from 'rxjs/operators';
 import { Preferences } from '../preferences';
 
 export class CapacitorStoragePreferences implements Preferences {
@@ -28,7 +29,8 @@ export class CapacitorStoragePreferences implements Preferences {
 
   get$<T extends boolean | number | string>(key: string, defaultValue: T) {
     return defer(() => this.initializeValue(key, defaultValue)).pipe(
-      concatMap(() => this.subjects.get(key)?.asObservable() as Observable<T>)
+      concatMap(() => this.subjects.get(key)?.asObservable() as Observable<T>),
+      distinctUntilChanged(isEqual)
     );
   }
 
