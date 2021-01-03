@@ -144,7 +144,6 @@ export class CapturePage implements OnInit {
             [photo.base64]: { mimeType: photo.mimeType },
           })
         ),
-        concatMap(proof => this.diaBackendAssetRepository.add$(proof)),
         single(),
         untilDestroyed(this)
       )

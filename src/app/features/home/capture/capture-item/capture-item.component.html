@@ -1,8 +1,9 @@
 <ion-icon
-  *ngIf="!(item$ | async)?.diaBackendAsset"
+  *ngIf="!isUploading && !(item$ | async)?.diaBackendAsset"
   name="cloud-offline"
   size="large"
 ></ion-icon>
+<ion-icon *ngIf="isUploading" name="cloud-upload" size="large"></ion-icon>
 <app-img
   [src]="thumbnailUrl$ | async"
   [cacheKey]="cacheKey$ | async"

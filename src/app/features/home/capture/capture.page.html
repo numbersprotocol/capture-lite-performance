@@ -45,6 +45,7 @@
             >
               <app-capture-item
                 [item]="item"
+                [autoUpload]="true"
                 [routerLink]="item.id ? ['asset', { id: item.id }] : undefined"
               >
               </app-capture-item>
