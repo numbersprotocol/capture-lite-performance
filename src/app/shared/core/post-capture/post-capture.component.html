@@ -13,7 +13,10 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-img [src]="(asset$ | async)?.sharable_copy"></app-img>
+  <app-img
+    [src]="(asset$ | async)?.sharable_copy"
+    [cacheKey]="(asset$ | async)?.id + '_sharableCopy'"
+  ></app-img>
 
   <ion-list [class.ion-hide]="!showMore" lines="none">
     <ion-item>

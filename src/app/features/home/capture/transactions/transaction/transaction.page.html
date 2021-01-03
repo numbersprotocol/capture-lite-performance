@@ -10,7 +10,7 @@
 <ion-content *transloco="let t">
   <app-img
     [src]="(transaction$ | async)?.asset.asset_file_thumbnail"
-    [cacheKey]="(transaction$ | async)?.id + 'assetFileThumbnail'"
+    [cacheKey]="(transaction$ | async)?.id + '_assetFileThumbnail'"
   ></app-img>
   <ion-list>
     <ion-item>
