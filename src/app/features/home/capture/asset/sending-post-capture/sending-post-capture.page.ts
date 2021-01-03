@@ -21,6 +21,7 @@ import {
   DiaBackendContactRepository,
 } from '../../../../../shared/services/dia-backend/contact/dia-backend-contact-repository.service';
 import { DiaBackendTransactionRepository } from '../../../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository.service';
+import { PagingSourceManager } from '../../../../../shared/services/paging-source-manager/paging-source-manager.service';
 import { getOldProof } from '../../../../../shared/services/repositories/proof/old-proof-adapter';
 import { ProofRepository } from '../../../../../shared/services/repositories/proof/proof-repository.service';
 import {
@@ -28,7 +29,6 @@ import {
   IonRefresherEvent,
   IonSlidesEvent,
 } from '../../../../../utils/events';
-import { PagingSource } from '../../../../../utils/paging-source/paging-source';
 import {
   isNonNullable,
   switchTap,
@@ -46,10 +46,13 @@ export class SendingPostCapturePage implements OnInit {
   currentSlideIndex = this.initialSlideIndex;
   readonly slidesOptions = { initialSlide: this.initialSlideIndex };
 
-  private readonly contactRemoteSource = new PagingSource(
-    options =>
-      this.diaBackendContactRepository.fetchAll$(options).pipe(first()),
-    50
+  private readonly contactRemoteSource = this.pagingSourceManager.getPagingSource(
+    {
+      id: `${DiaBackendContactRepository.name}_fetchAll`,
+      pagingFetchFunction$: options =>
+        this.diaBackendContactRepository.fetchAll$(options).pipe(first()),
+      pagingSize: 50,
+    }
   );
   readonly contacts$ = this.contactRemoteSource.data$;
   readonly isContactsFetching$ = this.diaBackendContactRepository.isFetching$;
@@ -77,7 +80,8 @@ export class SendingPostCapturePage implements OnInit {
     private readonly router: Router,
     private readonly confirmAlert: ConfirmAlert,
     private readonly blockingAction: BlockingAction,
-    private readonly translocoService: TranslocoService
+    private readonly translocoService: TranslocoService,
+    private readonly pagingSourceManager: PagingSourceManager
   ) {}
 
   ngOnInit() {

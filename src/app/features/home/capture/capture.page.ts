@@ -14,6 +14,7 @@ import {
   DiaBackendTransaction,
   DiaBackendTransactionRepository,
 } from '../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository.service';
+import { PagingSourceManager } from '../../../shared/services/paging-source-manager/paging-source-manager.service';
 import { getOldProof } from '../../../shared/services/repositories/proof/old-proof-adapter';
 import { Proof } from '../../../shared/services/repositories/proof/proof';
 import { ProofRepository } from '../../../shared/services/repositories/proof/proof-repository.service';
@@ -21,7 +22,6 @@ import {
   IonInfiniteScrollEvent,
   IonRefresherEvent,
 } from '../../../utils/events';
-import { PagingSource } from '../../../utils/paging-source/paging-source';
 import { CaptureItem } from './capture-item/capture-item.component';
 
 @UntilDestroy({ checkProperties: true })
@@ -32,10 +32,15 @@ import { CaptureItem } from './capture-item/capture-item.component';
 })
 export class CapturePage implements OnInit {
   readonly isFetching$ = this.diaBackendAssetRepository.isFetching$;
-  private readonly captureRemoteSource = new PagingSource(options =>
-    this.diaBackendAssetRepository
-      .fetchAllOriginallyOwned$(options)
-      .pipe(first())
+  private readonly captureRemoteSource = this.pagingSourceManager.getPagingSource(
+    {
+      id: `${DiaBackendAssetRepository.name}_fetchAllOriginallyOwned`,
+      pagingFetchFunction$: options =>
+        this.diaBackendAssetRepository
+          .fetchAllOriginallyOwned$(options)
+          .pipe(first()),
+      pagingSize: 20,
+    }
   );
   readonly captures$ = combineLatest([
     this.captureRemoteSource.data$,
@@ -48,9 +53,15 @@ export class CapturePage implements OnInit {
     map(captures => sortBy(captures, [c => -c.timestamp]))
   );
 
-  private readonly postCaptureRemoteSource = new PagingSource(
-    options => this.diaBackendTransactionRepository.fetchAllReceived$(options),
-    10
+  private readonly postCaptureRemoteSource = this.pagingSourceManager.getPagingSource(
+    {
+      id: `${DiaBackendTransactionRepository.name}_fetchAllReceived`,
+      pagingFetchFunction$: options =>
+        this.diaBackendTransactionRepository
+          .fetchAllReceived$(options)
+          .pipe(first()),
+      pagingSize: 10,
+    }
   );
   readonly postCaptures$ = this.postCaptureRemoteSource.data$.pipe(
     map(transactions =>
@@ -65,7 +76,8 @@ export class CapturePage implements OnInit {
     private readonly cameraService: CameraService,
     private readonly collectorService: CollectorService,
     private readonly proofRepository: ProofRepository,
-    private readonly diaBackendTransactionRepository: DiaBackendTransactionRepository
+    private readonly diaBackendTransactionRepository: DiaBackendTransactionRepository,
+    private readonly pagingSourceManager: PagingSourceManager
   ) {}
 
   ngOnInit() {

@@ -10,11 +10,11 @@ import {
   DiaBackendTransactionRepository,
 } from '../../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository.service';
 import { IgnoredTransactionRepository } from '../../../../shared/services/dia-backend/transaction/ignored-transaction-repository.service';
+import { PagingSourceManager } from '../../../../shared/services/paging-source-manager/paging-source-manager.service';
 import {
   IonInfiniteScrollEvent,
   IonRefresherEvent,
 } from '../../../../utils/events';
-import { PagingSource } from '../../../../utils/paging-source/paging-source';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -24,8 +24,13 @@ import { PagingSource } from '../../../../utils/paging-source/paging-source';
 })
 export class InboxPage implements OnInit {
   readonly isFetching$ = this.diaBackendTransactionRepository.isFetching$;
-  private readonly inboxRemoteSource = new PagingSource(options =>
-    this.diaBackendTransactionRepository.fetchInbox$(options).pipe(first())
+  private readonly inboxRemoteSource = this.pagingSourceManager.getPagingSource(
+    {
+      id: `${DiaBackendTransactionRepository.name}_fetchInbox`,
+      pagingFetchFunction$: options =>
+        this.diaBackendTransactionRepository.fetchInbox$(options).pipe(first()),
+      pagingSize: 20,
+    }
   );
   readonly inbox$ = combineLatest([
     this.inboxRemoteSource.data$,
@@ -43,7 +48,8 @@ export class InboxPage implements OnInit {
     private readonly diaBackendTransactionRepository: DiaBackendTransactionRepository,
     private readonly ignoredTransactionRepository: IgnoredTransactionRepository,
     private readonly diaBackendAuthService: DiaBackendAuthService,
-    private readonly blockingAction: BlockingAction
+    private readonly blockingAction: BlockingAction,
+    private readonly pagingSourceManager: PagingSourceManager
   ) {}
 
   ngOnInit() {
@@ -63,14 +69,14 @@ export class InboxPage implements OnInit {
   ) {
     return this.inboxRemoteSource
       .refresh$(event, ionInfiniteScroll)
-      .pipe(untilDestroyed(this))
+      .pipe(first(), untilDestroyed(this))
       .subscribe();
   }
 
   loadInbox(event: IonInfiniteScrollEvent) {
     return this.inboxRemoteSource
       .loadData$(event)
-      .pipe(untilDestroyed(this))
+      .pipe(first(), untilDestroyed(this))
       .subscribe();
   }
 

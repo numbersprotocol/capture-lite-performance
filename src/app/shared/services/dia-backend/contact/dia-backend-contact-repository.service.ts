@@ -8,8 +8,8 @@ import {
   pluck,
   tap,
 } from 'rxjs/operators';
-import { PagingFetchFunctionOptions } from '../../../../utils/paging-source/paging-source';
 import { Tuple } from '../../database/table/table';
+import { PagingFetchFunctionOptions } from '../../paging-source-manager/paging-source/paging-source';
 import { DiaBackendAuthService } from '../auth/dia-backend-auth.service';
 import { BASE_URL } from '../secret';
 

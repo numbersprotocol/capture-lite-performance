@@ -7,11 +7,11 @@ import {
   DiaBackendTransaction,
   DiaBackendTransactionRepository,
 } from '../../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository.service';
+import { PagingSourceManager } from '../../../../shared/services/paging-source-manager/paging-source-manager.service';
 import {
   IonInfiniteScrollEvent,
   IonRefresherEvent,
 } from '../../../../utils/events';
-import { PagingSource } from '../../../../utils/paging-source/paging-source';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -21,15 +21,21 @@ import { PagingSource } from '../../../../utils/paging-source/paging-source';
 })
 export class TransactionsPage implements OnInit {
   readonly isFetching$ = this.diaBackendTransactionRepository.isFetching$;
-  private readonly transactionRemoteSource = new PagingSource(options =>
-    this.diaBackendTransactionRepository.fetchAll$(options).pipe(first())
+  private readonly transactionRemoteSource = this.pagingSourceManager.getPagingSource(
+    {
+      id: `${DiaBackendTransactionRepository.name}_fetchAll`,
+      pagingFetchFunction$: options =>
+        this.diaBackendTransactionRepository.fetchAll$(options).pipe(first()),
+      pagingSize: 20,
+    }
   );
   readonly transactions$ = this.transactionRemoteSource.data$;
   readonly email$ = this.diaBackendAuthService.email$;
 
   constructor(
     private readonly diaBackendTransactionRepository: DiaBackendTransactionRepository,
-    private readonly diaBackendAuthService: DiaBackendAuthService
+    private readonly diaBackendAuthService: DiaBackendAuthService,
+    private readonly pagingSourceManager: PagingSourceManager
   ) {}
 
   ngOnInit() {
@@ -49,14 +55,14 @@ export class TransactionsPage implements OnInit {
   ) {
     return this.transactionRemoteSource
       .refresh$(event, ionInfiniteScroll)
-      .pipe(untilDestroyed(this))
+      .pipe(first(), untilDestroyed(this))
       .subscribe();
   }
 
   loadTransactions(event: IonInfiniteScrollEvent) {
     return this.transactionRemoteSource
       .loadData$(event)
-      .pipe(untilDestroyed(this))
+      .pipe(first(), untilDestroyed(this))
       .subscribe();
   }
 

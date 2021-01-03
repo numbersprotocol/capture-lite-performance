@@ -19,52 +19,50 @@
       (isFetching$ | async) === false && (transactions$ | async)?.length === 0
     "
   ></app-no-data>
-  <ng-container *ngIf="(transactions$ | async)?.length !== 0">
-    <ion-list lines="none">
-      <ion-item
-        *ngFor="
-          let transaction of transactions$ | async;
-          trackBy: trackByIdAndStatus
-        "
-        [routerLink]="['transaction', { id: transaction.id }]"
-      >
-        <app-img
-          slot="start"
-          [src]="transaction.asset.asset_file_thumbnail"
-          [cacheKey]="transaction.id + 'assetFileThumbnail'"
-          class="ion-margin-end"
-        >
-        </app-img>
-        <ion-label>
-          <h3>{{ transaction.asset.id }}</h3>
-          <p>
-            {{
-              transaction.created_at
-                | translocoDate: { dateStyle: 'short', timeStyle: 'medium' }
-            }}
-          </p>
-        </ion-label>
-        <ion-label
-          slot="end"
-          class="status ion-no-margin ion-margin-start"
-          [class]="transaction | transactionStatus: email$ | async"
-          disabled
-        >
-          {{
-            t(
-              'transactionStatus.' +
-                (transaction | transactionStatus: email$ | async)
-            )
-          }}
-        </ion-label>
-      </ion-item>
-    </ion-list>
-    <ion-infinite-scroll
-      #transactionsInfiniteScroll
-      (ionInfinite)="loadTransactions($event)"
-      threshold="10px"
+  <ion-list lines="none">
+    <ion-item
+      *ngFor="
+        let transaction of transactions$ | async;
+        trackBy: trackByIdAndStatus
+      "
+      [routerLink]="['transaction', { id: transaction.id }]"
     >
-      <ion-infinite-scroll-content></ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  </ng-container>
+      <app-img
+        slot="start"
+        [src]="transaction.asset.asset_file_thumbnail"
+        [cacheKey]="transaction.id + 'assetFileThumbnail'"
+        class="ion-margin-end"
+      >
+      </app-img>
+      <ion-label>
+        <h3>{{ transaction.asset.id }}</h3>
+        <p>
+          {{
+            transaction.created_at
+              | translocoDate: { dateStyle: 'short', timeStyle: 'medium' }
+          }}
+        </p>
+      </ion-label>
+      <ion-label
+        slot="end"
+        class="status ion-no-margin ion-margin-start"
+        [class]="transaction | transactionStatus: email$ | async"
+        disabled
+      >
+        {{
+          t(
+            'transactionStatus.' +
+              (transaction | transactionStatus: email$ | async)
+          )
+        }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll
+    #transactionsInfiniteScroll
+    (ionInfinite)="loadTransactions($event)"
+    threshold="10px"
+  >
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

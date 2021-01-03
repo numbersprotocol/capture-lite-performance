@@ -28,7 +28,9 @@ export class CaptureItemComponent {
   readonly thumbnailUrl$ = this.item$.pipe(
     switchMap(item => item.getThumbnailUrl())
   );
-  readonly cacheKey$ = this.item$.pipe(map(item => item.id));
+  readonly cacheKey$ = this.item$.pipe(
+    map(item => `${item.id}_assetFileThumbnail`)
+  );
 }
 
 // Uniform interface for Proof, Asset and DiaBackendAsset

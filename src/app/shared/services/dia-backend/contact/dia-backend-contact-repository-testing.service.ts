@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { PagingFetchFunctionOptions } from '../../../../utils/paging-source/paging-source';
+import { PagingFetchFunctionOptions } from '../../paging-source-manager/paging-source/paging-source';
 
 @Injectable({
   providedIn: 'root',

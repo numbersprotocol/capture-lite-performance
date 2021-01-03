@@ -10,8 +10,8 @@ import {
 } from 'rxjs/operators';
 import { base64ToBlob } from '../../../../utils/encoding/encoding';
 import { toExtension } from '../../../../utils/mime-type';
-import { PagingFetchFunctionOptions } from '../../../../utils/paging-source/paging-source';
 import { Tuple } from '../../database/table/table';
+import { PagingFetchFunctionOptions } from '../../paging-source-manager/paging-source/paging-source';
 import {
   getOldSignatures,
   getSortedProofInformation,
