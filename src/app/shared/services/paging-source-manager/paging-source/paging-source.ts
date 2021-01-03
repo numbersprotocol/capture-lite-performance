@@ -39,9 +39,15 @@ export class PagingSource<T extends Tuple> {
         )
       ),
       switchTap(data => this.insertCurrentPagingData(data, this.currentOffset)),
-      catchError(() =>
-        defer(() => this.queryCurrentPagingCache(this.currentOffset))
-      ),
+      catchError((err: unknown) => {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Error when fetching paging data, use local cache instead: ${JSON.stringify(
+            err
+          )}`
+        );
+        return defer(() => this.queryCurrentPagingCache(this.currentOffset));
+      }),
       tap(data => {
         this._data$.next(data);
         this.currentOffset += data.length;
