@@ -1,7 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, defer, forkJoin, Subject } from 'rxjs';
-import { concatMap, concatMapTo, pluck, tap } from 'rxjs/operators';
+import {
+  concatMap,
+  concatMapTo,
+  distinctUntilChanged,
+  pluck,
+  tap,
+} from 'rxjs/operators';
 import { base64ToBlob } from '../../../../utils/encoding/encoding';
 import { toExtension } from '../../../../utils/mime-type';
 import { PagingFetchFunctionOptions } from '../../../../utils/paging-source/paging-source';
@@ -23,7 +29,9 @@ export class DiaBackendAssetRepository {
   private readonly _isDirtyEvent$ = new Subject<string | undefined>();
   readonly isDirtyEvent$ = this._isDirtyEvent$.asObservable();
   private readonly _isFetching$ = new BehaviorSubject(false);
-  readonly isFetching$ = this._isFetching$.asObservable();
+  readonly isFetching$ = this._isFetching$
+    .asObservable()
+    .pipe(distinctUntilChanged());
 
   constructor(
     private readonly httpClient: HttpClient,

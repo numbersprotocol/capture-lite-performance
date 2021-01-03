@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, of } from 'rxjs';
-import { switchAll, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, switchAll, switchMap } from 'rxjs/operators';
 import { blobToBase64 } from '../../../utils/encoding/encoding';
 import { MimeType } from '../../../utils/mime-type';
 import { isNonNullable } from '../../../utils/rx-operators/rx-operators';
@@ -35,7 +35,9 @@ export class ImageComponent {
     `${ImageComponent.name}_cache`
   );
   private readonly _isLoading$ = new BehaviorSubject(true);
-  readonly isLoading$ = this._isLoading$.asObservable();
+  readonly isLoading$ = this._isLoading$
+    .asObservable()
+    .pipe(distinctUntilChanged());
 
   constructor(
     private readonly database: Database,
