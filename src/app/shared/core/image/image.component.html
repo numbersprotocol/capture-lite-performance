@@ -1,11 +1,18 @@
-<div *ngIf="isLoading$ | async" class="spinner-container">
+<div *ngIf="isLoading" class="spinner-container">
   <ion-spinner></ion-spinner>
 </div>
+<ion-icon
+  *ngIf="isError"
+  src="/assets/icons/broken-image.svg"
+  class="error-icon"
+></ion-icon>
 <ion-img
+  *ngIf="!isError"
   part="ion-img"
   exportparts="image"
   [attr.src]="url$ | async"
   (ionImgWillLoad)="imageWillLoad()"
   (ionImgDidLoad)="imageDidLoad()"
-  [class.isLoading]="isLoading$ | async"
+  (ionError)="imageError()"
+  [class.isLoading]="isLoading"
 ></ion-img>

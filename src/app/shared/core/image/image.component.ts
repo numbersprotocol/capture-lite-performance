@@ -1,8 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { isEqual } from 'lodash-es';
 import { BehaviorSubject, of } from 'rxjs';
-import { distinctUntilChanged, switchAll, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  switchAll,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { blobToBase64 } from '../../../utils/encoding/encoding';
 import { MimeType } from '../../../utils/mime-type';
 import { isNonNullable } from '../../../utils/rx-operators/rx-operators';
@@ -25,7 +32,11 @@ export class ImageComponent {
     this._src$.next(value);
   }
   private readonly _src$ = new BehaviorSubject<string | undefined>(undefined);
-  private readonly src$ = this._src$.asObservable().pipe(isNonNullable());
+  private readonly src$ = this._src$.asObservable().pipe(
+    isNonNullable(),
+    distinctUntilChanged(isEqual),
+    tap(() => (this.isError = false))
+  );
   readonly url$ = this.src$.pipe(
     switchMap(src => this.updateUrl(src)),
     switchAll()
@@ -34,10 +45,8 @@ export class ImageComponent {
   private readonly cacheTable = this.database.getTable<Cache>(
     `${ImageComponent.name}_cache`
   );
-  private readonly _isLoading$ = new BehaviorSubject(true);
-  readonly isLoading$ = this._isLoading$
-    .asObservable()
-    .pipe(distinctUntilChanged());
+  isLoading = true;
+  isError = false;
 
   constructor(
     private readonly database: Database,
@@ -69,16 +78,23 @@ export class ImageComponent {
         await this.cacheTable.insert(caches, OnConflictStrategy.IGNORE);
 
         return toDataUrl(base64, blob.type);
-      })
+      }),
+      catchError(() => of(src))
     );
   }
 
   imageWillLoad() {
-    this._isLoading$.next(true);
+    this.isLoading = true;
+    this.isError = false;
   }
 
   imageDidLoad() {
-    this._isLoading$.next(false);
+    this.isLoading = false;
+  }
+
+  imageError() {
+    this.isLoading = false;
+    this.isError = true;
   }
 }
 
