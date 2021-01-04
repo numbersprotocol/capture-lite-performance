@@ -54,9 +54,7 @@
           ></ion-input>
           <ion-button
             (click)="inviteFriend(invitedEmailInput.value); slides.slideNext()"
-            [disabled]="
-              !invitedEmailInput.value || invitedEmailInput.value.length === 0
-            "
+            [disabled]="!invitedEmailInput.value"
             class="input-button"
             fill="clear"
             slot="end"

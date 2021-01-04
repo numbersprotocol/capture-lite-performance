@@ -21,8 +21,8 @@ export class ProofRepository {
 
   getAll$() {
     return this.table.queryAll$().pipe(
-      distinctUntilChanged(isEqual),
-      map((indexedProofViews: IndexedProofView[]) => {
+      distinctUntilChanged<IndexedProofView[]>(isEqual),
+      map(indexedProofViews => {
         return indexedProofViews.map(view =>
           Proof.fromIndexedProofView(this.imageStore, view)
         );

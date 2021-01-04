@@ -113,8 +113,8 @@ export class SendingPostCapturePage implements OnInit {
     return item.contact_email;
   }
 
-  async inviteFriend(invitedEmail: string) {
-    this.targetContact = { contact_email: invitedEmail };
+  inviteFriend(invitedEmail?: string | number | null) {
+    this.targetContact = { contact_email: String(invitedEmail) };
   }
 
   async send(targetEmail: string) {

@@ -34,7 +34,7 @@ export class ImageComponent {
   private readonly _src$ = new BehaviorSubject<string | undefined>(undefined);
   private readonly src$ = this._src$.asObservable().pipe(
     isNonNullable(),
-    distinctUntilChanged(isEqual),
+    distinctUntilChanged<string>(isEqual),
     tap(() => (this.isError = false))
   );
   readonly url$ = this.src$.pipe(

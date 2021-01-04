@@ -30,7 +30,7 @@ export class CapacitorStoragePreferences implements Preferences {
   get$<T extends boolean | number | string>(key: string, defaultValue: T) {
     return defer(() => this.initializeValue(key, defaultValue)).pipe(
       concatMap(() => this.subjects.get(key)?.asObservable() as Observable<T>),
-      distinctUntilChanged(isEqual)
+      distinctUntilChanged<T>(isEqual)
     );
   }
 

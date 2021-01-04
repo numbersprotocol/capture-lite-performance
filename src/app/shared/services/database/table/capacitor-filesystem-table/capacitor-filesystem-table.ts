@@ -26,7 +26,7 @@ export class CapacitorFilesystemTable<T extends Tuple> implements Table<T> {
   queryAll$() {
     return defer(() => this.initialize()).pipe(
       concatMapTo(this.tuples$.asObservable()),
-      distinctUntilChanged(isEqual)
+      distinctUntilChanged<T[]>(isEqual)
     );
   }
 
