@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@angular/core';
-import { GeolocationPlugin, Plugins } from '@capacitor/core';
-import { GEOLOCATION_PLUGIN } from '../../../../core/capacitor-plugins/capacitor-plugins.module';
+import { Injectable } from '@angular/core';
+import { Plugins } from '@capacitor/core';
+import { GeolocationService } from '../../../geolocation/geolocation.service';
 import { PreferenceManager } from '../../../preference-manager/preference-manager.service';
 import {
   DefaultFactId,
@@ -28,8 +28,7 @@ export class CapacitorFactsProvider implements FactsProvider {
   );
 
   constructor(
-    @Inject(GEOLOCATION_PLUGIN)
-    private readonly geolocationPlugin: GeolocationPlugin,
+    private readonly geolocationService: GeolocationService,
     private readonly preferenceManager: PreferenceManager
   ) {}
 
@@ -75,30 +74,13 @@ export class CapacitorFactsProvider implements FactsProvider {
       return undefined;
     }
 
-    // WORKAROUND: manually set timeout to avoid location never resolved:
-    //             https://github.com/ionic-team/capacitor/issues/3062
-
-    const timeout = new Promise<undefined>((_, reject) => {
-      setTimeout(() => {
-        reject({
-          code: GeolocationPositionErrorCode.TIMEOUT,
-          message: `Timeout when collecting location info: ${defaultGeolocationTimeout}`,
-        });
-      }, defaultGeolocationTimeout);
-    });
-
-    return Promise.race([
-      this.geolocationPlugin.getCurrentPosition({
+    return this.geolocationService
+      .getCurrentPosition({
         enableHighAccuracy: true,
         maximumAge: defaultGeolocationAge,
         timeout: defaultGeolocationTimeout,
-      }),
-      timeout,
-    ]).catch((err: GeolocationPositionError) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-      return undefined;
-    });
+      })
+      .catch(() => undefined);
   }
 
   async isDeviceInfoCollectionEnabled() {
@@ -121,15 +103,4 @@ export class CapacitorFactsProvider implements FactsProvider {
 const enum PrefKeys {
   COLLECT_DEVICE_INFO = 'COLLECT_DEVICE_INFO',
   COLLECT_LOCATION_INFO = 'COLLECT_LOCATION_INFO',
-}
-
-const enum GeolocationPositionErrorCode {
-  NOT_USED,
-  PERMISSION_DENIED,
-  POSITION_UNAVAILABLE,
-  TIMEOUT,
-}
-export interface GeolocationPositionError {
-  code: GeolocationPositionErrorCode;
-  message: string;
 }
