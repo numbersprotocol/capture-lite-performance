@@ -1,4 +1,10 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Input,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, combineLatest, defer, EMPTY } from 'rxjs';
 import {
@@ -65,7 +71,12 @@ export class CaptureItemComponent implements OnInit {
     combineLatest([this.item$, this.autoUpload$])
       .pipe(
         switchMap(([item, autoUpload]) => {
-          if (autoUpload && item.proof && !item.diaBackendAsset)
+          if (
+            autoUpload &&
+            item.proof &&
+            !item.diaBackendAsset &&
+            !this.isUploading
+          )
             return this.upload$(item.proof);
           return EMPTY;
         }),
@@ -80,6 +91,21 @@ export class CaptureItemComponent implements OnInit {
       first(),
       finalize(() => (this.isUploading = false))
     );
+  }
+
+  @HostListener('click')
+  click() {
+    this.item$
+      .pipe(
+        first(),
+        switchMap(item => {
+          if (!this.isUploading && item.proof && !item.diaBackendAsset)
+            return this.upload$(item.proof);
+          return EMPTY;
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }
 
