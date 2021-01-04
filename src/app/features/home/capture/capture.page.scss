@@ -14,9 +14,6 @@
 
     app-capture-item::part(app-img) {
       object-fit: cover;
-    }
-
-    app-capture-item::part(image) {
       border-radius: 8px;
     }
   }

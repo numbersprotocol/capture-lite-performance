@@ -2,14 +2,7 @@
   display: block;
   object-fit: contain;
   position: relative;
-
-  .spinner-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-  }
+  overflow: hidden;
 
   ion-icon.error-icon {
     position: absolute;
@@ -25,9 +18,20 @@
     height: 100%;
     object-fit: inherit;
     object-position: inherit;
+    animation: img-skeleton 1s ease-in-out alternate infinite;
   }
 
   ion-img.isLoading::part(image) {
     filter: contrast(0) brightness(1.8);
+  }
+
+  @keyframes img-skeleton {
+    0% {
+      background-color: lightgray;
+    }
+
+    100% {
+      background-color: whitesmoke;
+    }
   }
 }
