@@ -3,7 +3,12 @@
   name="cloud-offline"
   size="large"
 ></ion-icon>
-<ion-icon *ngIf="isUploading" name="cloud-upload" size="large"></ion-icon>
+<ng-container *ngIf="isUploading">
+  <div class="spinner-container">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-icon name="cloud-upload" size="large"></ion-icon>
+</ng-container>
 <app-img
   [src]="thumbnailUrl$ | async"
   [cacheKey]="cacheKey$ | async"
