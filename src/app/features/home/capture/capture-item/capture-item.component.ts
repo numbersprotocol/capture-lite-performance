@@ -113,7 +113,7 @@ export class CaptureItem {
   }
 
   get timestamp() {
-    if (this.diaBackendAsset)
+    if (this.diaBackendAsset?.information.proof)
       return this.diaBackendAsset.information.proof.timestamp;
     if (this.proof) return this.proof.timestamp;
     return this.createdTimestamp;

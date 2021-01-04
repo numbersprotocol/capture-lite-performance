@@ -27,7 +27,7 @@
       ></ion-icon>
       <ion-label class="ion-no-margin ion-margin-start">
         {{
-          (asset$ | async)?.information.proof.timestamp
+          (asset$ | async)?.information.proof?.timestamp
             | translocoDate: { dateStyle: 'short', timeStyle: 'long' }
         }}
       </ion-label>

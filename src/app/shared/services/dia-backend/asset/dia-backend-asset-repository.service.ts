@@ -109,7 +109,7 @@ export interface DiaBackendAsset extends Tuple {
   readonly asset_file: string;
   readonly asset_file_thumbnail: string;
   readonly sharable_copy: string;
-  readonly information: SortedProofInformation;
+  readonly information: Partial<SortedProofInformation>;
   readonly signature: OldSignature[];
   readonly owner: string;
   readonly is_original_owner: boolean;

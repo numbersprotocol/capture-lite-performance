@@ -37,7 +37,7 @@
         <h3>{{ t('timestamp') }}</h3>
         <p>
           {{
-            (asset$ | async)?.information.proof.timestamp
+            (asset$ | async)?.information.proof?.timestamp
               | translocoDate: { dateStyle: 'long', timeStyle: 'long' }
           }}
         </p>
@@ -48,13 +48,15 @@
       <ion-label>
         <h3>{{ t('mimeType') }}</h3>
         <p>
-          {{ (asset$ | async)?.information.proof.mimeType }}
+          {{ (asset$ | async)?.information.proof?.mimeType }}
         </p>
       </ion-label>
     </ion-item>
-    <ng-container *ngIf="asset$ | async as asset">
+    <ng-container
+      *ngIf="(asset$ | async)?.information.information as information"
+    >
       <ion-list-header>{{ t('information') }}</ion-list-header>
-      <ion-item *ngFor="let info of asset.information.information">
+      <ion-item *ngFor="let info of information">
         <ion-icon name="information-circle" slot="start"></ion-icon>
         <ion-label>
           <h3>{{ info.name }}</h3>
