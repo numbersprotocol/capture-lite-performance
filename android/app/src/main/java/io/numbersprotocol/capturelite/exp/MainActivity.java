@@ -1,4 +1,4 @@
-package io.numbersprotocol.capturelite;
+package io.numbersprotocol.capturelite.exp;
 
 import android.os.Bundle;
 
