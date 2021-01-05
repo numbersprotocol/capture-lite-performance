@@ -40,7 +40,7 @@
         <ion-grid class="capture-tab">
           <ion-row>
             <ion-col
-              *ngFor="let item of captures$ | async; trackBy: trackById"
+              *ngFor="let item of captures$ | async; trackBy: trackCaptureItem"
               size="4"
             >
               <app-capture-item

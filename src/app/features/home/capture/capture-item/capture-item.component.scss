@@ -2,6 +2,8 @@
   display: block;
   object-fit: contain;
   position: relative;
+  overflow: hidden;
+  background-color: lightgray;
 
   .spinner-container {
     position: absolute;

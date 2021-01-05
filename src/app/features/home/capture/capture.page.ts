@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { isEqual, sortBy } from 'lodash-es';
-import { combineLatest, defer } from 'rxjs';
+import { isEqual, sortBy, without } from 'lodash-es';
+import { BehaviorSubject, combineLatest, defer } from 'rxjs';
 import { concatMap, first, map, single, tap } from 'rxjs/operators';
 import { CameraService } from '../../../shared/services/camera/camera.service';
 import { CollectorService } from '../../../shared/services/collector/collector.service';
@@ -42,12 +42,16 @@ export class CapturePage implements OnInit {
       pagingSize: 20,
     }
   );
+  private readonly collectingCaptures$ = new BehaviorSubject<CaptureItem[]>([]);
   readonly captures$ = combineLatest([
     this.captureRemoteSource.data$,
     this.proofRepository.getAll$(),
+    this.collectingCaptures$.asObservable(),
   ]).pipe(
-    map(([diaBackendAssets, proofs]) =>
-      mergeDiaBackendAssetsAndProofs(diaBackendAssets, proofs)
+    map(([diaBackendAssets, proofs, collectingCaptures]) =>
+      mergeDiaBackendAssetsAndProofs(diaBackendAssets, proofs).concat(
+        collectingCaptures
+      )
     ),
     map(captures => sortBy(captures, [c => -c.timestamp]))
   );
@@ -122,6 +126,10 @@ export class CapturePage implements OnInit {
     return item.id;
   }
 
+  trackCaptureItem(_: number, item: CaptureItem) {
+    return item.id ?? item.oldProofHash;
+  }
+
   loadCaptures(event: IonInfiniteScrollEvent) {
     return this.captureRemoteSource
       .loadData$(event)
@@ -139,11 +147,22 @@ export class CapturePage implements OnInit {
   capture() {
     return defer(() => this.cameraService.capture())
       .pipe(
-        concatMap(photo =>
-          this.collectorService.runAndStore({
+        concatMap(async photo => {
+          const collectingCapture = new CaptureItem({});
+          this.collectingCaptures$.next(
+            // eslint-disable-next-line rxjs/no-subject-value
+            this.collectingCaptures$.value.concat(collectingCapture)
+          );
+
+          await this.collectorService.runAndStore({
             [photo.base64]: { mimeType: photo.mimeType },
-          })
-        ),
+          });
+
+          this.collectingCaptures$.next(
+            // eslint-disable-next-line rxjs/no-subject-value
+            without(this.collectingCaptures$.value, collectingCapture)
+          );
+        }),
         single(),
         untilDestroyed(this)
       )

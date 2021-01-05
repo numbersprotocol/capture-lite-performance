@@ -6,6 +6,7 @@
   .capture-tab {
     app-capture-item {
       height: 30vw;
+      border-radius: 8px;
     }
 
     app-capture-item:focus {
@@ -14,7 +15,6 @@
 
     app-capture-item::part(app-img) {
       object-fit: cover;
-      border-radius: 8px;
     }
   }
 }

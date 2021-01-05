@@ -70,15 +70,14 @@ export class CaptureItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    combineLatest([this.item$, this.autoUpload$])
+    combineLatest([
+      this.item$,
+      this.autoUpload$,
+      defer(async () => this.isUploading),
+    ])
       .pipe(
-        switchMap(([item, autoUpload]) => {
-          if (
-            autoUpload &&
-            item.proof &&
-            !item.diaBackendAsset &&
-            !this.isUploading
-          )
+        switchMap(([item, autoUpload, isUploading]) => {
+          if (autoUpload && item.proof && !item.diaBackendAsset && !isUploading)
             return this.upload$(item.proof);
           return EMPTY;
         }),

@@ -1,9 +1,20 @@
 <ion-icon
-  *ngIf="!isUploading && !hasUploaded && !(item$ | async)?.diaBackendAsset"
+  *ngIf="
+    !isUploading &&
+    !hasUploaded &&
+    !(item$ | async)?.diaBackendAsset &&
+    (item$ | async)?.proof
+  "
   name="cloud-offline"
   size="large"
 ></ion-icon>
-<div *ngIf="isUploading" class="spinner-container">
+<div
+  *ngIf="
+    isUploading ||
+    (!(item$ | async)?.diaBackendAsset && !(item$ | async)?.proof)
+  "
+  class="spinner-container"
+>
   <ion-spinner></ion-spinner>
 </div>
 <ion-icon
@@ -11,8 +22,14 @@
   name="cloud-upload"
   size="large"
 ></ion-icon>
+<ion-icon
+  *ngIf="!(item$ | async)?.diaBackendAsset && !(item$ | async)?.proof"
+  name="hourglass-outline"
+  size="large"
+></ion-icon>
 <app-img
-  [src]="thumbnailUrl$ | async"
+  *ngIf="thumbnailUrl$ | async as thumbnailUrl"
+  [src]="thumbnailUrl"
   [cacheKey]="cacheKey$ | async"
   part="app-img"
   exportparts="ion-img, image"
