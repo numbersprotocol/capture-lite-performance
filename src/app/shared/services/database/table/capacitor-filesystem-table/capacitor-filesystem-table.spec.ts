@@ -211,6 +211,32 @@ describe('CapacitorFilesystemTable', () => {
       done();
     });
   });
+
+  it('should wipe all data after clear', async () => {
+    await table.insert([TUPLE1, TUPLE2]);
+
+    await table.clear();
+
+    expect(await table.queryAll()).toEqual([]);
+  });
+
+  it('should be able to reinitialize after clear', async () => {
+    await table.insert([TUPLE1, TUPLE2]);
+    await table.clear();
+
+    await table.insert([TUPLE1]);
+
+    expect(await table.queryAll()).toEqual([TUPLE1]);
+  });
+
+  it('should clear idempotently', async () => {
+    await table.insert([TUPLE1]);
+
+    await table.clear();
+    await table.clear();
+
+    expect(await table.queryAll()).toEqual([]);
+  });
 });
 
 interface TestTuple extends Tuple {

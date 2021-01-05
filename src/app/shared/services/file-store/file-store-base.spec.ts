@@ -43,6 +43,11 @@ describe('FileStoreBase', () => {
     expect(await store.read(index)).toEqual(FILE);
   });
 
+  it('should get MIME type with index', async () => {
+    const index = await store.write(FILE, MIME_TYPE);
+    expect(await store.getMimeType(index)).toEqual(MIME_TYPE);
+  });
+
   it('should delete file with index', async () => {
     const index = await store.write(FILE, MIME_TYPE);
 
@@ -94,6 +99,23 @@ describe('FileStoreBase', () => {
     for (const index of indexes) {
       expect(await store.exists(index)).toBeFalse();
     }
+  });
+
+  it('should clear all files', async () => {
+    const index = await store.write(FILE, MIME_TYPE);
+
+    await store.clear();
+
+    expect(await store.exists(index)).toBeFalse();
+  });
+
+  it('should clear idempotently', async () => {
+    const index = await store.write(FILE, MIME_TYPE);
+
+    await store.clear();
+    await store.clear();
+
+    expect(await store.exists(index)).toBeFalse();
   });
 });
 

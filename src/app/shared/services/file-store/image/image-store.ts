@@ -6,6 +6,7 @@ import {
   blobToBase64,
 } from '../../../../utils/encoding/encoding';
 import { MimeType } from '../../../../utils/mime-type';
+import { toDataUrl } from '../../../../utils/url';
 import { FILESYSTEM_PLUGIN } from '../../../core/capacitor-plugins/capacitor-plugins.module';
 import { Database } from '../../database/database.service';
 import { OnConflictStrategy, Tuple } from '../../database/table/table';
@@ -50,14 +51,19 @@ export class ImageStore extends FileStoreBase {
     return index;
   }
 
-  async readThumbnail(index: string, mimeType: MimeType) {
+  async getThumbnailUrl(index: string) {
     const thumbnailRef = await this.getThumbnailRef(index);
 
     if (thumbnailRef) {
       return this.thumbnailStore.read(thumbnailRef.thumbnailIndex);
     }
     const thumbnailSize = 100;
-    const blob = await base64ToBlob(await this.read(index), mimeType);
+    const blob = await base64ToBlob(
+      await this.read(index),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      (await this.getMimeType(index))!
+    );
+
     const thumbnailBlob = await imageBlobReduce.toBlob(blob, {
       max: thumbnailSize,
     });
@@ -68,18 +74,24 @@ export class ImageStore extends FileStoreBase {
           imageIndex: index,
           thumbnailIndex: await this.thumbnailStore.write(
             thumbnailBase64,
-            mimeType
+            blob.type as MimeType
           ),
         },
       ],
       OnConflictStrategy.IGNORE
     );
-    return thumbnailBase64;
+    return toDataUrl(thumbnailBase64, blob.type);
   }
 
   private async getThumbnailRef(index: string) {
     const thumbnails = await this.thumbnailRefTable.queryAll();
     return thumbnails.find(thumbnail => thumbnail.imageIndex === index);
+  }
+
+  async clear() {
+    await this.thumbnailRefTable.clear();
+    await this.thumbnailStore.clear();
+    return super.clear();
   }
 
   async drop() {

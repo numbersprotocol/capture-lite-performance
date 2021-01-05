@@ -97,6 +97,14 @@ describe('CacheStore', () => {
   it('should delete file even if not exists', async () => {
     expect(await store.delete(INDEX)).toEqual(INDEX);
   });
+
+  it('should clear all files', async () => {
+    const index = await store.write(FILE, MIME_TYPE);
+
+    await store.clear();
+
+    expect(await store.exists(index)).toBeFalse();
+  });
 });
 
 const FILE =

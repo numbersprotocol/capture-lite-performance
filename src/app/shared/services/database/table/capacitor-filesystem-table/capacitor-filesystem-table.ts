@@ -157,7 +157,7 @@ export class CapacitorFilesystemTable<T extends Tuple> implements Table<T> {
     });
   }
 
-  async drop() {
+  async clear() {
     this.hasInitialized = false;
     if (await this.hasCreatedJson()) {
       await this.filesystemPlugin.deleteFile({
@@ -165,6 +165,10 @@ export class CapacitorFilesystemTable<T extends Tuple> implements Table<T> {
         path: `${this.rootDir}/${this.id}.json`,
       });
     }
+  }
+
+  async drop() {
+    await this.clear();
     return this.tuples$.complete();
   }
 }

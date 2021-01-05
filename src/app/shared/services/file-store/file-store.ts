@@ -5,5 +5,6 @@ export interface FileStore {
   write(base64: string, mimeType: MimeType): Promise<string>;
   delete(index: string): Promise<string>;
   exists(index: string): Promise<boolean>;
+  clear(): Promise<void>;
   drop(): Promise<void>;
 }

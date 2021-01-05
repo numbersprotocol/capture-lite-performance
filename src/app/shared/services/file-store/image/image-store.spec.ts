@@ -54,7 +54,7 @@ describe('ImageStore', () => {
 
   it('should delete file with index and thumbnail', async () => {
     const index = await store.write(FILE, MIME_TYPE);
-    await store.readThumbnail(index, MIME_TYPE);
+    await store.getThumbnailUrl(index);
 
     await store.delete(index);
 
@@ -108,8 +108,16 @@ describe('ImageStore', () => {
 
   it('should read thumbnail', async () => {
     const index = await store.write(FILE, MIME_TYPE);
-    const thumbnailFile = await store.readThumbnail(index, MIME_TYPE);
-    expect(thumbnailFile).toBeTruthy();
+    const thumbnailUrl = await store.getThumbnailUrl(index);
+    expect(thumbnailUrl).toBeTruthy();
+  });
+
+  it('should clear all files', async () => {
+    const index = await store.write(FILE, MIME_TYPE);
+
+    await store.clear();
+
+    expect(await store.exists(index)).toBeFalse();
   });
 });
 

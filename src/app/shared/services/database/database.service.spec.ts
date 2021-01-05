@@ -12,6 +12,8 @@ describe('Database', () => {
     database = TestBed.inject(Database);
   });
 
+  afterEach(async () => database.clear());
+
   it('should be created', () => expect(database).toBeTruthy());
 
   it('should get new table with new ID', () => {
@@ -22,5 +24,15 @@ describe('Database', () => {
   it('should get same table with same ID', () => {
     const id = 'id';
     expect(database.getTable(id)).toBe(database.getTable(id));
+  });
+
+  it('should clear all tables', async () => {
+    const id = 'id';
+    const table = database.getTable(id);
+    await table.insert([{ a: 1 }]);
+
+    await database.clear();
+
+    expect(await table.queryAll()).toEqual([]);
   });
 });
