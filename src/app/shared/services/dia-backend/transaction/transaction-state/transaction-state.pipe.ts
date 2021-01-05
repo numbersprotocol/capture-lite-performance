@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs';
 import { DiaBackendTransaction } from '../dia-backend-transaction-repository.service';
 
 @Pipe({
@@ -8,12 +7,19 @@ import { DiaBackendTransaction } from '../dia-backend-transaction-repository.ser
 export class TransactionStatePipe implements PipeTransform {
   async transform(
     transaction?: DiaBackendTransaction | null,
-    email$?: string | Promise<string> | Observable<string>
+    args?: { email?: string | Promise<string> | null; prefix?: string }
+  ) {
+    const status = await this.getStatus(transaction, args?.email);
+    if (args?.prefix) return `${args.prefix}${status}`;
+    return status;
+  }
+
+  private async getStatus(
+    transaction?: DiaBackendTransaction | null,
+    email?: string | Promise<string> | null
   ) {
     if (!transaction) return Status.Unknown;
-    const resolvedEmail = await (email$ instanceof Observable
-      ? email$.toPromise()
-      : email$);
+    const resolvedEmail = await email;
     if (transaction.expired) return Status.Returned;
     if (transaction.fulfilled_at) return Status.Accepted;
     if (!resolvedEmail) return Status.Unknown;
@@ -23,7 +29,7 @@ export class TransactionStatePipe implements PipeTransform {
   }
 }
 
-enum Status {
+const enum Status {
   waitingToBeAccepted = 'waitingToBeAccepted',
   InProgress = 'inProgress',
   Returned = 'returned',

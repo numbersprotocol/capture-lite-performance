@@ -39,8 +39,11 @@
         <p>
           {{
             t(
-              'transactionState.' +
-                (transaction$ | async | transactionState: email$ | async)
+              transaction$
+                | async
+                | transactionState
+                  : { email: (email$ | async), prefix: 'transactionState.' }
+                | async
             )
           }}
         </p>

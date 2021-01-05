@@ -46,13 +46,17 @@
       <ion-label
         slot="end"
         class="transaction-state ion-no-margin ion-margin-start"
-        [class]="transaction | transactionState: email$ | async"
+        [class]="
+          transaction | transactionState: { email: email$ | async } | async
+        "
         disabled
       >
         {{
           t(
-            'transactionState.' +
-              (transaction | transactionState: email$ | async)
+            transaction
+              | transactionState
+                : { email: (email$ | async), prefix: 'transactionState.' }
+              | async
           )
         }}
       </ion-label>
