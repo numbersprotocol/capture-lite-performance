@@ -9,7 +9,6 @@ describe('ImageComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ImageComponent],
         imports: [SharedTestingModule],
       }).compileComponents();
 

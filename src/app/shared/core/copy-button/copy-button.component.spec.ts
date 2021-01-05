@@ -9,7 +9,6 @@ describe('CopyButtonComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [CopyButtonComponent],
         imports: [SharedTestingModule],
       }).compileComponents();
 

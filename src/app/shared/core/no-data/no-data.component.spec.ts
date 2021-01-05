@@ -9,7 +9,6 @@ describe('NoDataComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [NoDataComponent],
         imports: [SharedTestingModule],
       }).compileComponents();
 

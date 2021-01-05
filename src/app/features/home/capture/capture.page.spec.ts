@@ -5,6 +5,7 @@ import { DiaBackendAssetRepository } from '../../../shared/services/dia-backend/
 import { DiaBackendTransactionTestingRepository } from '../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository-testing.service';
 import { DiaBackendTransactionRepository } from '../../../shared/services/dia-backend/transaction/dia-backend-transaction-repository.service';
 import { SharedTestingModule } from '../../../shared/shared-testing.module';
+import { CaptureItemComponent } from './capture-item/capture-item.component';
 import { CapturePage } from './capture.page';
 
 describe('CapturePage', () => {
@@ -14,7 +15,7 @@ describe('CapturePage', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [CapturePage],
+        declarations: [CapturePage, CaptureItemComponent],
         imports: [SharedTestingModule, SuperTabsModule],
         providers: [
           {

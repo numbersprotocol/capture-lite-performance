@@ -9,7 +9,6 @@ describe('PostCaptureComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [PostCaptureComponent],
         imports: [SharedTestingModule],
       }).compileComponents();
 
