@@ -33,7 +33,7 @@
     "@ngneat/until-destroy": "^8.0.3",
     "@ngx-formly/core": "^5.0.0",
     "@ngx-formly/ionic": "^5.0.0",
-    "@ngx-formly/schematics": "^5.10.10",
+    "@ngx-formly/schematics": "^5.10.11",
     "async-mutex": "^0.2.6",
     "image-blob-reduce": "^2.2.1",
     "immutable": "^4.0.0-rc.12",
