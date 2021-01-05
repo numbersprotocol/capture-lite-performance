@@ -158,18 +158,25 @@ export class CapacitorFilesystemTable<T extends Tuple> implements Table<T> {
   }
 
   async clear() {
-    this.hasInitialized = false;
-    if (await this.hasCreatedJson()) {
-      await this.filesystemPlugin.deleteFile({
-        directory: this.directory,
-        path: `${this.rootDir}/${this.id}.json`,
-      });
-    }
+    await this.destroy();
+    return this.tuples$.next([]);
   }
 
   async drop() {
-    await this.clear();
+    await this.destroy();
     return this.tuples$.complete();
+  }
+
+  private async destroy() {
+    return this.mutex.runExclusive(async () => {
+      this.hasInitialized = false;
+      if (await this.hasCreatedJson()) {
+        await this.filesystemPlugin.deleteFile({
+          directory: this.directory,
+          path: `${this.rootDir}/${this.id}.json`,
+        });
+      }
+    });
   }
 }
 

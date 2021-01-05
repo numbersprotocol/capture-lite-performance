@@ -237,6 +237,24 @@ describe('CapacitorFilesystemTable', () => {
 
     expect(await table.queryAll()).toEqual([]);
   });
+
+  it('should emit empty data after clear', async done => {
+    let counter = 0;
+
+    table.queryAll$().subscribe(value => {
+      if (counter === 0) expect(value).toEqual([]);
+      else if (counter === 1) expect(value).toEqual([TUPLE1]);
+      else if (counter === 2) {
+        expect(value).toEqual([]);
+        done();
+      }
+      counter++;
+    });
+
+    await table.insert([TUPLE1]);
+
+    await table.clear();
+  });
 });
 
 interface TestTuple extends Tuple {
