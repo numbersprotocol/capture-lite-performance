@@ -1,8 +1,8 @@
-import { TransactionStatusPipe } from './transaction-status.pipe';
+import { TransactionStatePipe } from './transaction-state.pipe';
 
 describe('TransactionStatusPipe', () => {
   it('create an instance', () => {
-    const pipe = new TransactionStatusPipe();
+    const pipe = new TransactionStatePipe();
     expect(pipe).toBeTruthy();
   });
 });

@@ -41,7 +41,7 @@
   "to": "至",
   "id": "ID",
   "createdAt": "建立於",
-  "status": "狀態",
+  "state": "狀態",
   "privacy": "隱私",
   "version": "版本",
   "privateKey": "私密金鑰",
@@ -59,7 +59,7 @@
     "sendPostCaptureAlert": "PostCapture 送出後，它的所有權將轉移至選定的朋友。您確定嗎？",
     "copiedToClipboard": "已複製至剪貼簿。"
   },
-  "transactionStatus": {
+  "transactionState": {
     "accepted": "已接收",
     "delivered": "已送出",
     "returned": "已退回",

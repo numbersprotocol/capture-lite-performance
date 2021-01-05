@@ -41,7 +41,7 @@
   "to": "To",
   "id": "ID",
   "createdAt": "Created at",
-  "status": "Status",
+  "state": "State",
   "privacy": "Privacy",
   "version": "Version",
   "privateKey": "Private Key",
@@ -59,7 +59,7 @@
     "sendPostCaptureAlert": "After a PostCapture is sent, the ownership will be transferred to the selected friend. Are you sure?",
     "copiedToClipboard": "Has copied to clipboard."
   },
-  "transactionStatus": {
+  "transactionState": {
     "accepted": "Accepted",
     "delivered": "Delivered",
     "returned": "Returned",

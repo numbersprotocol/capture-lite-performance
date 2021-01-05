@@ -23,7 +23,7 @@
     <ion-item
       *ngFor="
         let transaction of transactions$ | async;
-        trackBy: trackByIdAndStatus
+        trackBy: trackByIdAndState
       "
       [routerLink]="['transaction', { id: transaction.id }]"
     >
@@ -45,14 +45,14 @@
       </ion-label>
       <ion-label
         slot="end"
-        class="status ion-no-margin ion-margin-start"
-        [class]="transaction | transactionStatus: email$ | async"
+        class="transaction-state ion-no-margin ion-margin-start"
+        [class]="transaction | transactionState: email$ | async"
         disabled
       >
         {{
           t(
-            'transactionStatus.' +
-              (transaction | transactionStatus: email$ | async)
+            'transactionState.' +
+              (transaction | transactionState: email$ | async)
           )
         }}
       </ion-label>

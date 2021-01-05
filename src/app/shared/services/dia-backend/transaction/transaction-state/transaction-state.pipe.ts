@@ -3,9 +3,9 @@ import { Observable } from 'rxjs';
 import { DiaBackendTransaction } from '../dia-backend-transaction-repository.service';
 
 @Pipe({
-  name: 'transactionStatus',
+  name: 'transactionState',
 })
-export class TransactionStatusPipe implements PipeTransform {
+export class TransactionStatePipe implements PipeTransform {
   async transform(
     transaction?: DiaBackendTransaction | null,
     email$?: string | Promise<string> | Observable<string>

@@ -1,14 +1,16 @@
 <ion-icon
-  *ngIf="!isUploading && !(item$ | async)?.diaBackendAsset"
+  *ngIf="!isUploading && !hasUploaded && !(item$ | async)?.diaBackendAsset"
   name="cloud-offline"
   size="large"
 ></ion-icon>
-<ng-container *ngIf="isUploading">
-  <div class="spinner-container">
-    <ion-spinner></ion-spinner>
-  </div>
-  <ion-icon name="cloud-upload" size="large"></ion-icon>
-</ng-container>
+<div *ngIf="isUploading" class="spinner-container">
+  <ion-spinner></ion-spinner>
+</div>
+<ion-icon
+  *ngIf="isUploading || hasUploaded"
+  name="cloud-upload"
+  size="large"
+></ion-icon>
 <app-img
   [src]="thumbnailUrl$ | async"
   [cacheKey]="cacheKey$ | async"

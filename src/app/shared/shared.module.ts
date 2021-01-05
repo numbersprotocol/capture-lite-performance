@@ -10,7 +10,7 @@ import { CopyButtonComponent } from './core/copy-button/copy-button.component';
 import { ImageComponent } from './core/image/image.component';
 import { NoDataComponent } from './core/no-data/no-data.component';
 import { PostCaptureComponent } from './core/post-capture/post-capture.component';
-import { TransactionStatusPipe } from './services/dia-backend/transaction/transaction-status/transaction-status.pipe';
+import { TransactionStatePipe } from './services/dia-backend/transaction/transaction-state/transaction-state.pipe';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { TransactionStatusPipe } from './services/dia-backend/transaction/transa
     PostCaptureComponent,
     NoDataComponent,
     CopyButtonComponent,
-    TransactionStatusPipe,
+    TransactionStatePipe,
   ],
   imports: [
     CommonModule,
@@ -39,7 +39,7 @@ import { TransactionStatusPipe } from './services/dia-backend/transaction/transa
     PostCaptureComponent,
     NoDataComponent,
     CopyButtonComponent,
-    TransactionStatusPipe,
+    TransactionStatePipe,
   ],
 })
 export class SharedModule {}

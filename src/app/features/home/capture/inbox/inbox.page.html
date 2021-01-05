@@ -19,7 +19,7 @@
   ></app-no-data>
   <ion-list lines="none">
     <ion-item
-      *ngFor="let transaction of inbox$ | async; trackBy: trackByIdAndStatus"
+      *ngFor="let transaction of inbox$ | async; trackBy: trackByIdAndState"
       class="ion-margin-bottom"
     >
       <app-img

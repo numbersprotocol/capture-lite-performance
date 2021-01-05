@@ -66,7 +66,7 @@ export class TransactionsPage implements OnInit {
       .subscribe();
   }
 
-  trackByIdAndStatus(_: number, item: DiaBackendTransaction) {
+  trackByIdAndState(_: number, item: DiaBackendTransaction) {
     return `${item.id}, ${item.expired}, ${item.fulfilled_at}`;
   }
 }

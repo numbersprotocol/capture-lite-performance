@@ -40,7 +40,7 @@ describe('ProofRepository', () => {
 
   it('should be created', () => expect(repo).toBeTruthy());
 
-  it('should get empty array when query on initial status', done => {
+  it('should get empty array when query on initial state', done => {
     repo.getAll$().subscribe(proofs => {
       expect(proofs).toEqual([]);
       done();

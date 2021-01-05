@@ -35,12 +35,12 @@
     <ion-item>
       <ion-icon name="information-outline" slot="start"></ion-icon>
       <ion-label>
-        <h3>{{ t('status') }}</h3>
+        <h3>{{ t('state') }}</h3>
         <p>
           {{
             t(
-              'transactionStatus.' +
-                (transaction$ | async | transactionStatus: email$ | async)
+              'transactionState.' +
+                (transaction$ | async | transactionState: email$ | async)
             )
           }}
         </p>

@@ -8,7 +8,7 @@
         border-radius: 4px;
       }
 
-      .status {
+      .transaction-state {
         max-width: 40%;
         text-align: center;
         border: 1px solid;
@@ -16,29 +16,29 @@
         padding: 4px;
       }
 
-      .status.accepted {
+      .transaction-state.accepted {
         color: white;
         border-color: #4cd964;
         background-color: #4cd964;
       }
 
-      .status.delivered {
+      .transaction-state.delivered {
         color: mediumseagreen;
         border-color: mediumseagreen;
       }
 
-      .status.inProgress {
+      .transaction-state.inProgress {
         color: deepskyblue;
         border-color: deepskyblue;
       }
 
-      .status.waitingToBeAccepted {
+      .transaction-state.waitingToBeAccepted {
         color: white;
         border-color: deepskyblue;
         background-color: deepskyblue;
       }
 
-      .status.returned {
+      .transaction-state.returned {
         color: white;
         border-color: var(--ion-color-danger);
         background-color: #e31587;

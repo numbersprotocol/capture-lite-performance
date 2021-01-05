@@ -29,7 +29,7 @@ export class AppComponent {
     languageService: LanguageService
   ) {
     this.initializeApp();
-    this.restoreAppStatus();
+    this.restoreAppState();
     this.initializeCollectorService();
     languageService.initialize();
   }
@@ -39,7 +39,7 @@ export class AppComponent {
     await SplashScreen.hide();
   }
 
-  private restoreAppStatus() {
+  private restoreAppState() {
     this.cameraService
       .restoreKilledCapture$()
       .pipe(

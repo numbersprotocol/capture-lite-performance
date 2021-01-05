@@ -14,6 +14,7 @@ import {
   first,
   map,
   switchMap,
+  tap,
 } from 'rxjs/operators';
 import {
   DiaBackendAsset,
@@ -62,6 +63,7 @@ export class CaptureItemComponent implements OnInit {
     .asObservable()
     .pipe(distinctUntilChanged());
   isUploading = false;
+  hasUploaded = false;
 
   constructor(
     private readonly diaBackendAssetRepository: DiaBackendAssetRepository
@@ -89,6 +91,7 @@ export class CaptureItemComponent implements OnInit {
     return defer(async () => (this.isUploading = true)).pipe(
       concatMapTo(this.diaBackendAssetRepository.add$(proof)),
       first(),
+      tap(() => (this.hasUploaded = true)),
       finalize(() => (this.isUploading = false))
     );
   }
