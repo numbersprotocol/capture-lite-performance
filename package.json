@@ -39,7 +39,7 @@
     "immutable": "^4.0.0-rc.12",
     "lodash-es": "^4.17.20",
     "rxjs": "~6.6.3",
-    "tslib": "^2.0.0",
+    "tslib": "^2.1.0",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
